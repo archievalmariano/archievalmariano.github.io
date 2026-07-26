@@ -1,0 +1,161 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const featuredWork = (await getCollection('work', ({ data }) => !data.draft && data.featured))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
+  .slice(0, 3);
+
+const recentWriting = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+
+const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' });
+---
+
+<BaseLayout
+  title="Archieval Mariano — Publishing & Audience Strategy"
+  description="Archieval Mariano is a publishing and audience strategy professional based in the Philippines, working on editorial growth, reader engagement, and audience development."
+>
+  <section class="wrap intro">
+    <p class="eyebrow">Publishing &amp; Audience Strategy · Philippines</p>
+    <h1 class="intro__lede">
+      I help publications find their readers &mdash; and keep them.
+    </h1>
+    <p class="intro__body">
+      I work at the intersection of editorial and audience: shaping how stories
+      reach people, how readerships grow, and how newsrooms build durable
+      relationships with the audiences they serve.
+    </p>
+  </section>
+
+  <section class="wrap section">
+    <div class="section__head">
+      <h2>Selected work</h2>
+      <a href="/work" class="section__more">All work &rarr;</a>
+    </div>
+    <ul class="entry-list">
+      {
+        featuredWork.map((entry) => (
+          <li class="entry-list__item">
+            <a href={`/work/${entry.slug}`} class="entry-list__link">
+              <div class="entry-list__title">{entry.data.title}</div>
+              <p class="entry-list__summary">{entry.data.summary}</p>
+              <p class="meta">
+                {entry.data.role}
+                {entry.data.organization && <span> · {entry.data.organization}</span>}
+                <span> · {entry.data.period}</span>
+              </p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="wrap section">
+    <div class="section__head">
+      <h2>Recent writing</h2>
+      <a href="/writing" class="section__more">All writing &rarr;</a>
+    </div>
+    <ul class="entry-list">
+      {
+        recentWriting.map((entry) => (
+          <li class="entry-list__item">
+            <a href={`/writing/${entry.slug}`} class="entry-list__link">
+              <div class="entry-list__title">{entry.data.title}</div>
+              <p class="entry-list__summary">{entry.data.description}</p>
+              <p class="meta">
+                <time datetime={entry.data.pubDate.toISOString()}>
+                  {dateFmt.format(entry.data.pubDate)}
+                </time>
+              </p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    max-width: 54rem;
+  }
+
+  .intro__lede {
+    margin-top: var(--space-md);
+    font-size: var(--step-4);
+    line-height: 1.08;
+  }
+
+  .intro__body {
+    margin-top: var(--space-md);
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .section {
+    padding-top: var(--space-lg);
+  }
+
+  .section__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section__more {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .section__more:hover {
+    color: var(--accent);
+  }
+
+  .entry-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .entry-list__item + .entry-list__item {
+    border-top: 1px solid var(--rule);
+  }
+
+  .entry-list__link {
+    display: block;
+    padding-block: var(--space-md);
+    text-decoration: none;
+  }
+
+  .entry-list__title {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    line-height: 1.15;
+  }
+
+  .entry-list__link:hover .entry-list__title {
+    color: var(--accent);
+  }
+
+  .entry-list__summary {
+    margin: var(--space-xs) 0;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+  }
+</style>

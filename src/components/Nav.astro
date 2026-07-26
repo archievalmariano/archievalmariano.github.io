@@ -1,0 +1,89 @@
+---
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const links = [
+  { href: '/work', label: 'Work' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const isActive = (href: string) =>
+  href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
+---
+
+<header class="site-head">
+  <div class="wrap site-head__inner">
+    <a href="/" class="wordmark" aria-label="Archieval Mariano — home">
+      Archieval&nbsp;Mariano
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-head {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .site-head__inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    padding-block: var(--space-md);
+  }
+
+  .wordmark {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  .wordmark:hover {
+    color: var(--accent);
+  }
+
+  nav ul {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+
+  nav a:hover {
+    color: var(--accent);
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+</style>

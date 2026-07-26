@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const work = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => {
+  const ao = a.data.order ?? 99;
+  const bo = b.data.order ?? 99;
+  if (ao !== bo) return ao - bo;
+  return a.data.period < b.data.period ? 1 : -1;
+});
+---
+
+<BaseLayout
+  title="Work — Archieval Mariano"
+  description="Selected work in publishing and audience strategy: editorial growth, reader engagement, and audience development."
+>
+  <section class="wrap page-head">
+    <p class="eyebrow">Work</p>
+    <h1>Selected engagements</h1>
+    <p class="page-head__intro">
+      A selection of projects across editorial strategy, audience growth, and
+      reader engagement. Written up as short case studies.
+    </p>
+  </section>
+
+  <section class="wrap">
+    <ul class="entry-list">
+      {
+        work.map((entry) => (
+          <li class="entry-list__item">
+            <a href={`/work/${entry.slug}`} class="entry-list__link">
+              <p class="meta entry-list__period">{entry.data.period}</p>
+              <div class="entry-list__title">{entry.data.title}</div>
+              <p class="entry-list__summary">{entry.data.summary}</p>
+              <p class="meta">
+                {entry.data.role}
+                {entry.data.organization && <span> · {entry.data.organization}</span>}
+              </p>
+              {entry.data.tags.length > 0 && (
+                <ul class="tags">
+                  {entry.data.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    max-width: 54rem;
+  }
+
+  .page-head h1 {
+    margin-top: var(--space-sm);
+  }
+
+  .page-head__intro {
+    margin-top: var(--space-md);
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .entry-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .entry-list__item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .entry-list__link {
+    display: block;
+    padding-block: var(--space-lg);
+    text-decoration: none;
+  }
+
+  .entry-list__period {
+    margin-bottom: var(--space-xs);
+  }
+
+  .entry-list__title {
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+  }
+
+  .entry-list__link:hover .entry-list__title {
+    color: var(--accent);
+  }
+
+  .entry-list__summary {
+    margin: var(--space-sm) 0;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: var(--space-sm) 0 0;
+    padding: 0;
+  }
+
+  .tags li {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.15em 0.75em;
+  }
+</style>

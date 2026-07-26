@@ -1,0 +1,70 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  meta?: string;
+  backHref: string;
+  backLabel: string;
+}
+
+const { title, description, eyebrow, meta, backHref, backLabel } = Astro.props;
+---
+
+<BaseLayout title={`${title} — Archieval Mariano`} description={description} type="article">
+  <article class="wrap entry">
+    <header class="entry__head">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      {meta && <p class="meta entry__meta">{meta}</p>}
+    </header>
+
+    <div class="prose flow">
+      <slot />
+    </div>
+
+    <footer class="entry__foot">
+      <a href={backHref} class="back-link">← {backLabel}</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .entry {
+    padding-top: var(--space-xl);
+  }
+
+  .entry__head {
+    max-width: var(--measure);
+    margin-bottom: var(--space-lg);
+  }
+
+  .entry__head h1 {
+    margin-top: var(--space-sm);
+  }
+
+  .entry__meta {
+    margin-top: var(--space-md);
+  }
+
+  .entry__foot {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--rule);
+  }
+
+  .back-link {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+</style>

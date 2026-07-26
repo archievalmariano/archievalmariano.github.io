@@ -1,0 +1,41 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import EntryLayout from '../../layouts/EntryLayout.astro';
+
+export async function getStaticPaths() {
+  const writing = await getCollection('writing', ({ data }) => !data.draft);
+  return writing.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'writing'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const dateFmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+let meta = dateFmt.format(entry.data.pubDate);
+if (entry.data.updatedDate) {
+  meta += ` · Updated ${dateFmt.format(entry.data.updatedDate)}`;
+}
+---
+
+<EntryLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  eyebrow="Writing"
+  meta={meta}
+  backHref="/writing"
+  backLabel="All writing"
+>
+  <Content />
+</EntryLayout>

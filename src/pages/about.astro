@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About — Archieval Mariano"
+  description="Archieval Mariano is a publishing and audience strategy professional based in the Philippines."
+>
+  <section class="wrap about">
+    <div class="about__head">
+      <p class="eyebrow">About</p>
+      <h1>Archieval Mariano</h1>
+    </div>
+
+    <div class="prose flow about__body">
+      <p class="lede">
+        I&rsquo;m a publishing and audience strategy professional based in the
+        Philippines. I work on the connective tissue between what newsrooms
+        publish and the readers they hope to reach.
+      </p>
+
+      <p>
+        Over the past several years I&rsquo;ve worked across editorial and
+        audience teams &mdash; helping publications understand their readers,
+        grow their reach, and build habits of return. My interest is less in
+        chasing traffic and more in the slower, more durable work of earning
+        and keeping attention.
+      </p>
+
+      <h2>What I do</h2>
+      <ul>
+        <li>Audience strategy and development for editorial organizations</li>
+        <li>Reader engagement, retention, and loyalty programs</li>
+        <li>Editorial analytics and the sense-making around them</li>
+        <li>Newsletter, distribution, and platform strategy</li>
+      </ul>
+
+      <h2>Approach</h2>
+      <p>
+        Good audience work is editorial work. I try to keep strategy grounded in
+        the newsroom&rsquo;s own voice and values rather than importing tactics
+        wholesale. The goal is a relationship with readers that survives any
+        single algorithm change.
+      </p>
+
+      <p>
+        If you&rsquo;re working on something in this space, I&rsquo;d be glad to
+        talk &mdash; you can reach me on the
+        <a href="/contact">contact page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding-top: var(--space-xl);
+  }
+
+  .about__head {
+    max-width: 54rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .about__head h1 {
+    margin-top: var(--space-sm);
+  }
+
+  .lede {
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+</style>

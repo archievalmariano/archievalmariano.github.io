@@ -1,0 +1,43 @@
+---
+// Self-hosted variable fonts (bundled at build, no CDN request)
+import '@fontsource-variable/newsreader';
+import '@fontsource-variable/newsreader/wght-italic.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  type?: 'website' | 'article';
+}
+
+const { title, description, type = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="Writing — Archieval Mariano"
+  href={new URL('rss.xml', Astro.site)}
+/>
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary_large_image" />
+
+<meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)" />

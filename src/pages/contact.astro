@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const email = 'archieval.mariano@gmail.com';
+---
+
+<BaseLayout
+  title="Contact — Archieval Mariano"
+  description="Get in touch with Archieval Mariano about publishing and audience strategy."
+>
+  <section class="wrap contact">
+    <p class="eyebrow">Contact</p>
+    <h1>Get in touch</h1>
+    <p class="contact__intro">
+      For work, writing, or a conversation about publishing and audience
+      strategy &mdash; email is the best way to reach me.
+    </p>
+
+    <p class="contact__email">
+      <a href={`mailto:${email}`}>{email}</a>
+    </p>
+
+    <p class="meta contact__note">Based in the Philippines · PHT (UTC+8)</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    padding-top: var(--space-xl);
+    max-width: 54rem;
+  }
+
+  .contact h1 {
+    margin-top: var(--space-sm);
+  }
+
+  .contact__intro {
+    margin-top: var(--space-md);
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .contact__email {
+    margin-top: var(--space-lg);
+    font-family: var(--font-serif);
+    font-size: var(--step-3);
+    letter-spacing: -0.01em;
+  }
+
+  .contact__email a {
+    text-decoration: none;
+  }
+
+  .contact__email a:hover {
+    color: var(--accent);
+  }
+
+  .contact__note {
+    margin-top: var(--space-lg);
+  }
+</style>
