@@ -1,10 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteLinks } from '../data/site';
+
+const workOn = [
+  'Audience growth and digital strategy',
+  'Analytics, segmentation, and performance measurement',
+  'Content and campaign systems',
+  'E-commerce acquisition and lifecycle strategy',
+  'New digital programs and platform opportunities',
+  'Cross-functional workflows and operational design',
+];
 ---
 
 <BaseLayout
   title="About — Archieval Mariano"
-  description="Archieval Mariano is a publishing and audience strategy professional based in the Philippines."
+  description="Archieval Mariano is a digital strategy and audience growth professional based in the Philippines, working across content, analytics, e-commerce, and digital operations."
 >
   <section class="wrap about">
     <div class="about__head">
@@ -14,39 +24,46 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     <div class="prose flow about__body">
       <p class="lede">
-        I&rsquo;m a publishing and audience strategy professional based in the
-        Philippines. I work on the connective tissue between what newsrooms
-        publish and the readers they hope to reach.
+        I&rsquo;m a digital strategy and audience growth professional based in the
+        Philippines. I work across content, analytics, e-commerce, and digital
+        operations &mdash; usually in the space between a good idea and the systems
+        needed to make it work.
       </p>
 
       <p>
-        Over the past several years I&rsquo;ve worked across editorial and
-        audience teams &mdash; helping publications understand their readers,
-        grow their reach, and build habits of return. My interest is less in
-        chasing traffic and more in the slower, more durable work of earning
-        and keeping attention.
+        I started my career in digital publishing as a writer and editor. Over
+        time, the questions I found myself working on became larger: Who are we
+        trying to reach? Why does something perform? How do we build a repeatable
+        process around it? What should we measure? And what should we try next?
       </p>
 
-      <h2>What I do</h2>
+      <p>
+        That progression has taken me through editorial, branded content, creative
+        strategy, client management, e-commerce, analytics, audience development,
+        partnerships, and digital strategy.
+      </p>
+
+      <h2>What I work on</h2>
       <ul>
-        <li>Audience strategy and development for editorial organizations</li>
-        <li>Reader engagement, retention, and loyalty programs</li>
-        <li>Editorial analytics and the sense-making around them</li>
-        <li>Newsletter, distribution, and platform strategy</li>
+        {workOn.map((item) => <li>{item}</li>)}
       </ul>
 
-      <h2>Approach</h2>
+      <h2>How I work</h2>
       <p>
-        Good audience work is editorial work. I try to keep strategy grounded in
-        the newsroom&rsquo;s own voice and values rather than importing tactics
-        wholesale. The goal is a relationship with readers that survives any
-        single algorithm change.
+        I like strategy that survives contact with actual work. That usually means
+        understanding the audience first, using data without mistaking it for
+        judgment, and building processes that people can realistically maintain.
       </p>
 
       <p>
-        If you&rsquo;re working on something in this space, I&rsquo;d be glad to
-        talk &mdash; you can reach me on the
-        <a href="/contact">contact page</a>.
+        My background in writing still shapes how I approach digital work: clarity
+        matters, context matters, and the person on the other side of the screen
+        is never merely a metric.
+      </p>
+
+      <p>
+        You can reach me on the <a href="/contact">contact page</a>, or view my
+        full record on <a href={siteLinks.linkedin} target="_blank" rel="noopener">LinkedIn</a>.
       </p>
     </div>
   </section>

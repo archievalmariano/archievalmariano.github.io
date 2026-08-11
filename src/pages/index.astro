@@ -1,10 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { hero, services, siteLinks } from '../data/site';
 
 const featuredWork = (await getCollection('work', ({ data }) => !data.draft && data.featured))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
-  .slice(0, 3);
+  .slice(0, 6);
 
 const recentWriting = (await getCollection('writing', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -14,39 +16,43 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long
 ---
 
 <BaseLayout
-  title="Archieval Mariano — Publishing & Audience Strategy"
-  description="Archieval Mariano is a publishing and audience strategy professional based in the Philippines, working on editorial growth, reader engagement, and audience development."
+  title="Archieval Mariano — Digital Strategy & Audience Growth"
+  description="Archieval Mariano is a digital strategy and audience growth professional based in the Philippines, working across strategy, content, analytics, e-commerce, and digital operations."
 >
   <section class="wrap intro">
-    <p class="eyebrow">Publishing &amp; Audience Strategy · Philippines</p>
-    <h1 class="intro__lede">
-      I help publications find their readers &mdash; and keep them.
-    </h1>
-    <p class="intro__body">
-      I work at the intersection of editorial and audience: shaping how stories
-      reach people, how readerships grow, and how newsrooms build durable
-      relationships with the audiences they serve.
+    <p class="eyebrow">{hero.eyebrow}</p>
+    <h1 class="intro__lede">{hero.headline}</h1>
+    <p class="intro__body">{hero.intro}</p>
+    <p class="intro__ctas">
+      <a href="/work">View my work <span aria-hidden="true">&rarr;</span></a>
+      <a href="/contact">Work with me <span aria-hidden="true">&rarr;</span></a>
+      <a class="intro__cv" href={siteLinks.cv} target="_blank" rel="noopener">
+        Download CV <span aria-hidden="true">&darr;</span>
+      </a>
     </p>
   </section>
 
-  <section class="wrap section">
+  <section class="wrap section section--first">
     <div class="section__head">
       <h2>Selected work</h2>
       <a href="/work" class="section__more">All work &rarr;</a>
     </div>
-    <ul class="entry-list">
+    <ul class="work-list">
+      {featuredWork.map((entry) => <WorkCard entry={entry} />)}
+    </ul>
+  </section>
+
+  <section class="wrap section">
+    <div class="section__head">
+      <h2>What I can help with</h2>
+      <a href="/services" class="section__more">All services &rarr;</a>
+    </div>
+    <ul class="services-preview">
       {
-        featuredWork.map((entry) => (
-          <li class="entry-list__item">
-            <a href={`/work/${entry.slug}`} class="entry-list__link">
-              <div class="entry-list__title">{entry.data.title}</div>
-              <p class="entry-list__summary">{entry.data.summary}</p>
-              <p class="meta">
-                {entry.data.role}
-                {entry.data.organization && <span> · {entry.data.organization}</span>}
-                <span> · {entry.data.period}</span>
-              </p>
-            </a>
+        services.map((service) => (
+          <li class="services-preview__item">
+            <h3 class="services-preview__title">{service.title}</h3>
+            <p class="services-preview__desc">{service.description}</p>
           </li>
         ))
       }
@@ -76,6 +82,14 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long
       }
     </ul>
   </section>
+
+  <section class="wrap closing">
+    <p class="closing__text">
+      Have a digital problem, an opportunity, or a pile of data and aren&rsquo;t
+      sure what to do next?
+    </p>
+    <a class="closing__link" href="/contact">Get in touch <span aria-hidden="true">&rarr;</span></a>
+  </section>
 </BaseLayout>
 
 <style>
@@ -98,8 +112,37 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long
     color: var(--ink-soft);
   }
 
+  .intro__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-lg);
+    margin-top: var(--space-lg);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .intro__ctas a {
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .intro__ctas a:hover {
+    color: var(--accent);
+  }
+
+  .intro__cv {
+    color: var(--ink-faint) !important;
+  }
+
   .section {
     padding-top: var(--space-lg);
+  }
+
+  /* First section sits directly below the hero now that the proof row is gone. */
+  .section--first {
+    padding-top: var(--space-md);
   }
 
   .section__head {
@@ -123,6 +166,39 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long
 
   .section__more:hover {
     color: var(--accent);
+  }
+
+  .work-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Services preview — compact editorial rows, not cards. */
+  .services-preview {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .services-preview__item {
+    padding-block: var(--space-md);
+  }
+
+  .services-preview__item + .services-preview__item {
+    border-top: 1px solid var(--rule);
+  }
+
+  .services-preview__title {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 500;
+  }
+
+  .services-preview__desc {
+    margin: var(--space-xs) 0 0;
+    max-width: var(--measure);
+    color: var(--ink-soft);
   }
 
   .entry-list {
@@ -157,5 +233,29 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long
     margin: var(--space-xs) 0;
     max-width: var(--measure);
     color: var(--ink-soft);
+  }
+
+  .closing {
+    padding-top: var(--space-xl);
+    max-width: 54rem;
+  }
+
+  .closing__text {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    color: var(--ink);
+    max-width: var(--measure);
+    margin: 0;
+  }
+
+  .closing__link {
+    display: inline-block;
+    margin-top: var(--space-md);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--accent);
   }
 </style>

@@ -1,24 +1,36 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const email = 'archieval.mariano@gmail.com';
+import { siteLinks } from '../data/site';
 ---
 
 <BaseLayout
   title="Contact — Archieval Mariano"
-  description="Get in touch with Archieval Mariano about publishing and audience strategy."
+  description="Get in touch with Archieval Mariano about consulting, project work, or full-time opportunities in digital strategy and audience growth."
 >
   <section class="wrap contact">
     <p class="eyebrow">Contact</p>
     <h1>Get in touch</h1>
     <p class="contact__intro">
-      For work, writing, or a conversation about publishing and audience
-      strategy &mdash; email is the best way to reach me.
+      For consulting, project work, or full-time opportunities, email is the best
+      way to reach me.
     </p>
 
     <p class="contact__email">
-      <a href={`mailto:${email}`}>{email}</a>
+      <a href={`mailto:${siteLinks.email}`}>{siteLinks.email}</a>
     </p>
+
+    <ul class="contact__links">
+      <li>
+        <a href={siteLinks.linkedin} target="_blank" rel="noopener">
+          LinkedIn <span aria-hidden="true">&rarr;</span>
+        </a>
+      </li>
+      <li>
+        <a href={siteLinks.cv} target="_blank" rel="noopener">
+          Download CV <span aria-hidden="true">&darr;</span>
+        </a>
+      </li>
+    </ul>
 
     <p class="meta contact__note">Based in the Philippines · PHT (UTC+8)</p>
   </section>
@@ -53,6 +65,28 @@ const email = 'archieval.mariano@gmail.com';
   }
 
   .contact__email a:hover {
+    color: var(--accent);
+  }
+
+  .contact__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-lg);
+    list-style: none;
+    margin: var(--space-lg) 0 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .contact__links a {
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .contact__links a:hover {
     color: var(--accent);
   }
 

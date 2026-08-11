@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { services } from '../data/site';
+---
+
+<BaseLayout
+  title="Services — Archieval Mariano"
+  description="Digital strategy, audience and performance, and content and digital operations — how Archieval Mariano can help teams turn ideas and data into working programs."
+>
+  <section class="wrap page-head">
+    <p class="eyebrow">Services</p>
+    <h1>What I can help with</h1>
+    <p class="page-head__intro">
+      I work with teams that have a digital problem, an opportunity, or a pile of
+      data and aren&rsquo;t quite sure what to do next.
+    </p>
+  </section>
+
+  <div class="wrap services">
+    {
+      services.map((service) => (
+        <section class="service">
+          <h2 class="service__title">{service.title}</h2>
+          <p class="service__desc">{service.description}</p>
+          <p class="service__label">Typical work</p>
+          <ul class="service__work">
+            {service.work.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <section class="services-close">
+      <p>
+        Need something that doesn&rsquo;t fit neatly into one category?
+        That&rsquo;s usually fine. Much of my work sits between strategy, content,
+        analytics, and execution.
+      </p>
+      <a class="services-close__link" href="/contact">
+        Get in touch <span aria-hidden="true">&rarr;</span>
+      </a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    max-width: 54rem;
+  }
+
+  .page-head h1 {
+    margin-top: var(--space-sm);
+  }
+
+  .page-head__intro {
+    margin-top: var(--space-md);
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .service {
+    padding-block: var(--space-lg);
+    border-top: 1px solid var(--rule);
+  }
+
+  .service__title {
+    font-size: var(--step-2);
+  }
+
+  .service__desc {
+    margin: var(--space-sm) 0 var(--space-md);
+    max-width: var(--measure);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .service__label {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .service__work {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.35rem var(--space-lg);
+    max-width: var(--measure);
+  }
+
+  .service__work li {
+    position: relative;
+    padding-left: 1rem;
+    color: var(--ink-soft);
+  }
+
+  .service__work li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--ink-faint);
+  }
+
+  .services-close {
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+
+  .services-close p {
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+
+  .services-close__link {
+    display: inline-block;
+    margin-top: var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--accent);
+  }
+
+  @media (max-width: 34rem) {
+    .service__work {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

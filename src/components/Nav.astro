@@ -1,8 +1,11 @@
 ---
+import { siteLinks } from '../data/site';
+
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const links = [
   { href: '/work', label: 'Work' },
+  { href: '/services', label: 'Services' },
   { href: '/writing', label: 'Writing' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
@@ -28,6 +31,9 @@ const isActive = (href: string) =>
             </li>
           ))
         }
+        <li class="nav-utility">
+          <a href={siteLinks.cv} target="_blank" rel="noopener">CV <span aria-hidden="true">↗</span></a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -61,7 +67,8 @@ const isActive = (href: string) =>
 
   nav ul {
     display: flex;
-    gap: clamp(1rem, 3vw, 2rem);
+    flex-wrap: wrap;
+    gap: var(--space-xs) clamp(1rem, 3vw, 2rem);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -85,5 +92,14 @@ const isActive = (href: string) =>
   nav a[aria-current='page'] {
     color: var(--ink);
     border-bottom-color: var(--accent);
+  }
+
+  /* Quiet utility link, set apart from the primary items. */
+  .nav-utility {
+    margin-left: clamp(0.25rem, 2vw, 1rem);
+  }
+
+  .nav-utility a {
+    color: var(--ink-faint);
   }
 </style>

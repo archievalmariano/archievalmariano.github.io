@@ -15,7 +15,7 @@ export async function GET(context) {
       title: entry.data.title,
       description: entry.data.description,
       pubDate: entry.data.pubDate,
-      link: `/writing/${entry.slug}/`,
+      link: entry.data.externalURL ?? `/writing/${entry.slug}/`,
     })),
   });
 }

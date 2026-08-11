@@ -15,14 +15,13 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 
 <BaseLayout
   title="Writing — Archieval Mariano"
-  description="Essays and notes on publishing, audience strategy, and the practice of building readerships."
+  description="Selected commissioned work and occasional personal writing on digital strategy, audience, content, and analytics."
 >
   <section class="wrap page-head">
     <p class="eyebrow">Writing</p>
     <h1>Essays &amp; notes</h1>
     <p class="page-head__intro">
-      Occasional writing on publishing, audience development, and the work of
-      connecting stories with the people who need them.
+      Selected commissioned work and occasional personal writing.
     </p>
   </section>
 
@@ -36,6 +35,8 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
                 <time datetime={entry.data.pubDate.toISOString()}>
                   {dateFmt.format(entry.data.pubDate)}
                 </time>
+                <span> · {entry.data.classification === 'commissioned' ? 'Commissioned' : 'Personal'}</span>
+                {entry.data.format && <span> · {entry.data.format}</span>}
               </p>
               <div class="entry-list__title">{entry.data.title}</div>
               <p class="entry-list__summary">{entry.data.description}</p>

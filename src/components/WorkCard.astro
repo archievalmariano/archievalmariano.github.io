@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { hasCaseStudy } from '../utils/work';
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+
+const org = d.anonymized ? 'Confidential' : d.companyOrClient;
+const metaTop = [d.year, d.category].filter(Boolean).join(' · ');
+
+// Listing-only projects render as static content, not links.
+const clickable = hasCaseStudy(entry);
+const Wrapper = clickable ? 'a' : 'div';
+---
+
+<li class="work-card">
+  <Wrapper
+    class:list={['work-card__link', { 'work-card__link--static': !clickable }]}
+    {...(clickable ? { href: `/work/${entry.slug}` } : {})}
+  >
+    {metaTop && <p class="meta work-card__meta">{metaTop}</p>}
+    <h3 class="work-card__title">{d.title}</h3>
+    <p class="work-card__desc">{d.shortDescription}</p>
+    {org && <p class="meta work-card__org">{org}</p>}
+    {
+      d.tags.length > 0 && (
+        <ul class="tags">
+          {d.tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      )
+    }
+  </Wrapper>
+</li>
+
+<style>
+  .work-card {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .work-card__link {
+    display: block;
+    padding-block: var(--space-lg);
+    text-decoration: none;
+  }
+
+  .work-card__meta {
+    margin-bottom: var(--space-xs);
+  }
+
+  .work-card__title {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.12;
+  }
+
+  a.work-card__link:hover .work-card__title {
+    color: var(--accent);
+  }
+
+  /* Static (listing-only) cards give no clickable affordance. */
+  .work-card__link--static {
+    cursor: default;
+  }
+
+  .work-card__desc {
+    margin: var(--space-sm) 0;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+  }
+
+  .work-card__org {
+    margin-top: var(--space-xs);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: var(--space-sm) 0 0;
+    padding: 0;
+  }
+
+  .tags li {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.15em 0.75em;
+  }
+</style>
