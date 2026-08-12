@@ -12,6 +12,15 @@ export const siteLinks = {
 // GA4 Measurement ID, centralized here. Empty string disables analytics.
 export const ga4Id = 'G-YQ3HPJ2GJZ';
 
+// Default social preview image (Open Graph / Twitter). `path` is resolved to an
+// absolute URL against `site` in BaseHead, so it's not hardcoded per page.
+export const ogImage = {
+  path: '/og.png',
+  width: 1200,
+  height: 630,
+  alt: 'Archieval Mariano — Digital Strategy & Audience Growth, based in the Philippines.',
+};
+
 export const hero = {
   eyebrow: 'Digital Strategy & Audience Growth · Philippines',
   headline: 'I turn audience insight into better digital work.',

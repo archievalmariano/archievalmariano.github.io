@@ -78,6 +78,7 @@ const recentWriting = (await getCollection('writing', ({ data }) => !data.draft)
                 <div class="entry-list__title">
                   {d.title}
                   {isExternal && <span class="ext" aria-hidden="true"> ↗</span>}
+                  {isExternal && <span class="visually-hidden"> (opens in new tab)</span>}
                 </div>
                 <p class="entry-list__summary">{d.description}</p>
                 {attribution && <p class="meta">{attribution}</p>}
