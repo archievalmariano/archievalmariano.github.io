@@ -43,6 +43,19 @@ const workOn = [
         partnerships, and digital strategy.
       </p>
 
+      <p>
+        More than a decade across digital publishing, branded content, client
+        strategy, e-commerce, analytics, and audience development.
+      </p>
+
+      <div class="selected-exp">
+        <p class="eyebrow">Selected experience</p>
+        <p class="selected-exp__list">
+          GMA New Media Inc. · SM Investments Corporation · Summit Media ·
+          Independent consulting
+        </p>
+      </div>
+
       <h2>What I work on</h2>
       <ul>
         {workOn.map((item) => <li>{item}</li>)}
@@ -86,5 +99,15 @@ const workOn = [
   .lede {
     font-size: var(--step-1);
     color: var(--ink);
+  }
+
+  /* Quiet credibility cue — not a résumé section. */
+  .selected-exp p {
+    margin: 0;
+  }
+
+  .selected-exp__list {
+    margin-top: var(--space-xs);
+    color: var(--ink-soft);
   }
 </style>
