@@ -34,6 +34,7 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
               <a
                 href={href}
                 class="entry-list__link"
+                data-ga-event="writing_click"
                 {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}
               >
                 {d.format && <p class="meta entry-list__type">{d.format}</p>}

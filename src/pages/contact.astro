@@ -16,12 +16,12 @@ import { siteLinks } from '../data/site';
     </p>
 
     <p class="contact__email">
-      <a href={`mailto:${siteLinks.email}`}>{siteLinks.email}</a>
+      <a href={`mailto:${siteLinks.email}`} data-ga-event="email_click">{siteLinks.email}</a>
     </p>
 
     <ul class="contact__links">
       <li>
-        <a href={siteLinks.linkedin} target="_blank" rel="noopener">
+        <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">
           LinkedIn <span aria-hidden="true">&rarr;</span>
         </a>
       </li>

@@ -72,6 +72,7 @@ const recentWriting = (await getCollection('writing', ({ data }) => !data.draft)
               <a
                 href={href}
                 class="entry-list__link"
+                data-ga-event="writing_click"
                 {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}
               >
                 <div class="entry-list__title">

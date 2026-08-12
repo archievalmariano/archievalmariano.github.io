@@ -9,6 +9,9 @@ export const siteLinks = {
   cv: '#',
 };
 
+// GA4 Measurement ID, centralized here. Empty string disables analytics.
+export const ga4Id = 'G-YQ3HPJ2GJZ';
+
 export const hero = {
   eyebrow: 'Digital Strategy & Audience Growth · Philippines',
   headline: 'I turn audience insight into better digital work.',
