@@ -2,7 +2,9 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 
 export async function GET(context) {
-  const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  // Only dated writing (internal essays) appears in the feed; outward-linked
+  // commissioned pieces without a confirmed date are excluded.
+  const writing = (await getCollection('writing', ({ data }) => !data.draft && data.pubDate)).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   );
 

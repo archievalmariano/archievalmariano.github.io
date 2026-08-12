@@ -2,47 +2,52 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+// Manual order via numeric filename prefixes (01–07); no reliable dates to sort by.
+const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort((a, b) =>
+  a.slug < b.slug ? -1 : 1
 );
-
-const dateFmt = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
 ---
 
 <BaseLayout
   title="Writing — Archieval Mariano"
-  description="Selected commissioned work and occasional personal writing on digital strategy, audience, content, and analytics."
+  description="Selected commissioned work across finance, technology, travel, lifestyle, and consumer content."
 >
   <section class="wrap page-head">
     <p class="eyebrow">Writing</p>
-    <h1>Essays &amp; notes</h1>
+    <h1>Writing</h1>
     <p class="page-head__intro">
-      Selected commissioned work and occasional personal writing.
+      Selected commissioned work across finance, technology, travel, lifestyle,
+      and consumer content. Some pieces were published without a byline.
     </p>
   </section>
 
   <section class="wrap">
     <ul class="entry-list">
       {
-        writing.map((entry) => (
-          <li class="entry-list__item">
-            <a href={`/writing/${entry.slug}`} class="entry-list__link">
-              <p class="meta entry-list__date">
-                <time datetime={entry.data.pubDate.toISOString()}>
-                  {dateFmt.format(entry.data.pubDate)}
-                </time>
-                <span> · {entry.data.classification === 'commissioned' ? 'Commissioned' : 'Personal'}</span>
-                {entry.data.format && <span> · {entry.data.format}</span>}
-              </p>
-              <div class="entry-list__title">{entry.data.title}</div>
-              <p class="entry-list__summary">{entry.data.description}</p>
-            </a>
-          </li>
-        ))
+        writing.map((entry) => {
+          const d = entry.data;
+          const href = d.externalURL ?? `/writing/${entry.slug}`;
+          const isExternal = Boolean(d.externalURL);
+          const attribution = [d.publisher, d.clientOrCampaign].filter(Boolean).join(' · ');
+          return (
+            <li class="entry-list__item">
+              <a
+                href={href}
+                class="entry-list__link"
+                {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}
+              >
+                {d.format && <p class="meta entry-list__type">{d.format}</p>}
+                <div class="entry-list__title">
+                  {d.title}
+                  {isExternal && <span class="ext" aria-hidden="true"> ↗</span>}
+                </div>
+                <p class="entry-list__summary">{d.description}</p>
+                {attribution && <p class="meta entry-list__attr">{attribution}</p>}
+                {d.credit && <p class="meta entry-list__credit">{d.credit}</p>}
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
   </section>
@@ -83,19 +88,29 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
     text-decoration: none;
   }
 
-  .entry-list__date {
+  .entry-list__type {
     margin-bottom: var(--space-xs);
   }
 
   .entry-list__title {
     font-family: var(--font-serif);
-    font-size: var(--step-3);
+    font-size: var(--step-2);
     font-weight: 500;
-    letter-spacing: -0.015em;
-    line-height: 1.1;
+    letter-spacing: -0.012em;
+    line-height: 1.15;
   }
 
   .entry-list__link:hover .entry-list__title {
+    color: var(--accent);
+  }
+
+  .ext {
+    font-family: var(--font-sans);
+    font-size: 0.7em;
+    color: var(--ink-faint);
+  }
+
+  .entry-list__link:hover .ext {
     color: var(--accent);
   }
 
@@ -104,5 +119,14 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
     max-width: var(--measure);
     color: var(--ink-soft);
     font-size: var(--step-1);
+  }
+
+  .entry-list__attr {
+    margin-top: var(--space-sm);
+  }
+
+  .entry-list__credit {
+    margin-top: 0.25rem;
+    font-style: italic;
   }
 </style>

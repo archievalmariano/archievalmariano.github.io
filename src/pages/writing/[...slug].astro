@@ -3,7 +3,11 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import EntryLayout from '../../layouts/EntryLayout.astro';
 
 export async function getStaticPaths() {
-  const writing = await getCollection('writing', ({ data }) => !data.draft);
+  // Entries that link outward (externalURL) do not get an internal detail page.
+  const writing = await getCollection(
+    'writing',
+    ({ data }) => !data.draft && !data.externalURL
+  );
   return writing.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
@@ -26,20 +30,17 @@ const dateFmt = new Intl.DateTimeFormat('en-US', {
 
 const classificationLabel =
   d.classification === 'commissioned' ? 'Commissioned' : 'Personal';
-const bylineLabel: Record<string, string> = {
-  bylined: 'Bylined',
-  ghostwritten: 'Ghostwritten',
-  uncredited: 'Uncredited',
-};
+
+const publishedDate = d.pubDate ? dateFmt.format(d.pubDate) : undefined;
 
 const facts: { label: string; value?: string }[] = [
   { label: 'Type', value: classificationLabel },
-  { label: 'Published', value: dateFmt.format(d.pubDate) },
+  { label: 'Published', value: publishedDate },
   { label: 'Publisher', value: d.publisher },
   { label: 'Client / campaign', value: d.clientOrCampaign },
   { label: 'Format', value: d.format },
   { label: 'Contribution', value: d.contribution },
-  { label: 'Byline', value: bylineLabel[d.byline] },
+  { label: 'Credit', value: d.credit },
 ];
 ---
 
@@ -47,7 +48,7 @@ const facts: { label: string; value?: string }[] = [
   title={d.title}
   description={d.description}
   eyebrow={`Writing · ${classificationLabel}`}
-  meta={dateFmt.format(d.pubDate)}
+  meta={publishedDate}
   backHref="/writing"
   backLabel="All writing"
 >

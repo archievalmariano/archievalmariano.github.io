@@ -9,10 +9,8 @@ const featuredWork = (await getCollection('work', ({ data }) => !data.draft && d
   .slice(0, 6);
 
 const recentWriting = (await getCollection('writing', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 4);
-
-const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' });
+  .sort((a, b) => (a.slug < b.slug ? -1 : 1))
+  .slice(0, 3);
 ---
 
 <BaseLayout
@@ -66,19 +64,28 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long
     </div>
     <ul class="entry-list">
       {
-        recentWriting.map((entry) => (
-          <li class="entry-list__item">
-            <a href={`/writing/${entry.slug}`} class="entry-list__link">
-              <div class="entry-list__title">{entry.data.title}</div>
-              <p class="entry-list__summary">{entry.data.description}</p>
-              <p class="meta">
-                <time datetime={entry.data.pubDate.toISOString()}>
-                  {dateFmt.format(entry.data.pubDate)}
-                </time>
-              </p>
-            </a>
-          </li>
-        ))
+        recentWriting.map((entry) => {
+          const d = entry.data;
+          const href = d.externalURL ?? `/writing/${entry.slug}`;
+          const isExternal = Boolean(d.externalURL);
+          const attribution = [d.publisher, d.clientOrCampaign].filter(Boolean).join(' · ');
+          return (
+            <li class="entry-list__item">
+              <a
+                href={href}
+                class="entry-list__link"
+                {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}
+              >
+                <div class="entry-list__title">
+                  {d.title}
+                  {isExternal && <span class="ext" aria-hidden="true"> ↗</span>}
+                </div>
+                <p class="entry-list__summary">{d.description}</p>
+                {attribution && <p class="meta">{attribution}</p>}
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
   </section>
@@ -226,6 +233,16 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long
   }
 
   .entry-list__link:hover .entry-list__title {
+    color: var(--accent);
+  }
+
+  .ext {
+    font-family: var(--font-sans);
+    font-size: 0.7em;
+    color: var(--ink-faint);
+  }
+
+  .entry-list__link:hover .ext {
     color: var(--accent);
   }
 

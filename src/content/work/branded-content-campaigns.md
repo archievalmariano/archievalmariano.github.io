@@ -33,7 +33,7 @@ tags:
   - Optimization
   - Performance
 confidentialityNote: Internal campaign budgets, guaranteed delivery figures, pricing, client materials, and performance reports are withheld to protect confidential company information.
-featured: true
+featured: false
 order: 4
 draft: false
 ---

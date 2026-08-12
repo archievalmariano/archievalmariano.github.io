@@ -47,9 +47,10 @@ const writing = defineCollection({
     clientOrCampaign: z.string().optional(),
     format: z.string().optional(), // e.g. "Essay", "Feature", "Newsletter"
     contribution: z.string().optional(), // e.g. "Writing", "Editing", "Strategy"
-    pubDate: z.coerce.date(),
+    pubDate: z.coerce.date().optional(), // optional: many commissioned pieces have no reliably confirmable date
     externalURL: z.string().url().optional(),
-    byline: z.enum(['bylined', 'ghostwritten', 'uncredited']).default('bylined'),
+    byline: z.enum(['bylined', 'ghostwritten', 'uncredited']).default('uncredited'),
+    credit: z.string().optional(), // exact visible on-page credit, e.g. "Text by Arch Mariano"
     description: z.string(), // short description
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
