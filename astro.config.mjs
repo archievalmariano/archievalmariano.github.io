@@ -3,10 +3,10 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 
-// User site (archievalmariano.github.io) is served from the domain root,
+// Served from the domain root (custom domain archievalmariano.com),
 // so `site` is set and `base` is intentionally omitted.
 export default defineConfig({
-  site: 'https://archievalmariano.github.io',
+  site: 'https://archievalmariano.com',
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {
