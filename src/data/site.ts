@@ -2,7 +2,7 @@
 // updated in one place without touching presentation.
 
 export const siteLinks = {
-  email: 'archieval.mariano@gmail.com',
+  email: 'hello@archievalmariano.com',
   linkedin: 'https://www.linkedin.com/in/archievalmariano/',
   // CV destination — LinkedIn for now, or swap for a hosted PDF path like '/cv.pdf'.
   // TODO: set this to the actual CV/LinkedIn URL.
