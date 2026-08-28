@@ -18,7 +18,7 @@ export const ogImage = {
   path: '/og.png',
   width: 1200,
   height: 630,
-  alt: 'Archieval Mariano — Digital Strategy & Audience Growth, based in the Philippines.',
+  alt: 'Archieval Mariano — Digital strategy, audience growth, and systems.',
 };
 
 export const hero = {

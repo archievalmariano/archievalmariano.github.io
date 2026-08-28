@@ -1,278 +1,283 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import WorkCard from '../components/WorkCard.astro';
-import { hero, services } from '../data/site';
+import portrait from '../assets/photos/archieval-portrait.jpg';
+import singapore from '../assets/photos/archieval-singapore.jpg';
+import { hero } from '../data/site';
 
 const featuredWork = (await getCollection('work', ({ data }) => !data.draft && data.featured))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
-  .slice(0, 6);
+  .slice(0, 3);
 
 const recentWriting = (await getCollection('writing', ({ data }) => !data.draft))
   .sort((a, b) => (a.slug < b.slug ? -1 : 1))
   .slice(0, 3);
+
+const projectVisuals = [
+  {
+    className: 'visual--audience',
+    kicker: 'Audience system',
+    stat: '≈40',
+    statLabel: 'targetable audience segments',
+    marks: ['Automotive', 'Online shoppers', 'Gamers', 'Beauty', 'Entrepreneurs'],
+  },
+  {
+    className: 'visual--editorial',
+    kicker: 'Editorial system',
+    stat: '20',
+    statLabel: 'first scripts',
+    marks: ['TikTok', 'Reels', 'YouTube Shorts'],
+  },
+  {
+    className: 'visual--commerce',
+    kicker: 'Commerce system',
+    stat: '01',
+    statLabel: 'connected growth loop',
+    marks: ['Social', 'Marketplace', 'Owned channel'],
+  },
+];
 ---
 
 <BaseLayout
-  title="Archieval Mariano — Digital Strategy & Audience Growth"
+  title="Archieval Mariano — Digital Strategy, Audience Growth & Systems"
   description="Archieval Mariano is a digital strategy and audience growth professional based in the Philippines, working across strategy, content, analytics, e-commerce, and digital operations."
 >
-  <section class="wrap intro">
-    <p class="eyebrow">{hero.eyebrow}</p>
-    <h1 class="intro__lede">{hero.headline}</h1>
-    <p class="intro__body">{hero.intro}</p>
-    <p class="intro__ctas">
-      <a href="/work">View my work <span aria-hidden="true">&rarr;</span></a>
-      <a href="/contact">Work with me <span aria-hidden="true">&rarr;</span></a>
-      {/* Download CV link temporarily hidden until a real CV is added; siteLinks.cv preserved in src/data/site.ts */}
-    </p>
+  <section class="cover wrap-wide">
+    <div class="cover__copy">
+      <p class="chapter-label"><span>00</span> Introduction</p>
+      <p class="cover__eyebrow">{hero.eyebrow}</p>
+      <h1>{hero.headline}</h1>
+      <p class="cover__intro">{hero.intro}</p>
+      <div class="cover__actions">
+        <a class="button button--ink" href="#selected-work">Explore the work</a>
+        <a class="text-link" href="/about">A little about me <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+
+    <figure class="cover__portrait">
+      <Image
+        src={portrait}
+        alt="Archieval Mariano seated at a table, resting his face on one hand"
+        widths={[560, 840, 1120]}
+        sizes="(max-width: 760px) 100vw, 42vw"
+        loading="eager"
+      />
+      <figcaption>
+        <span>Archieval Mariano</span>
+        <span>Philippines · PHT</span>
+      </figcaption>
+    </figure>
   </section>
 
-  <section class="wrap section section--first">
-    <div class="section__head">
-      <h2>Selected work</h2>
-      <a href="/work" class="section__more">All work &rarr;</a>
+  <section class="thesis wrap-wide" aria-labelledby="thesis-title">
+    <p class="chapter-label chapter-label--light"><span>01</span> The throughline</p>
+    <div class="thesis__grid">
+      <h2 id="thesis-title">The useful work often happens between the disciplines.</h2>
+      <div class="thesis__body">
+        <p>
+          I started in digital publishing as a writer and editor. The questions eventually
+          became larger: who are we trying to reach, why does something perform, and what
+          kind of system would make the work repeatable?
+        </p>
+        <p>
+          That path now runs through audience intelligence, content strategy, analytics,
+          e-commerce and digital operations. The medium changes. The interest in making
+          complicated work clearer does not.
+        </p>
+      </div>
     </div>
-    <ul class="work-list">
-      {featuredWork.map((entry) => <WorkCard entry={entry} />)}
-    </ul>
   </section>
 
-  <section class="wrap section">
-    <div class="section__head">
-      <h2>What I can help with</h2>
-      <a href="/services" class="section__more">All services &rarr;</a>
-    </div>
-    <ul class="services-preview">
+  <section class="projects wrap-wide" id="selected-work" aria-labelledby="work-title">
+    <header class="section-intro">
+      <p class="chapter-label"><span>02</span> Selected work</p>
+      <h2 id="work-title">Three stories about turning information into something people can use.</h2>
+      <a href="/work" class="text-link">See all work <span aria-hidden="true">→</span></a>
+    </header>
+
+    <div class="project-chapters">
       {
-        services.map((service) => (
-          <li class="services-preview__item">
-            <h3 class="services-preview__title">{service.title}</h3>
-            <p class="services-preview__desc">{service.description}</p>
-          </li>
-        ))
+        featuredWork.map((entry, index) => {
+          const d = entry.data;
+          const visual = projectVisuals[index];
+          return (
+            <article class="project-chapter">
+              <a class="project-chapter__visual" href={`/work/${entry.slug}`} aria-hidden="true" tabindex="-1">
+                <div class:list={['evidence-visual', visual.className]}>
+                  <p>{visual.kicker}</p>
+                  <div class="evidence-visual__stat">
+                    <strong>{visual.stat}</strong>
+                    <span>{visual.statLabel}</span>
+                  </div>
+                  <ul>
+                    {visual.marks.map((mark) => <li>{mark}</li>)}
+                  </ul>
+                </div>
+              </a>
+              <div class="project-chapter__copy">
+                <p class="project-chapter__number">0{index + 1}</p>
+                <p class="meta">{[d.year, d.category].filter(Boolean).join(' · ')}</p>
+                <h3><a href={`/work/${entry.slug}`}>{d.title}</a></h3>
+                <p class="project-chapter__description">{d.shortDescription}</p>
+                <p class="project-chapter__org">{d.anonymized ? 'Confidential' : d.companyOrClient}</p>
+                <a class="text-link" href={`/work/${entry.slug}`}>Read the story <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+          );
+        })
       }
-    </ul>
+    </div>
   </section>
 
-  <section class="wrap section">
-    <div class="section__head">
-      <h2>Recent writing</h2>
-      <a href="/writing" class="section__more">All writing &rarr;</a>
-    </div>
-    <ul class="entry-list">
+  <section class="panorama">
+    <figure>
+      <Image
+        src={singapore}
+        alt="Archieval Mariano seen from behind, looking toward the Singapore skyline"
+        widths={[960, 1600, 2400]}
+        sizes="100vw"
+      />
+      <figcaption class="wrap-wide">
+        <span>Singapore · Personal archive</span>
+        <span>Archieval Mariano, photographed from behind.</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="notes wrap-wide" aria-labelledby="notes-title">
+    <header class="section-intro section-intro--compact">
+      <p class="chapter-label"><span>03</span> Field notes</p>
+      <h2 id="notes-title">Writing from before the work became strategy decks and systems.</h2>
+      <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
+    </header>
+
+    <ol class="notes__list">
       {
-        recentWriting.map((entry) => {
+        recentWriting.map((entry, index) => {
           const d = entry.data;
           const href = d.externalURL ?? `/writing/${entry.slug}`;
           const isExternal = Boolean(d.externalURL);
-          const attribution = [d.publisher, d.clientOrCampaign].filter(Boolean).join(' · ');
           return (
-            <li class="entry-list__item">
-              <a
-                href={href}
-                class="entry-list__link"
-                data-ga-event="writing_click"
-                {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}
-              >
-                <div class="entry-list__title">
-                  {d.title}
-                  {isExternal && <span class="ext" aria-hidden="true"> ↗</span>}
-                  {isExternal && <span class="visually-hidden"> (opens in new tab)</span>}
-                </div>
-                <p class="entry-list__summary">{d.description}</p>
-                {attribution && <p class="meta">{attribution}</p>}
+            <li>
+              <a href={href} {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}>
+                <span class="notes__number">0{index + 1}</span>
+                <span class="notes__main">
+                  <strong>{d.title}</strong>
+                  <span>{d.description}</span>
+                </span>
+                <span class="notes__publisher">{d.publisher ?? 'Field note'}</span>
+                <span aria-hidden="true">{isExternal ? '↗' : '→'}</span>
               </a>
             </li>
           );
         })
       }
-    </ul>
+    </ol>
   </section>
 
-  <section class="wrap closing">
-    <p class="closing__text">
-      Have a digital problem, an opportunity, or a pile of data and aren&rsquo;t
-      sure what to do next?
-    </p>
-    <a class="closing__link" href="/contact">Get in touch <span aria-hidden="true">&rarr;</span></a>
+  <section class="closing-panel wrap-wide">
+    <p class="chapter-label chapter-label--light"><span>04</span> Continue</p>
+    <div>
+      <h2>There is more to tell than fits on a résumé.</h2>
+      <div>
+        <p>
+          The longer version includes editorial work, branded campaigns, audience systems,
+          product experiments, and the operational details that make ideas survive contact
+          with actual work.
+        </p>
+        <div class="closing-panel__actions">
+          <a class="button button--paper" href="/about">Read about me</a>
+          <a class="text-link text-link--light" href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
   </section>
 </BaseLayout>
 
 <style>
-  .intro {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-lg);
-    max-width: 54rem;
+  .wrap-wide { width: min(100%, 92rem); margin-inline: auto; padding-inline: var(--gutter); }
+  .chapter-label { display: flex; gap: .75rem; align-items: center; margin: 0 0 var(--space-lg); font-size: .72rem; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); }
+  .chapter-label span { display: inline-grid; place-items: center; width: 2rem; aspect-ratio: 1; border: 1px solid currentColor; }
+  .chapter-label--light { color: color-mix(in srgb, var(--paper) 72%, transparent); }
+  .cover { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(24rem, .75fr); min-height: calc(100svh - 5rem); padding-top: clamp(3.5rem, 8vw, 8rem); padding-bottom: clamp(3rem, 7vw, 7rem); gap: clamp(2.5rem, 7vw, 8rem); align-items: center; }
+  .cover h1 { max-width: 11ch; font-family: var(--font-sans); font-size: clamp(3.4rem, 7vw, 7.7rem); font-weight: 760; letter-spacing: -.065em; line-height: .9; }
+  .cover__eyebrow { margin: 0 0 var(--space-md); font-size: var(--step--1); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--coral); }
+  .cover__intro { max-width: 41rem; margin: var(--space-lg) 0 0; font-family: var(--font-serif); font-size: clamp(1.35rem, 2vw, 2rem); line-height: 1.35; }
+  .cover__actions, .closing-panel__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem 2rem; margin-top: var(--space-lg); }
+  .cover__portrait { position: relative; margin: 0; align-self: stretch; min-height: 36rem; overflow: hidden; background: var(--blue-soft); border: var(--heavy-rule); box-shadow: .75rem .75rem 0 var(--yellow); }
+  .cover__portrait :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 47% center; filter: saturate(.82) contrast(1.04); }
+  .cover__portrait figcaption { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; gap: 1rem; padding: .7rem .9rem; background: var(--ink); color: var(--paper); font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .button { display: inline-flex; align-items: center; min-height: 3.2rem; padding: .75rem 1.1rem; border: 2px solid currentColor; font-size: .76rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; text-decoration: none; box-shadow: .3rem .3rem 0 var(--coral); }
+  .button--ink { background: var(--ink); color: var(--paper); }
+  .button--paper { background: var(--paper); color: var(--ink); box-shadow: .3rem .3rem 0 var(--yellow); }
+  .text-link { font-size: .77rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; text-decoration-thickness: 1px; text-underline-offset: .35em; }
+  .text-link--light { color: var(--paper); }
+  .thesis { padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); background: var(--ink); color: var(--paper); box-shadow: 0 0 0 100vmax var(--ink); clip-path: inset(0 -100vmax); }
+  .thesis__grid { display: grid; grid-template-columns: 1fr .8fr; gap: clamp(2rem, 8vw, 9rem); align-items: start; }
+  .thesis h2 { max-width: 15ch; font-family: var(--font-sans); font-size: clamp(2.7rem, 5.7vw, 6rem); font-weight: 750; letter-spacing: -.055em; line-height: .96; }
+  .thesis__body { max-width: 38rem; font-family: var(--font-serif); font-size: clamp(1.2rem, 1.8vw, 1.65rem); line-height: 1.45; color: color-mix(in srgb, var(--paper) 82%, transparent); }
+  .projects, .notes { padding-top: clamp(5rem, 10vw, 10rem); padding-bottom: clamp(5rem, 10vw, 10rem); }
+  .section-intro { display: grid; grid-template-columns: 1fr minmax(18rem, 1.5fr) auto; gap: 2rem; align-items: end; margin-bottom: var(--space-xl); }
+  .section-intro .chapter-label { align-self: start; margin: 0; }
+  .section-intro h2 { max-width: 22ch; font-family: var(--font-sans); font-size: clamp(2rem, 3.6vw, 4.4rem); font-weight: 740; letter-spacing: -.045em; line-height: 1; }
+  .project-chapters { border-top: var(--heavy-rule); }
+  .project-chapter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .82fr); border-bottom: var(--heavy-rule); }
+  .project-chapter__visual { display: block; padding: clamp(1.5rem, 4vw, 4rem); color: var(--ink); text-decoration: none; border-right: var(--heavy-rule); }
+  .project-chapter__copy { padding: clamp(2rem, 5vw, 5rem); }
+  .project-chapter__number { margin: 0 0 var(--space-xl); font-size: .78rem; font-weight: 800; }
+  .project-chapter h3 { margin: var(--space-sm) 0; font-family: var(--font-sans); font-size: clamp(2rem, 3vw, 3.6rem); font-weight: 750; letter-spacing: -.045em; line-height: 1; }
+  .project-chapter h3 a { text-decoration: none; }
+  .project-chapter__description { margin: var(--space-md) 0; font-family: var(--font-serif); font-size: var(--step-1); line-height: 1.48; color: var(--ink-soft); }
+  .project-chapter__org { margin: 0 0 var(--space-lg); font-size: var(--step--1); font-weight: 700; }
+  .evidence-visual { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 34rem; padding: clamp(1.4rem, 3vw, 3rem); overflow: hidden; border: var(--heavy-rule); box-shadow: .65rem .65rem 0 var(--ink); }
+  .evidence-visual > p { position: relative; z-index: 1; margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .evidence-visual__stat { position: relative; z-index: 1; display: flex; align-items: end; gap: 1rem; }
+  .evidence-visual__stat strong { font-size: clamp(5rem, 10vw, 10rem); letter-spacing: -.09em; line-height: .72; }
+  .evidence-visual__stat span { max-width: 9rem; font-size: .78rem; font-weight: 750; line-height: 1.2; text-transform: uppercase; }
+  .evidence-visual ul { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: .45rem; margin: 2rem 0 0; padding: 0; list-style: none; }
+  .evidence-visual li { padding: .35rem .6rem; background: var(--paper); border: 1px solid var(--ink); font-size: .68rem; font-weight: 700; }
+  .visual--audience { background: var(--blue-soft); }
+  .visual--audience::after { content: ''; position: absolute; width: 24rem; aspect-ratio: 1; right: -6rem; top: -6rem; border: 5rem solid var(--blue); border-radius: 50%; opacity: .58; }
+  .visual--editorial { background: var(--yellow); }
+  .visual--editorial::after { content: '20'; position: absolute; right: -.03em; top: -.15em; color: color-mix(in srgb, var(--paper) 55%, transparent); font-size: 22rem; font-weight: 850; letter-spacing: -.12em; line-height: 1; }
+  .visual--commerce { background: var(--coral); }
+  .visual--commerce::after { content: ''; position: absolute; inset: 13% 10%; background: repeating-linear-gradient(90deg, transparent 0 4rem, color-mix(in srgb, var(--ink) 16%, transparent) 4rem 4.1rem), repeating-linear-gradient(0deg, transparent 0 4rem, color-mix(in srgb, var(--ink) 16%, transparent) 4rem 4.1rem); }
+  .panorama { border-block: var(--heavy-rule); }
+  .panorama figure { margin: 0; }
+  .panorama :global(img) { width: 100%; max-height: 82vh; object-fit: cover; object-position: center; filter: saturate(.8) contrast(1.04); }
+  .panorama figcaption { display: flex; justify-content: space-between; gap: 2rem; padding-top: .8rem; padding-bottom: .8rem; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .section-intro--compact { margin-bottom: var(--space-lg); }
+  .notes__list { margin: 0; padding: 0; border-top: var(--heavy-rule); list-style: none; }
+  .notes__list li { border-bottom: var(--heavy-rule); }
+  .notes__list a { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 11rem 1rem; gap: clamp(1rem, 3vw, 3rem); align-items: start; padding-block: clamp(1.5rem, 3vw, 2.5rem); text-decoration: none; }
+  .notes__number, .notes__publisher { font-size: .72rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+  .notes__main { display: grid; gap: .55rem; }
+  .notes__main strong { max-width: 32ch; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.4vw, 2.4rem); font-weight: 550; letter-spacing: -.02em; line-height: 1.08; }
+  .notes__main > span { max-width: 60ch; color: var(--ink-soft); }
+  .closing-panel { padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); background: var(--blue-dark); color: var(--paper); box-shadow: 0 0 0 100vmax var(--blue-dark); clip-path: inset(0 -100vmax); }
+  .closing-panel > div { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .65fr); gap: clamp(2rem, 8vw, 9rem); align-items: end; }
+  .closing-panel h2 { max-width: 13ch; font-family: var(--font-sans); font-size: clamp(3rem, 6.5vw, 7rem); font-weight: 750; letter-spacing: -.06em; line-height: .9; }
+  .closing-panel p { font-family: var(--font-serif); font-size: var(--step-1); line-height: 1.5; color: color-mix(in srgb, var(--paper) 82%, transparent); }
+  @media (max-width: 64rem) {
+    .cover, .thesis__grid, .closing-panel > div { grid-template-columns: 1fr; }
+    .cover__portrait { min-height: min(68rem, 105vw); }
+    .section-intro { grid-template-columns: 1fr auto; }
+    .section-intro h2 { grid-column: 1 / -1; grid-row: 2; }
+    .project-chapter { grid-template-columns: 1fr; }
+    .project-chapter__visual { border-right: 0; border-bottom: var(--heavy-rule); }
   }
-
-  .intro__lede {
-    margin-top: var(--space-md);
-    font-size: var(--step-4);
-    line-height: 1.08;
-  }
-
-  .intro__body {
-    margin-top: var(--space-md);
-    max-width: var(--measure);
-    font-size: var(--step-1);
-    color: var(--ink-soft);
-  }
-
-  .intro__ctas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-md) var(--space-lg);
-    margin-top: var(--space-lg);
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .intro__ctas a {
-    text-decoration: none;
-    color: var(--ink);
-  }
-
-  .intro__ctas a:hover {
-    color: var(--accent);
-  }
-
-  .intro__cv {
-    color: var(--ink-faint) !important;
-  }
-
-  .section {
-    padding-top: var(--space-lg);
-  }
-
-  /* First section sits directly below the hero now that the proof row is gone. */
-  .section--first {
-    padding-top: var(--space-md);
-  }
-
-  .section__head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-md);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .section__more {
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--ink-faint);
-    white-space: nowrap;
-  }
-
-  .section__more:hover {
-    color: var(--accent);
-  }
-
-  .work-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Services preview — compact editorial rows, not cards. */
-  .services-preview {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .services-preview__item {
-    padding-block: var(--space-md);
-  }
-
-  .services-preview__item + .services-preview__item {
-    border-top: 1px solid var(--rule);
-  }
-
-  .services-preview__title {
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    font-weight: 500;
-  }
-
-  .services-preview__desc {
-    margin: var(--space-xs) 0 0;
-    max-width: var(--measure);
-    color: var(--ink-soft);
-  }
-
-  .entry-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .entry-list__item + .entry-list__item {
-    border-top: 1px solid var(--rule);
-  }
-
-  .entry-list__link {
-    display: block;
-    padding-block: var(--space-md);
-    text-decoration: none;
-  }
-
-  .entry-list__title {
-    font-family: var(--font-serif);
-    font-size: var(--step-2);
-    font-weight: 500;
-    letter-spacing: -0.012em;
-    line-height: 1.15;
-  }
-
-  .entry-list__link:hover .entry-list__title {
-    color: var(--accent);
-  }
-
-  .ext {
-    font-family: var(--font-sans);
-    font-size: 0.7em;
-    color: var(--ink-faint);
-  }
-
-  .entry-list__link:hover .ext {
-    color: var(--accent);
-  }
-
-  .entry-list__summary {
-    margin: var(--space-xs) 0;
-    max-width: var(--measure);
-    color: var(--ink-soft);
-  }
-
-  .closing {
-    padding-top: var(--space-xl);
-    max-width: 54rem;
-  }
-
-  .closing__text {
-    font-family: var(--font-serif);
-    font-size: var(--step-2);
-    color: var(--ink);
-    max-width: var(--measure);
-    margin: 0;
-  }
-
-  .closing__link {
-    display: inline-block;
-    margin-top: var(--space-md);
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--accent);
+  @media (max-width: 44rem) {
+    .cover { min-height: auto; padding-top: 3rem; }
+    .cover h1 { font-size: clamp(3.2rem, 15vw, 5rem); }
+    .cover__portrait { min-height: 125vw; }
+    .section-intro { grid-template-columns: 1fr; }
+    .section-intro h2 { grid-column: auto; grid-row: auto; }
+    .evidence-visual { min-height: 27rem; }
+    .project-chapter__copy { padding-inline: 0; }
+    .notes__list a { grid-template-columns: 2rem minmax(0, 1fr) 1rem; }
+    .notes__publisher { display: none; }
+    .panorama :global(img) { height: 72vh; object-position: 53% center; }
+    .panorama figcaption { display: grid; gap: .25rem; }
   }
 </style>

@@ -16,98 +16,124 @@ const workOn = [
   title="About — Archieval Mariano"
   description="Archieval Mariano is a digital strategy and audience growth professional based in the Philippines, working across content, analytics, e-commerce, and digital operations."
 >
-  <section class="wrap about">
-    <div class="about__head">
-      <p class="eyebrow">About</p>
-      <h1>Archieval Mariano</h1>
-    </div>
-
-    <div class="prose flow about__body">
-      <p class="lede">
+  <header class="about-cover wrap">
+    <p class="about-cover__chapter"><span>02</span> About</p>
+    <div>
+      <p class="about-cover__kicker">A working introduction</p>
+      <h1>Archieval<br />Mariano</h1>
+      <p class="about-cover__lede">
         I&rsquo;m a digital strategy and audience growth professional based in the
         Philippines. I work across content, analytics, e-commerce, and digital
         operations &mdash; usually in the space between a good idea and the systems
         needed to make it work.
       </p>
+    </div>
+  </header>
 
-      <p>
-        I started my career in digital publishing as a writer and editor. Over
-        time, the questions I found myself working on became larger: Who are we
-        trying to reach? Why does something perform? How do we build a repeatable
-        process around it? What should we measure? And what should we try next?
+  <section class="origin wrap" aria-labelledby="origin-title">
+    <p class="section-number">01</p>
+    <h2 id="origin-title">The longer version</h2>
+    <div class="origin__body">
+      <p class="origin__lead">
+        I started my career in digital publishing as a writer and editor.
       </p>
-
+      <p>
+        Over time, the questions I found myself working on became larger: Who are we
+        trying to reach? Why does something perform? How do we build a repeatable process
+        around it? What should we measure? And what should we try next?
+      </p>
       <p>
         That progression has taken me through editorial, branded content, creative
         strategy, client management, e-commerce, analytics, audience development,
         partnerships, and digital strategy.
       </p>
+    </div>
+  </section>
 
-      <p>
-        More than a decade across digital publishing, branded content, client
-        strategy, e-commerce, analytics, and audience development.
-      </p>
-
-      <div class="selected-exp">
-        <p class="eyebrow">Selected experience</p>
-        <p class="selected-exp__list">
-          GMA New Media Inc. · SM Investments Corporation · Summit Media ·
-          Independent consulting
-        </p>
-      </div>
-
-      <h2>What I work on</h2>
+  <aside class="experience-band">
+    <div class="wrap experience-band__inner">
+      <p>Selected experience</p>
       <ul>
-        {workOn.map((item) => <li>{item}</li>)}
+        <li>GMA New Media Inc.</li>
+        <li>SM Investments Corporation</li>
+        <li>Summit Media</li>
+        <li>Independent consulting</li>
       </ul>
+      <strong>More than a decade across digital work.</strong>
+    </div>
+  </aside>
 
-      <h2>How I work</h2>
+  <section class="work-map wrap" aria-labelledby="work-map-title">
+    <p class="section-number">02</p>
+    <h2 id="work-map-title">What I work on</h2>
+    <ol>
+      {workOn.map((item, index) => <li><span>0{index + 1}</span>{item}</li>)}
+    </ol>
+  </section>
+
+  <section class="philosophy wrap" aria-labelledby="philosophy-title">
+    <p class="section-number section-number--light">03</p>
+    <h2 id="philosophy-title">How I work</h2>
+    <blockquote>
+      Strategy should survive contact with actual work.
+    </blockquote>
+    <div class="philosophy__body">
       <p>
-        I like strategy that survives contact with actual work. That usually means
-        understanding the audience first, using data without mistaking it for
-        judgment, and building processes that people can realistically maintain.
+        That usually means understanding the audience first, using data without
+        mistaking it for judgment, and building processes that people can realistically
+        maintain.
       </p>
-
       <p>
         My background in writing still shapes how I approach digital work: clarity
-        matters, context matters, and the person on the other side of the screen
-        is never merely a metric.
+        matters, context matters, and the person on the other side of the screen is never
+        merely a metric.
       </p>
-
       <p>
-        You can reach me on the <a href="/contact">contact page</a>, or view my
-        full record on <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">LinkedIn<span class="visually-hidden"> (opens in new tab)</span></a>.
+        You can reach me on the <a href="/contact">contact page</a>, or view my full
+        record on <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">LinkedIn<span class="visually-hidden"> (opens in new tab)</span></a>.
       </p>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .about {
-    padding-top: var(--space-xl);
+  .about-cover {
+    display: grid;
+    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 8vw, 9rem);
+    padding-top: clamp(4rem, 9vw, 9rem);
+    padding-bottom: clamp(4rem, 9vw, 9rem);
   }
-
-  .about__head {
-    max-width: 54rem;
-    margin-bottom: var(--space-lg);
+  .about-cover__chapter, .section-number { margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+  .about-cover__chapter span { display: block; width: fit-content; margin-bottom: .65rem; padding: .35rem .5rem; background: var(--coral); border: 1px solid var(--ink); color: var(--ink); }
+  .about-cover__kicker { margin: 0 0 var(--space-sm); font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--coral); }
+  .about-cover h1 { max-width: 9ch; font-family: var(--font-sans); font-size: clamp(4.2rem, 11vw, 11rem); font-weight: 780; letter-spacing: -.08em; line-height: .76; }
+  .about-cover__lede { max-width: 48rem; margin: clamp(2.5rem, 6vw, 6rem) 0 0; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.4vw, 2.3rem); line-height: 1.42; }
+  .origin, .work-map, .philosophy { display: grid; grid-template-columns: 4rem minmax(15rem, .45fr) minmax(0, 1fr); gap: clamp(1.2rem, 4vw, 4rem); padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); border-top: var(--heavy-rule); }
+  .origin h2, .work-map h2, .philosophy h2 { max-width: 12ch; font-family: var(--font-sans); font-size: clamp(2.4rem, 4vw, 4.8rem); font-weight: 750; letter-spacing: -.05em; line-height: .95; }
+  .origin__body, .philosophy__body { max-width: 46rem; font-family: var(--font-serif); font-size: clamp(1.15rem, 1.7vw, 1.5rem); line-height: 1.58; }
+  .origin__lead { font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.15; color: var(--ink); }
+  .experience-band { background: var(--yellow); border-block: var(--heavy-rule); }
+  .experience-band__inner { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 15rem; gap: clamp(1.5rem, 5vw, 5rem); align-items: start; padding-top: clamp(2rem, 4vw, 4rem); padding-bottom: clamp(2rem, 4vw, 4rem); }
+  .experience-band p { margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .experience-band ul { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem 2rem; margin: 0; padding: 0; list-style: none; font-family: var(--font-serif); font-size: var(--step-1); }
+  .experience-band li { padding-bottom: .55rem; border-bottom: 1px solid var(--ink); }
+  .experience-band strong { font-size: .85rem; line-height: 1.4; text-transform: uppercase; }
+  .work-map ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0; padding: 0; border-top: var(--heavy-rule); border-left: var(--heavy-rule); list-style: none; }
+  .work-map li { min-height: 10rem; padding: 1.25rem; border-right: var(--heavy-rule); border-bottom: var(--heavy-rule); font-family: var(--font-serif); font-size: var(--step-1); }
+  .work-map li span { display: block; margin-bottom: 2.5rem; font-family: var(--font-sans); font-size: .7rem; font-weight: 800; }
+  .philosophy { color: var(--paper); background: var(--blue-dark); box-shadow: 0 0 0 100vmax var(--blue-dark); clip-path: inset(0 -100vmax); border: 0; }
+  .section-number--light { color: color-mix(in srgb, var(--paper) 65%, transparent); }
+  .philosophy blockquote { max-width: 13ch; margin: 0; font-family: var(--font-sans); font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 750; letter-spacing: -.055em; line-height: .95; }
+  .philosophy__body { grid-column: 3; color: color-mix(in srgb, var(--paper) 82%, transparent); }
+  .philosophy a { color: var(--paper); text-decoration-color: var(--yellow); }
+  @media (max-width: 52rem) {
+    .about-cover { grid-template-columns: 1fr; }
+    .origin, .work-map, .philosophy { grid-template-columns: 2rem 1fr; }
+    .origin__body, .work-map ol, .philosophy blockquote, .philosophy__body { grid-column: 2; }
+    .experience-band__inner { grid-template-columns: 1fr; }
   }
-
-  .about__head h1 {
-    margin-top: var(--space-sm);
-  }
-
-  .lede {
-    font-size: var(--step-1);
-    color: var(--ink);
-  }
-
-  /* Quiet credibility cue — not a résumé section. */
-  .selected-exp p {
-    margin: 0;
-  }
-
-  .selected-exp__list {
-    margin-top: var(--space-xs);
-    color: var(--ink-soft);
+  @media (max-width: 36rem) {
+    .work-map ol, .experience-band ul { grid-template-columns: 1fr; }
   }
 </style>

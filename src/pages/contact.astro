@@ -8,8 +8,9 @@ import { siteLinks } from '../data/site';
   description="Get in touch with Archieval Mariano about consulting, project work, or full-time opportunities in digital strategy and audience growth."
 >
   <section class="wrap contact">
-    <p class="eyebrow">Contact</p>
-    <h1>Get in touch</h1>
+    <p class="contact__chapter"><span>05</span> Contact</p>
+    <div class="contact__main">
+    <h1>Let&rsquo;s talk about the complicated part.</h1>
     <p class="contact__intro">
       For consulting, project work, or full-time opportunities, email is the best
       way to reach me.
@@ -29,34 +30,55 @@ import { siteLinks } from '../data/site';
     </ul>
 
     <p class="meta contact__note">Based in the Philippines · PHT (UTC+8)</p>
+    </div>
   </section>
 </BaseLayout>
 
 <style>
   .contact {
-    padding-top: var(--space-xl);
-    max-width: 54rem;
+    display: grid;
+    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
+    gap: 2rem clamp(2rem, 8vw, 9rem);
+    padding-top: clamp(4rem, 9vw, 9rem);
+    padding-bottom: clamp(4rem, 9vw, 9rem);
+    max-width: var(--wrap);
   }
 
   .contact h1 {
-    margin-top: var(--space-sm);
+    max-width: 12ch;
+    font-family: var(--font-sans);
+    font-size: clamp(3.5rem, 8vw, 8.5rem);
+    font-weight: 760;
+    letter-spacing: -.07em;
+    line-height: .87;
   }
+
+  .contact__chapter { margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+  .contact__chapter span { display: block; width: fit-content; margin-bottom: .65rem; padding: .35rem .5rem; background: var(--coral); border: 1px solid var(--ink); color: var(--ink); }
 
   .contact__intro {
     margin-top: var(--space-md);
     max-width: var(--measure);
-    font-size: var(--step-1);
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.8rem);
+    line-height: 1.45;
     color: var(--ink-soft);
   }
 
   .contact__email {
     margin-top: var(--space-lg);
-    font-family: var(--font-serif);
-    font-size: var(--step-3);
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    font-size: clamp(1.15rem, 3vw, 2.8rem);
+    font-weight: 760;
+    letter-spacing: -.04em;
   }
 
   .contact__email a {
+    display: inline-block;
+    padding: .75rem 1rem;
+    background: var(--yellow);
+    border: var(--heavy-rule);
+    box-shadow: .4rem .4rem 0 var(--ink);
     text-decoration: none;
   }
 
@@ -88,5 +110,9 @@ import { siteLinks } from '../data/site';
 
   .contact__note {
     margin-top: var(--space-lg);
+  }
+
+  @media (max-width: 44rem) {
+    .contact { grid-template-columns: 1fr; }
   }
 </style>

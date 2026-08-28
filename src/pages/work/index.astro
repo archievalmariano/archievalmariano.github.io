@@ -13,11 +13,11 @@ const work = (await getCollection('work', ({ data }) => !data.draft)).sort(
   description="Selected projects across digital strategy, audience growth, content, analytics, e-commerce, and operations."
 >
   <section class="wrap page-head">
-    <p class="eyebrow">Work</p>
-    <h1>Selected work</h1>
+    <p class="page-head__chapter"><span>01</span> Work</p>
+    <h1>Stories about audiences, systems and digital work.</h1>
     <p class="page-head__intro">
-      A selection of projects across digital strategy, audience growth, content,
-      analytics, e-commerce, and operations.
+      The projects are different on the surface. Underneath, most begin with the
+      same question: how can information become something a team can actually use?
     </p>
   </section>
 
@@ -30,26 +30,68 @@ const work = (await getCollection('work', ({ data }) => !data.draft)).sort(
 
 <style>
   .page-head {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-lg);
-    max-width: 54rem;
+    display: grid;
+    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-top: clamp(4rem, 9vw, 9rem);
+    padding-bottom: clamp(3rem, 7vw, 7rem);
+    max-width: var(--wrap);
   }
 
   .page-head h1 {
-    margin-top: var(--space-sm);
+    grid-column: 2;
+    max-width: 14ch;
+    font-family: var(--font-sans);
+    font-size: clamp(3.3rem, 7vw, 7.8rem);
+    font-weight: 760;
+    letter-spacing: -.065em;
+    line-height: .9;
   }
 
   .page-head__intro {
-    margin-top: var(--space-md);
-    max-width: var(--measure);
-    font-size: var(--step-1);
+    grid-column: 2;
+    max-width: 44rem;
+    margin: var(--space-md) 0 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.85rem);
+    line-height: 1.4;
     color: var(--ink-soft);
   }
 
+  .page-head__chapter {
+    grid-row: 1 / span 2;
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .page-head__chapter span {
+    display: block;
+    width: fit-content;
+    margin-bottom: .65rem;
+    padding: .35rem .5rem;
+    background: var(--yellow);
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+
   .work-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    counter-reset: project;
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--rule);
+    border-top: var(--heavy-rule);
+    border-left: var(--heavy-rule);
+  }
+
+  @media (max-width: 44rem) {
+    .page-head { grid-template-columns: 1fr; }
+    .page-head h1, .page-head__intro, .page-head__chapter { grid-column: 1; grid-row: auto; }
+    .work-list { grid-template-columns: 1fr; border-right: var(--heavy-rule); }
   }
 </style>

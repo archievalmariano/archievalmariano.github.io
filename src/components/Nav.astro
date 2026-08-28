@@ -17,9 +17,12 @@ const isActive = (href: string) =>
 
 <header class="site-head">
   <div class="wrap site-head__inner">
-    <a href="/" class="wordmark" aria-label="Archieval Mariano — home">
-      Archieval&nbsp;Mariano
-    </a>
+    <div class="identity">
+      <a href="/" class="wordmark" aria-label="Archieval Mariano — home">
+        Archieval&nbsp;Mariano
+      </a>
+      <span class="identity__descriptor">Digital strategy · Audience systems</span>
+    </div>
     <nav aria-label="Primary">
       <ul>
         {
@@ -41,24 +44,52 @@ const isActive = (href: string) =>
 
 <style>
   .site-head {
-    border-bottom: 1px solid var(--rule);
+    position: relative;
+    z-index: 10;
+    border-bottom: var(--heavy-rule);
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
   }
 
   .site-head__inner {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    gap: var(--space-md);
-    flex-wrap: wrap;
-    padding-block: var(--space-md);
+    gap: var(--space-lg);
+    padding-block: 1rem;
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   .wordmark {
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
     text-decoration: none;
+  }
+
+  .wordmark::before {
+    content: '';
+    display: inline-block;
+    width: .65rem;
+    aspect-ratio: 1;
+    margin-right: .55rem;
+    background: var(--coral);
+    border-radius: 50%;
+  }
+
+  .identity__descriptor {
+    padding-left: 1rem;
+    border-left: 1px solid var(--rule);
+    font-size: .63rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
   .wordmark:hover {
@@ -68,7 +99,7 @@ const isActive = (href: string) =>
   nav ul {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-xs) clamp(1rem, 3vw, 2rem);
+    gap: .5rem clamp(.85rem, 2.1vw, 1.75rem);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -76,13 +107,14 @@ const isActive = (href: string) =>
 
   nav a {
     font-family: var(--font-sans);
-    font-size: var(--step--1);
-    letter-spacing: 0.06em;
+    font-size: .69rem;
+    font-weight: 750;
+    letter-spacing: 0.075em;
     text-transform: uppercase;
     text-decoration: none;
     color: var(--ink-soft);
-    padding-bottom: 2px;
-    border-bottom: 1px solid transparent;
+    padding-block: .35rem;
+    border-bottom: 2px solid transparent;
   }
 
   nav a:hover {
@@ -96,10 +128,39 @@ const isActive = (href: string) =>
 
   /* Quiet utility link, set apart from the primary items. */
   .nav-utility {
-    margin-left: clamp(0.25rem, 2vw, 1rem);
+    margin-left: clamp(0.1rem, 1vw, .75rem);
   }
 
   .nav-utility a {
     color: var(--ink-faint);
+  }
+
+  @media (max-width: 58rem) {
+    .site-head__inner {
+      display: grid;
+    }
+
+    nav {
+      width: calc(100% + 2 * var(--gutter));
+      margin-inline: calc(-1 * var(--gutter));
+      padding-inline: var(--gutter);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav ul {
+      flex-wrap: nowrap;
+      width: max-content;
+    }
+  }
+
+  @media (max-width: 34rem) {
+    .identity__descriptor {
+      display: none;
+    }
   }
 </style>

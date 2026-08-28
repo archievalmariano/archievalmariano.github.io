@@ -8,8 +8,8 @@ import { services } from '../data/site';
   description="Digital strategy, audience and performance, and content and digital operations — how Archieval Mariano can help teams turn ideas and data into working programs."
 >
   <section class="wrap page-head">
-    <p class="eyebrow">Services</p>
-    <h1>What I can help with</h1>
+    <p class="page-head__chapter"><span>04</span> Services</p>
+    <h1>Problems I can help make clearer.</h1>
     <p class="page-head__intro">
       I work with teams that have a digital problem, an opportunity, or a pile of
       data and aren&rsquo;t quite sure what to do next.
@@ -47,35 +47,61 @@ import { services } from '../data/site';
 
 <style>
   .page-head {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-lg);
-    max-width: 54rem;
+    display: grid;
+    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-top: clamp(4rem, 9vw, 9rem);
+    padding-bottom: clamp(3rem, 7vw, 7rem);
+    max-width: var(--wrap);
   }
 
   .page-head h1 {
-    margin-top: var(--space-sm);
+    grid-column: 2;
+    max-width: 12ch;
+    font-family: var(--font-sans);
+    font-size: clamp(3.3rem, 7vw, 7.8rem);
+    font-weight: 760;
+    letter-spacing: -.065em;
+    line-height: .9;
   }
 
   .page-head__intro {
+    grid-column: 2;
     margin-top: var(--space-md);
     max-width: var(--measure);
-    font-size: var(--step-1);
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.85rem);
+    line-height: 1.4;
     color: var(--ink-soft);
   }
 
+  .page-head__chapter { grid-row: 1 / span 2; margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+  .page-head__chapter span { display: block; width: fit-content; margin-bottom: .65rem; padding: .35rem .5rem; background: var(--yellow); border: 1px solid var(--ink); color: var(--ink); }
+
   .service {
-    padding-block: var(--space-lg);
-    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: minmax(14rem, .55fr) minmax(0, 1fr);
+    gap: 1rem clamp(2rem, 7vw, 8rem);
+    padding-block: clamp(3rem, 6vw, 6rem);
+    border-top: var(--heavy-rule);
   }
 
   .service__title {
-    font-size: var(--step-2);
+    grid-row: 1 / span 3;
+    max-width: 11ch;
+    font-family: var(--font-sans);
+    font-size: clamp(2.2rem, 4vw, 4.4rem);
+    font-weight: 740;
+    letter-spacing: -.05em;
+    line-height: .96;
   }
 
   .service__desc {
     margin: var(--space-sm) 0 var(--space-md);
     max-width: var(--measure);
-    font-size: var(--step-1);
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    line-height: 1.5;
     color: var(--ink-soft);
   }
 
@@ -101,6 +127,8 @@ import { services } from '../data/site';
   .service__work li {
     position: relative;
     padding-left: 1rem;
+    padding-block: .45rem;
+    border-bottom: 1px solid var(--rule);
     color: var(--ink-soft);
   }
 
@@ -112,13 +140,16 @@ import { services } from '../data/site';
   }
 
   .services-close {
-    padding-top: var(--space-lg);
-    border-top: 1px solid var(--rule);
-    max-width: var(--measure);
+    padding: clamp(3rem, 6vw, 6rem);
+    border: var(--heavy-rule);
+    background: var(--coral);
+    max-width: none;
   }
 
   .services-close p {
-    font-size: var(--step-1);
+    max-width: 32ch;
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 2.4vw, 2.2rem);
     color: var(--ink);
   }
 
@@ -134,6 +165,9 @@ import { services } from '../data/site';
   }
 
   @media (max-width: 34rem) {
+    .page-head, .service { grid-template-columns: 1fr; }
+    .page-head h1, .page-head__intro, .page-head__chapter { grid-column: 1; grid-row: auto; }
+    .service__title { grid-row: auto; }
     .service__work {
       grid-template-columns: 1fr;
     }

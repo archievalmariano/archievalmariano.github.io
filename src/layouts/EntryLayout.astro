@@ -16,12 +16,12 @@ const { title, description, eyebrow, meta, backHref, backLabel } = Astro.props;
 <BaseLayout title={`${title} — Archieval Mariano`} description={description} type="article">
   <article class="wrap entry">
     <header class="entry__head">
-      <p class="eyebrow">{eyebrow}</p>
+      <p class="entry__chapter"><span>Case study</span>{eyebrow}</p>
       <h1>{title}</h1>
       {meta && <p class="meta entry__meta">{meta}</p>}
     </header>
 
-    <div class="prose flow">
+    <div class="prose flow entry__body">
       <slot />
     </div>
 
@@ -33,26 +33,65 @@ const { title, description, eyebrow, meta, backHref, backLabel } = Astro.props;
 
 <style>
   .entry {
-    padding-top: var(--space-xl);
+    padding-top: clamp(4rem, 9vw, 9rem);
   }
 
   .entry__head {
-    max-width: var(--measure);
-    margin-bottom: var(--space-lg);
+    display: grid;
+    grid-template-columns: minmax(10rem, .35fr) minmax(0, 1fr);
+    gap: var(--space-lg) clamp(2rem, 7vw, 8rem);
+    max-width: none;
+    margin-bottom: clamp(3rem, 7vw, 7rem);
+    padding-bottom: clamp(2rem, 5vw, 4rem);
+    border-bottom: var(--heavy-rule);
   }
 
   .entry__head h1 {
-    margin-top: var(--space-sm);
+    grid-column: 2;
+    max-width: 15ch;
+    font-family: var(--font-sans);
+    font-size: clamp(3rem, 6.2vw, 7rem);
+    font-weight: 760;
+    letter-spacing: -.06em;
+    line-height: .92;
   }
 
   .entry__meta {
-    margin-top: var(--space-md);
+    grid-column: 2;
+    margin: 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .entry__chapter {
+    grid-row: 1 / span 2;
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 750;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .entry__chapter span {
+    display: block;
+    width: fit-content;
+    margin-bottom: .8rem;
+    padding: .35rem .5rem;
+    background: var(--coral);
+    color: var(--ink);
+    border: 1px solid var(--ink);
+  }
+
+  .entry__body {
+    max-width: none;
   }
 
   .entry__foot {
     margin-top: var(--space-xl);
     padding-top: var(--space-md);
-    border-top: 1px solid var(--rule);
+    border-top: var(--heavy-rule);
   }
 
   .back-link {
@@ -66,5 +105,18 @@ const { title, description, eyebrow, meta, backHref, backLabel } = Astro.props;
 
   .back-link:hover {
     color: var(--accent);
+  }
+
+  @media (max-width: 44rem) {
+    .entry__head {
+      grid-template-columns: 1fr;
+    }
+
+    .entry__chapter,
+    .entry__head h1,
+    .entry__meta {
+      grid-column: 1;
+      grid-row: auto;
+    }
   }
 </style>

@@ -50,11 +50,11 @@ const facts: { label: string; value?: string }[] = [
 ];
 
 // Narrative sections that accept prose or a list.
-const sections: { heading: string; value?: string | string[] }[] = [
-  { heading: 'Context', value: d.context },
-  { heading: 'My role', value: d.role },
-  { heading: 'Approach', value: d.approach },
-  { heading: 'Outcome', value: d.outcome },
+const sections: { number: string; id: string; heading: string; value?: string | string[] }[] = [
+  { number: '01', id: 'situation', heading: 'The situation', value: d.context },
+  { number: '02', id: 'responsibility', heading: 'What I was responsible for', value: d.role },
+  { number: '03', id: 'work', heading: 'What I did', value: d.approach },
+  { number: '04', id: 'outcome', heading: 'What became possible', value: d.outcome },
 ];
 
 const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
@@ -70,7 +70,25 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
   backHref="/work"
   backLabel="All work"
 >
-  {overview && <p class="lede">{overview}</p>}
+  <div class="opening">
+    <div>
+      <p class="opening__label">In brief</p>
+      {overview && <p class="lede">{overview}</p>}
+    </div>
+
+    <dl class="facts">
+      {
+        facts
+          .filter((f) => f.value)
+          .map((f) => (
+            <div class="facts__row">
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))
+      }
+    </dl>
+  </div>
 
   {
     d.heroImage && (
@@ -80,47 +98,47 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
     )
   }
 
-  <dl class="facts">
-    {
-      facts
-        .filter((f) => f.value)
-        .map((f) => (
-          <div class="facts__row">
-            <dt>{f.label}</dt>
-            <dd>{f.value}</dd>
-          </div>
-        ))
-    }
-  </dl>
+  <div class="story-index" aria-label="Case study sections">
+    <p>Inside this story</p>
+    <ol>
+      {sections.filter((s) => s.value !== undefined).map((s) => <li><a href={`#${s.id}`}><span>{s.number}</span>{s.heading}</a></li>)}
+    </ol>
+  </div>
 
   {
     sections
       .filter((s) => s.value !== undefined)
       .map((s) => (
-        <section class="section">
+        <section class="story-section" id={s.id}>
+          <p class="story-section__number">{s.number}</p>
           <h2>{s.heading}</h2>
-          {Array.isArray(s.value) ? (
-            <ul class="section__list">
-              {s.value.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>{s.value}</p>
-          )}
+          <div class="story-section__content">
+            {Array.isArray(s.value) ? (
+              <ul class="section__list">
+                {s.value.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>{s.value}</p>
+            )}
+          </div>
         </section>
       ))
   }
 
   {
     d.metrics && d.metrics.length > 0 && (
-      <section class="section">
-        <h2>Metrics</h2>
-        <ul class="section__list">
-          {d.metrics.map((m) => (
-            <li>{m}</li>
-          ))}
-        </ul>
+      <section class="story-section" id="evidence">
+        <p class="story-section__number">05</p>
+        <h2>Selected evidence</h2>
+        <div class="story-section__content">
+          <ul class="section__list">
+            {d.metrics.map((m) => (
+              <li>{m}</li>
+            ))}
+          </ul>
+        </div>
       </section>
     )
   }
@@ -173,8 +191,30 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
 
 <style>
   .lede {
-    font-size: var(--step-1);
+    max-width: 43rem;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 2.2vw, 2.15rem);
+    line-height: 1.4;
     color: var(--ink);
+  }
+
+  .opening {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(17rem, .6fr);
+    gap: clamp(3rem, 9vw, 10rem);
+    align-items: start;
+    margin-bottom: clamp(4rem, 8vw, 8rem);
+  }
+
+  .opening__label,
+  .story-index > p {
+    margin: 0 0 var(--space-md);
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
   .cover {
@@ -187,17 +227,17 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
   }
 
   .facts {
-    margin: var(--space-lg) 0;
+    margin: 0;
     padding: 0;
-    border-top: 1px solid var(--rule);
+    border-top: var(--heavy-rule);
   }
 
   .facts__row {
     display: grid;
-    grid-template-columns: 8rem 1fr;
+    grid-template-columns: 6rem 1fr;
     gap: var(--space-md);
     padding-block: var(--space-sm);
-    border-bottom: 1px solid var(--rule);
+    border-bottom: 1px solid var(--ink);
   }
 
   .facts dt {
@@ -212,22 +252,89 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
     margin: 0;
   }
 
-  .section {
-    margin-top: var(--space-lg);
+  .story-index {
+    margin-bottom: clamp(5rem, 10vw, 10rem);
+    padding: clamp(1.5rem, 3vw, 3rem);
+    background: var(--yellow);
+    border: var(--heavy-rule);
+    box-shadow: .55rem .55rem 0 var(--ink);
   }
 
-  .section h2 {
-    font-size: var(--step-1);
-    margin-bottom: var(--space-sm);
+  .story-index ol {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .story-index a {
+    display: grid;
+    gap: .6rem;
+    min-height: 7rem;
+    padding: 1rem;
+    background: color-mix(in srgb, var(--paper) 48%, transparent);
+    border: 1px solid var(--ink);
+    font-size: .76rem;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .story-index a span {
+    color: var(--ink-faint);
+  }
+
+  .story-section {
+    display: grid;
+    grid-template-columns: 4rem minmax(14rem, .5fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 4vw, 4rem);
+    margin: 0;
+    padding-block: clamp(3rem, 7vw, 7rem);
+    border-top: var(--heavy-rule);
+    scroll-margin-top: 2rem;
+  }
+
+  .story-section__number {
+    margin: 0;
+    font-size: .74rem;
+    font-weight: 800;
+  }
+
+  .story-section h2 {
+    max-width: 12ch;
+    font-family: var(--font-sans);
+    font-size: clamp(2rem, 3vw, 3.6rem);
+    font-weight: 740;
+    letter-spacing: -.045em;
+    line-height: 1;
+  }
+
+  .story-section__content {
+    max-width: 48rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+    line-height: 1.56;
   }
 
   .section__list {
     margin: 0;
-    padding-left: 1.2em;
+    padding: 0;
+    list-style: none;
   }
 
   .section__list li {
-    margin-bottom: 0.4em;
+    position: relative;
+    margin: 0;
+    padding: .75rem 0 .75rem 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section__list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--coral);
   }
 
   .gallery {
@@ -242,9 +349,11 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
   }
 
   .confidentiality-note {
-    margin-top: var(--space-lg);
+    max-width: 48rem;
+    margin: var(--space-xl) 0 var(--space-xl) auto;
     padding: var(--space-md);
-    border-left: 1px solid var(--rule);
+    border: 1px solid var(--ink);
+    border-left: .65rem solid var(--coral);
     font-size: var(--step--1);
     color: var(--ink-soft);
   }
@@ -255,7 +364,7 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
     gap: var(--space-md);
     margin-top: var(--space-xl);
     padding-top: var(--space-md);
-    border-top: 1px solid var(--rule);
+    border-top: var(--heavy-rule);
   }
 
   .adjacent__link {
@@ -289,9 +398,25 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
   }
 
   @media (max-width: 34rem) {
+    .opening {
+      grid-template-columns: 1fr;
+    }
+
     .facts__row {
       grid-template-columns: 1fr;
       gap: 0.25rem;
+    }
+
+    .story-index ol {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .story-section {
+      grid-template-columns: 2rem 1fr;
+    }
+
+    .story-section__content {
+      grid-column: 2;
     }
   }
 </style>

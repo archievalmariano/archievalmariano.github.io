@@ -4,19 +4,22 @@ const year = new Date().getFullYear();
 
 <footer class="site-foot">
   <div class="wrap site-foot__inner">
-    <p class="meta">© {year} Archieval Mariano</p>
-    <p class="meta">
+    <p class="site-foot__mark">Archieval Mariano <span>© {year}</span></p>
+    <p>
       <a href="mailto:hello@archievalmariano.com" data-ga-event="email_click">hello@archievalmariano.com</a>
       <span aria-hidden="true"> · </span>
       <a href="/rss.xml">RSS</a>
     </p>
+    <a class="site-foot__top" href="#main">Back to top ↑</a>
   </div>
 </footer>
 
 <style>
   .site-foot {
-    margin-top: var(--space-xxl);
-    border-top: 1px solid var(--rule);
+    margin-top: 0;
+    border-top: var(--heavy-rule);
+    background: var(--ink);
+    color: var(--paper);
   }
 
   .site-foot__inner {
@@ -25,8 +28,13 @@ const year = new Date().getFullYear();
     align-items: baseline;
     flex-wrap: wrap;
     gap: var(--space-sm);
-    padding-block: var(--space-lg);
+    padding-block: clamp(2rem, 5vw, 4rem);
   }
+
+  .site-foot__inner p { margin: 0; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .site-foot__mark { font-family: var(--font-sans); font-size: 1rem !important; font-weight: 800 !important; letter-spacing: -.02em !important; text-transform: none !important; }
+  .site-foot__mark span { margin-left: .5rem; font-size: .65rem; font-weight: 600; color: color-mix(in srgb, var(--paper) 60%, transparent); }
+  .site-foot__top { font-size: .7rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
 
   .site-foot__inner a {
     text-decoration: none;

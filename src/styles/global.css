@@ -7,15 +7,21 @@
   --font-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter Variable', system-ui, -apple-system, sans-serif;
 
-  /* Light theme — warm off-white paper, near-black ink */
-  --paper: #faf9f6;
-  --paper-raised: #f4f2ec;
-  --ink: #1a1a17;
-  --ink-soft: #4a4842;
-  --ink-faint: #6c695f;
-  --rule: #e2ded4;
-  --accent: #7a2e1d; /* muted oxblood */
-  --accent-ink: #5f2417;
+  /* Editorial field-guide palette */
+  --paper: #f4f0e5;
+  --paper-raised: #e9e3d5;
+  --ink: #172126;
+  --ink-soft: #3f4a4e;
+  --ink-faint: #636d71;
+  --rule: #b9b4a9;
+  --accent: #d84f38;
+  --accent-ink: #a93829;
+  --coral: #df5b42;
+  --yellow: #f3cd4c;
+  --blue: #5d9fc1;
+  --blue-soft: #cfe4eb;
+  --blue-dark: #263f49;
+  --heavy-rule: 2px solid var(--ink);
 
   /* Scale & rhythm */
   --measure: 68ch;
@@ -34,19 +40,13 @@
   --space-xxl: 8rem;
 
   --gutter: clamp(1.25rem, 5vw, 3.5rem);
-  --wrap: 72rem;
+  --wrap: 78rem;
 }
 
+/* The redesigned identity has an intentional art-directed palette. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #14130f;
-    --paper-raised: #1c1a15;
-    --ink: #ece8df;
-    --ink-soft: #b7b2a6;
-    --ink-faint: #8a8578;
-    --rule: #2c2a23;
-    --accent: #d98a6a;
-    --accent-ink: #e6a184;
+    color-scheme: light;
   }
 }
 
@@ -87,6 +87,7 @@ body {
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -117,7 +118,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-serif);
-  font-weight: 500;
+  font-weight: 560;
   line-height: 1.12;
   letter-spacing: -0.012em;
   margin: 0;

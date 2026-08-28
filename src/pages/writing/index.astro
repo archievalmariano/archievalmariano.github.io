@@ -13,8 +13,8 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
   description="Selected commissioned work across finance, technology, travel, lifestyle, and consumer content."
 >
   <section class="wrap page-head">
-    <p class="eyebrow">Writing</p>
-    <h1>Writing</h1>
+    <p class="page-head__chapter"><span>03</span> Field notes</p>
+    <h1>Writing was the beginning of everything else.</h1>
     <p class="page-head__intro">
       Selected commissioned work across finance, technology, travel, lifestyle,
       and consumer content. Some pieces were published without a byline.
@@ -24,7 +24,7 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
   <section class="wrap">
     <ul class="entry-list">
       {
-        writing.map((entry) => {
+        writing.map((entry, index) => {
           const d = entry.data;
           const href = d.externalURL ?? `/writing/${entry.slug}`;
           const isExternal = Boolean(d.externalURL);
@@ -37,6 +37,8 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
                 data-ga-event="writing_click"
                 {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}
               >
+                <span class="entry-list__number">{String(index + 1).padStart(2, '0')}</span>
+                <div class="entry-list__body">
                 {d.format && <p class="meta entry-list__type">{d.format}</p>}
                 <div class="entry-list__title">
                   {d.title}
@@ -46,6 +48,8 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
                 <p class="entry-list__summary">{d.description}</p>
                 {attribution && <p class="meta entry-list__attr">{attribution}</p>}
                 {d.credit && <p class="meta entry-list__credit">{d.credit}</p>}
+                </div>
+                <span class="entry-list__arrow" aria-hidden="true">{isExternal ? '↗' : '→'}</span>
               </a>
             </li>
           );
@@ -57,38 +61,57 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
 
 <style>
   .page-head {
-    padding-top: var(--space-xl);
-    padding-bottom: var(--space-lg);
-    max-width: 54rem;
+    display: grid;
+    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-top: clamp(4rem, 9vw, 9rem);
+    padding-bottom: clamp(3rem, 7vw, 7rem);
+    max-width: var(--wrap);
   }
 
   .page-head h1 {
-    margin-top: var(--space-sm);
+    grid-column: 2;
+    max-width: 14ch;
+    font-family: var(--font-sans);
+    font-size: clamp(3.3rem, 7vw, 7.8rem);
+    font-weight: 760;
+    letter-spacing: -.065em;
+    line-height: .9;
   }
 
   .page-head__intro {
+    grid-column: 2;
     margin-top: var(--space-md);
     max-width: var(--measure);
-    font-size: var(--step-1);
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.85rem);
+    line-height: 1.4;
     color: var(--ink-soft);
   }
+
+  .page-head__chapter { grid-row: 1 / span 2; margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+  .page-head__chapter span { display: block; width: fit-content; margin-bottom: .65rem; padding: .35rem .5rem; background: var(--blue-soft); border: 1px solid var(--ink); color: var(--ink); }
 
   .entry-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--rule);
+    border-top: var(--heavy-rule);
   }
 
   .entry-list__item {
-    border-bottom: 1px solid var(--rule);
+    border-bottom: var(--heavy-rule);
   }
 
   .entry-list__link {
-    display: block;
-    padding-block: var(--space-lg);
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) 2rem;
+    gap: clamp(1rem, 4vw, 4rem);
+    padding-block: clamp(2rem, 5vw, 4.5rem);
     text-decoration: none;
   }
+
+  .entry-list__number, .entry-list__arrow { font-size: .74rem; font-weight: 800; }
 
   .entry-list__type {
     margin-bottom: var(--space-xs);
@@ -96,10 +119,11 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
 
   .entry-list__title {
     font-family: var(--font-serif);
-    font-size: var(--step-2);
-    font-weight: 500;
-    letter-spacing: -0.012em;
-    line-height: 1.15;
+    max-width: 28ch;
+    font-size: clamp(1.7rem, 3vw, 3.3rem);
+    font-weight: 550;
+    letter-spacing: -.025em;
+    line-height: 1.05;
   }
 
   .entry-list__link:hover .entry-list__title {
@@ -120,6 +144,7 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
     margin: var(--space-sm) 0 0;
     max-width: var(--measure);
     color: var(--ink-soft);
+    max-width: 58rem;
     font-size: var(--step-1);
   }
 
@@ -130,5 +155,11 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
   .entry-list__credit {
     margin-top: 0.25rem;
     font-style: italic;
+  }
+
+  @media (max-width: 44rem) {
+    .page-head { grid-template-columns: 1fr; }
+    .page-head h1, .page-head__intro, .page-head__chapter { grid-column: 1; grid-row: auto; }
+    .entry-list__link { grid-template-columns: 2rem minmax(0, 1fr) 1rem; }
   }
 </style>
