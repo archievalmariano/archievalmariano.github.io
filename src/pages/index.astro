@@ -100,9 +100,9 @@ const projectVisuals = [
     <header class="section-intro">
       <p class="chapter-label"><span>02</span> Selected work</p>
       <div class="section-intro__main">
-        <h2 id="work-title">Three stories about turning information into something people can use.</h2>
+        <h2 id="work-title">Selected stories about turning information into something people can use.</h2>
         <div class="section-intro__aside">
-          <p>Selected projects across audience intelligence, content strategy, and digital growth.</p>
+          <p>Data alone isn&rsquo;t enough. It needs to be actionable, too. These selected projects span audience intelligence, content strategy, and digital growth.</p>
           <a href="/work" class="text-link">See all work <span aria-hidden="true">→</span></a>
         </div>
       </div>
@@ -160,9 +160,9 @@ const projectVisuals = [
     <header class="section-intro section-intro--compact">
       <p class="chapter-label"><span>03</span> Field notes</p>
       <div class="section-intro__main">
-        <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
+        <h2 id="notes-title">Some of my writing from before I was consumed by dashboards and moving lines and graphs.</h2>
         <div class="section-intro__aside">
-          <p>Commissioned editorial work for publishers and brands, including pieces published without a byline.</p>
+          <p>Commissioned editorial and branded work for publications and clients, including pieces that ran without a byline.</p>
           <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
         </div>
       </div>
@@ -196,7 +196,7 @@ const projectVisuals = [
     <p class="chapter-label chapter-label--light"><span>04</span> There&rsquo;s always more</p>
     <div>
       <h2>What happened IRL could not possibly fit in a two-page CV.</h2>
-      <div>
+      <div class="closing-panel__copy">
         <p>
           The longer version includes editorial work, branded campaigns, audience systems,
           product experiments, and the operational details that make ideas survive contact
@@ -286,7 +286,7 @@ const projectVisuals = [
   .closing-panel { padding-top: clamp(4rem, 6vw, 6rem); padding-bottom: clamp(4rem, 6vw, 6rem); background: var(--blue-dark); color: var(--paper); box-shadow: 0 0 0 100vmax var(--blue-dark); clip-path: inset(0 -100vmax); }
   .closing-panel > div { display: grid; grid-template-columns: minmax(0, .95fr) minmax(22rem, .75fr); gap: clamp(3rem, 7vw, 8rem); align-items: center; }
   .closing-panel h2 { max-width: 19ch; font-family: var(--font-sans); font-size: clamp(2.5rem, 3.6vw, 4rem); font-weight: 750; letter-spacing: -.045em; line-height: 1; }
-  .closing-panel p { max-width: 36rem; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.52; color: color-mix(in srgb, var(--paper) 86%, transparent); }
+  .closing-panel__copy > p { max-width: 36rem; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.52; color: color-mix(in srgb, var(--paper) 86%, transparent); }
   @media (max-width: 64rem) {
     .cover, .thesis__grid, .closing-panel > div { grid-template-columns: 1fr; }
     .cover__portrait { width: min(100%, 42rem); max-height: none; aspect-ratio: 4 / 3; }
