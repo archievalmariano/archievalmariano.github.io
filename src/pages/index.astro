@@ -40,7 +40,7 @@ const projectVisuals = [
 ---
 
 <BaseLayout
-  title="Archieval Mariano — Digital Strategy, Audience Growth & Systems"
+  title="Archieval Mariano | Digital Strategy, Audience Growth & Systems"
   description="Archieval Mariano is a digital strategy and audience growth professional based in the Philippines, working across strategy, content, analytics, e-commerce, and digital operations."
 >
   <section class="cover wrap-wide">
@@ -49,7 +49,7 @@ const projectVisuals = [
       <p class="cover__eyebrow">{hero.eyebrow}</p>
       <h1>Have you heard of AI? Not that one.</h1>
       <p class="cover__statement">
-        I work with AI&mdash;audience intelligence&mdash;turning insight into better digital work.
+        I work with AI. Audience intelligence, that is. I turn insight into better digital work.
       </p>
       <p class="cover__intro">
         Across strategy, content, analytics, e-commerce, and digital operations, I help
@@ -100,11 +100,11 @@ const projectVisuals = [
     <header class="section-intro">
       <p class="chapter-label"><span>02</span> Selected work</p>
       <div class="section-intro__main">
-        <div class="section-intro__copy">
-          <h2 id="work-title">Three stories about turning information into something people can use.</h2>
+        <h2 id="work-title">Three stories about turning information into something people can use.</h2>
+        <div class="section-intro__aside">
           <p>Selected projects across audience intelligence, content strategy, and digital growth.</p>
+          <a href="/work" class="text-link">See all work <span aria-hidden="true">→</span></a>
         </div>
-        <a href="/work" class="text-link">See all work <span aria-hidden="true">→</span></a>
       </div>
     </header>
 
@@ -160,11 +160,11 @@ const projectVisuals = [
     <header class="section-intro section-intro--compact">
       <p class="chapter-label"><span>03</span> Field notes</p>
       <div class="section-intro__main">
-        <div class="section-intro__copy">
-          <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
+        <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
+        <div class="section-intro__aside">
           <p>Commissioned editorial work for publishers and brands, including pieces published without a byline.</p>
+          <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
         </div>
-        <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
       </div>
     </header>
 
@@ -243,12 +243,12 @@ const projectVisuals = [
   .thesis h2 { max-width: 15ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 750; letter-spacing: -.05em; line-height: .98; }
   .thesis__body { max-width: 38rem; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.5; color: color-mix(in srgb, var(--paper) 82%, transparent); }
   .projects, .notes { padding-top: clamp(3.5rem, 6vw, 6rem); padding-bottom: clamp(3.5rem, 7vw, 7rem); }
-  .section-intro { display: grid; grid-template-columns: minmax(10rem, .3fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 7rem); align-items: start; margin-bottom: clamp(2.5rem, 4vw, 4rem); }
-  .section-intro .chapter-label { align-self: start; margin: 0; }
-  .section-intro__main { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: end; }
-  .section-intro__copy { display: grid; gap: var(--space-md); }
+  .section-intro { margin-bottom: clamp(2.5rem, 4vw, 4rem); }
+  .section-intro .chapter-label { margin-bottom: clamp(3rem, 5vw, 5rem); }
+  .section-intro__main { display: grid; grid-template-columns: minmax(0, .95fr) minmax(22rem, .75fr); gap: clamp(3rem, 7vw, 8rem); align-items: center; }
+  .section-intro__aside { display: grid; justify-items: start; gap: var(--space-lg); }
   .section-intro h2 { max-width: 22ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 740; letter-spacing: -.045em; line-height: 1; }
-  .section-intro__copy p { max-width: 43rem; margin: 0; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.5; color: var(--ink-soft); }
+  .section-intro__aside p { max-width: 36rem; margin: 0; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.5; color: var(--ink-soft); }
   .project-chapters { border-top: var(--heavy-rule); }
   .project-chapter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .82fr); border-bottom: var(--heavy-rule); }
   .project-chapter__visual { display: block; padding: clamp(1.5rem, 4vw, 4rem); color: var(--ink); text-decoration: none; border-right: var(--heavy-rule); }
@@ -290,7 +290,6 @@ const projectVisuals = [
   @media (max-width: 64rem) {
     .cover, .thesis__grid, .closing-panel > div { grid-template-columns: 1fr; }
     .cover__portrait { width: min(100%, 42rem); max-height: none; aspect-ratio: 4 / 3; }
-    .section-intro { grid-template-columns: minmax(8rem, .25fr) minmax(0, 1fr); }
     .section-intro__main { grid-template-columns: 1fr; align-items: start; }
     .project-chapter { grid-template-columns: 1fr; }
     .project-chapter__visual { border-right: 0; border-bottom: var(--heavy-rule); }
@@ -298,7 +297,7 @@ const projectVisuals = [
   @media (max-width: 44rem) {
     .cover { min-height: auto; padding-top: 3rem; }
     .cover__portrait { aspect-ratio: 16 / 10; }
-    .section-intro { grid-template-columns: 1fr; gap: 1.5rem; }
+    .section-intro .chapter-label { margin-bottom: 2.5rem; }
     .evidence-visual { min-height: 27rem; }
     .project-chapter__copy { padding-inline: 0; }
     .notes__list a { grid-template-columns: 2rem minmax(0, 1fr) 1rem; }
