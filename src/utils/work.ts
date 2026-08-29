@@ -7,5 +7,5 @@ import type { CollectionEntry } from 'astro:content';
  */
 export function hasCaseStudy(entry: CollectionEntry<'work'>): boolean {
   const d = entry.data;
-  return Boolean(d.overview || d.context || d.role || d.approach || d.outcome);
+  return Boolean(d.overview || d.context || d.role || d.approach || d.outcome || d.limitations);
 }

@@ -22,6 +22,7 @@ const work = defineCollection({
       context: z.union([z.string(), z.array(z.string())]).optional(),
       approach: z.union([z.string(), z.array(z.string())]).optional(),
       outcome: z.union([z.string(), z.array(z.string())]).optional(),
+      limitations: z.union([z.string(), z.array(z.string())]).optional(),
       metrics: z.array(z.string()).optional(),
       tools: z.array(z.string()).default([]),
       tags: z.array(z.string()).default([]),

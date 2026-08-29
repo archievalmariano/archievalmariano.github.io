@@ -55,7 +55,13 @@ const sections: { number: string; id: string; heading: string; value?: string | 
   { number: '02', id: 'responsibility', heading: 'What I was responsible for', value: d.role },
   { number: '03', id: 'work', heading: 'What I did', value: d.approach },
   { number: '04', id: 'outcome', heading: 'What became possible', value: d.outcome },
+  { number: '05', id: 'limitations', heading: 'What remains limited', value: d.limitations },
 ];
+
+const visibleSections = sections.filter((section) => section.value !== undefined);
+const evidenceNumber = String(
+  Math.max(0, ...visibleSections.map((section) => Number(section.number))) + 1
+).padStart(2, '0');
 
 const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
   .filter(Boolean)
@@ -101,13 +107,12 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
   <div class="story-index" aria-label="Case study sections">
     <p>Inside this story</p>
     <ol>
-      {sections.filter((s) => s.value !== undefined).map((s) => <li><a href={`#${s.id}`}><span>{s.number}</span>{s.heading}</a></li>)}
+      {visibleSections.map((s) => <li><a href={`#${s.id}`}><span>{s.number}</span>{s.heading}</a></li>)}
     </ol>
   </div>
 
   {
-    sections
-      .filter((s) => s.value !== undefined)
+    visibleSections
       .map((s) => (
         <section class="story-section" id={s.id}>
           <p class="story-section__number">{s.number}</p>
@@ -130,7 +135,7 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
   {
     d.metrics && d.metrics.length > 0 && (
       <section class="story-section" id="evidence">
-        <p class="story-section__number">05</p>
+        <p class="story-section__number">{evidenceNumber}</p>
         <h2>Selected evidence</h2>
         <div class="story-section__content">
           <ul class="section__list">
@@ -262,7 +267,7 @@ const metaLine = [d.year, d.anonymized ? undefined : d.companyOrClient]
 
   .story-index ol {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
     gap: 1rem;
     margin: 0;
     padding: 0;
