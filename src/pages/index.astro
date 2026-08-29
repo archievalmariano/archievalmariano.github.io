@@ -49,7 +49,7 @@ const projectVisuals = [
       <p class="cover__eyebrow">{hero.eyebrow}</p>
       <h1>Have you heard of AI? Not that one.</h1>
       <p class="cover__statement">
-        I work with audience intelligence, turning insight into better digital work.
+        I work with AI&mdash;audience intelligence&mdash;turning insight into better digital work.
       </p>
       <p class="cover__intro">
         Across strategy, content, analytics, e-commerce, and digital operations, I help
@@ -100,7 +100,10 @@ const projectVisuals = [
     <header class="section-intro">
       <p class="chapter-label"><span>02</span> Selected work</p>
       <div class="section-intro__main">
-        <h2 id="work-title">Three stories about turning information into something people can use.</h2>
+        <div class="section-intro__copy">
+          <h2 id="work-title">Three stories about turning information into something people can use.</h2>
+          <p>Selected projects across audience intelligence, content strategy, and digital growth.</p>
+        </div>
         <a href="/work" class="text-link">See all work <span aria-hidden="true">→</span></a>
       </div>
     </header>
@@ -157,7 +160,10 @@ const projectVisuals = [
     <header class="section-intro section-intro--compact">
       <p class="chapter-label"><span>03</span> Field notes</p>
       <div class="section-intro__main">
-        <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
+        <div class="section-intro__copy">
+          <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
+          <p>Commissioned editorial work for publishers and brands, including pieces published without a byline.</p>
+        </div>
         <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
       </div>
     </header>
@@ -240,7 +246,9 @@ const projectVisuals = [
   .section-intro { display: grid; grid-template-columns: minmax(10rem, .3fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 7rem); align-items: start; margin-bottom: clamp(2.5rem, 4vw, 4rem); }
   .section-intro .chapter-label { align-self: start; margin: 0; }
   .section-intro__main { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: end; }
+  .section-intro__copy { display: grid; gap: var(--space-md); }
   .section-intro h2 { max-width: 22ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 740; letter-spacing: -.045em; line-height: 1; }
+  .section-intro__copy p { max-width: 43rem; margin: 0; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.5; color: var(--ink-soft); }
   .project-chapters { border-top: var(--heavy-rule); }
   .project-chapter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .82fr); border-bottom: var(--heavy-rule); }
   .project-chapter__visual { display: block; padding: clamp(1.5rem, 4vw, 4rem); color: var(--ink); text-decoration: none; border-right: var(--heavy-rule); }
