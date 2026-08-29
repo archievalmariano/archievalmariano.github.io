@@ -221,8 +221,8 @@ const projectVisuals = [
   }
 
   .wrap-wide { width: min(100%, 92rem); margin-inline: auto; padding-inline: var(--gutter); }
-  .chapter-label { display: flex; gap: .75rem; align-items: center; margin: 0 0 var(--space-lg); font-size: .72rem; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); }
-  .chapter-label span { display: inline-grid; place-items: center; width: 2rem; aspect-ratio: 1; border: 1px solid currentColor; }
+  .chapter-label { display: flex; gap: .75rem; align-items: center; margin: 0 0 var(--space-lg); font-family: var(--font-sans); font-size: .72rem; font-weight: 750; line-height: 1; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); }
+  .chapter-label span { display: inline-grid; flex: 0 0 2rem; place-items: center; box-sizing: border-box; width: 2rem; height: 2rem; border: 1px solid currentColor; font-family: var(--font-sans); font-size: .72rem; font-weight: 750; line-height: 1; letter-spacing: 0; font-variant-numeric: tabular-nums; }
   .chapter-label--light { color: color-mix(in srgb, var(--paper) 72%, transparent); }
   .cover { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(24rem, .75fr); min-height: calc(100svh - 5rem); padding-top: clamp(3.5rem, 8vw, 8rem); padding-bottom: clamp(3rem, 7vw, 7rem); gap: clamp(2.5rem, 7vw, 8rem); align-items: center; }
   .cover h1 { max-width: 12ch; font-family: var(--font-sans); font-size: var(--home-display); font-weight: 760; letter-spacing: -.06em; line-height: .92; }
@@ -287,6 +287,7 @@ const projectVisuals = [
   .closing-panel > div { display: grid; grid-template-columns: minmax(0, .95fr) minmax(22rem, .75fr); gap: clamp(3rem, 7vw, 8rem); align-items: center; }
   .closing-panel h2 { max-width: 19ch; font-family: var(--font-sans); font-size: clamp(2.5rem, 3.6vw, 4rem); font-weight: 750; letter-spacing: -.045em; line-height: 1; }
   .closing-panel__copy > p { max-width: 36rem; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.52; color: color-mix(in srgb, var(--paper) 86%, transparent); }
+  .closing-panel > .chapter-label { font-family: var(--font-sans); font-size: .72rem; font-weight: 750; line-height: 1; letter-spacing: .13em; }
   @media (max-width: 64rem) {
     .cover, .thesis__grid, .closing-panel > div { grid-template-columns: 1fr; }
     .cover__portrait { width: min(100%, 42rem); max-height: none; aspect-ratio: 4 / 3; }
