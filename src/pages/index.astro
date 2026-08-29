@@ -47,11 +47,15 @@ const projectVisuals = [
     <div class="cover__copy">
       <p class="chapter-label"><span>00</span> Introduction</p>
       <p class="cover__eyebrow">{hero.eyebrow}</p>
-      <h1>Have you heard of AI? No, not that one. Audience Intelligence.</h1>
+      <h1>Have you heard of AI? Not that one.</h1>
       <p class="cover__statement">
-        That&rsquo;s what I work with. I turn audience insight into better digital work.
+        I work with audience intelligence, turning insight into better digital work.
       </p>
-      <p class="cover__intro">{hero.intro}</p>
+      <p class="cover__intro">
+        Across strategy, content, analytics, e-commerce, and digital operations, I help
+        teams understand their audiences, build useful systems, and turn ideas into
+        scalable programs.
+      </p>
       <div class="cover__actions">
         <a class="button button--ink" href="#selected-work">Explore the work</a>
         <a class="text-link" href="/about">A little about me <span aria-hidden="true">→</span></a>
@@ -150,7 +154,7 @@ const projectVisuals = [
   <section class="notes wrap-wide" aria-labelledby="notes-title">
     <header class="section-intro section-intro--compact">
       <p class="chapter-label"><span>03</span> Field notes</p>
-      <h2 id="notes-title">Writing from before being consumed by dashboards and moving lines and graphs.</h2>
+      <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
       <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
     </header>
 
@@ -198,15 +202,23 @@ const projectVisuals = [
 </BaseLayout>
 
 <style>
+  :global(:root) {
+    --home-display: clamp(3.2rem, 6vw, 6.5rem);
+    --home-section: clamp(2.35rem, 4.2vw, 4.75rem);
+    --home-subhead: clamp(1.65rem, 2.6vw, 2.75rem);
+    --home-lede: clamp(1.25rem, 1.8vw, 1.65rem);
+    --home-copy: clamp(1rem, 1.1vw, 1.12rem);
+  }
+
   .wrap-wide { width: min(100%, 92rem); margin-inline: auto; padding-inline: var(--gutter); }
   .chapter-label { display: flex; gap: .75rem; align-items: center; margin: 0 0 var(--space-lg); font-size: .72rem; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint); }
   .chapter-label span { display: inline-grid; place-items: center; width: 2rem; aspect-ratio: 1; border: 1px solid currentColor; }
   .chapter-label--light { color: color-mix(in srgb, var(--paper) 72%, transparent); }
   .cover { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(24rem, .75fr); min-height: calc(100svh - 5rem); padding-top: clamp(3.5rem, 8vw, 8rem); padding-bottom: clamp(3rem, 7vw, 7rem); gap: clamp(2.5rem, 7vw, 8rem); align-items: center; }
-  .cover h1 { max-width: 12ch; font-family: var(--font-sans); font-size: clamp(3rem, 5.5vw, 6.2rem); font-weight: 760; letter-spacing: -.06em; line-height: .92; }
+  .cover h1 { max-width: 12ch; font-family: var(--font-sans); font-size: var(--home-display); font-weight: 760; letter-spacing: -.06em; line-height: .92; }
   .cover__eyebrow { margin: 0 0 var(--space-md); font-size: var(--step--1); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--coral); }
-  .cover__statement { max-width: 34rem; margin: var(--space-lg) 0 0; font-family: var(--font-serif); font-size: clamp(1.45rem, 2.2vw, 2.15rem); line-height: 1.3; }
-  .cover__intro { max-width: 41rem; margin: var(--space-md) 0 0; font-size: clamp(1rem, 1.2vw, 1.16rem); line-height: 1.6; color: var(--ink-soft); }
+  .cover__statement { max-width: 34rem; margin: var(--space-lg) 0 0; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.4; }
+  .cover__intro { max-width: 39rem; margin: var(--space-md) 0 0; font-size: var(--home-copy); line-height: 1.6; color: var(--ink-soft); }
   .cover__actions, .closing-panel__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem 2rem; margin-top: var(--space-lg); }
   .cover__portrait { position: relative; width: 100%; max-height: 42rem; aspect-ratio: 4 / 5; margin: 0; align-self: center; overflow: hidden; background: var(--blue-soft); border: var(--heavy-rule); box-shadow: .75rem .75rem 0 var(--yellow); }
   .cover__portrait :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 47% center; filter: saturate(.82) contrast(1.04); }
@@ -218,20 +230,20 @@ const projectVisuals = [
   .text-link--light { color: var(--paper); }
   .thesis { padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); background: var(--ink); color: var(--paper); box-shadow: 0 0 0 100vmax var(--ink); clip-path: inset(0 -100vmax); }
   .thesis__grid { display: grid; grid-template-columns: 1fr .8fr; gap: clamp(2rem, 8vw, 9rem); align-items: start; }
-  .thesis h2 { max-width: 15ch; font-family: var(--font-sans); font-size: clamp(2.7rem, 5.7vw, 6rem); font-weight: 750; letter-spacing: -.055em; line-height: .96; }
-  .thesis__body { max-width: 38rem; font-family: var(--font-serif); font-size: clamp(1.2rem, 1.8vw, 1.65rem); line-height: 1.45; color: color-mix(in srgb, var(--paper) 82%, transparent); }
+  .thesis h2 { max-width: 15ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 750; letter-spacing: -.05em; line-height: .98; }
+  .thesis__body { max-width: 38rem; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.5; color: color-mix(in srgb, var(--paper) 82%, transparent); }
   .projects, .notes { padding-top: clamp(5rem, 10vw, 10rem); padding-bottom: clamp(5rem, 10vw, 10rem); }
   .section-intro { display: grid; grid-template-columns: 1fr minmax(18rem, 1.5fr) auto; gap: 2rem; align-items: end; margin-bottom: var(--space-xl); }
   .section-intro .chapter-label { align-self: start; margin: 0; }
-  .section-intro h2 { max-width: 22ch; font-family: var(--font-sans); font-size: clamp(2rem, 3.6vw, 4.4rem); font-weight: 740; letter-spacing: -.045em; line-height: 1; }
+  .section-intro h2 { max-width: 22ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 740; letter-spacing: -.045em; line-height: 1; }
   .project-chapters { border-top: var(--heavy-rule); }
   .project-chapter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .82fr); border-bottom: var(--heavy-rule); }
   .project-chapter__visual { display: block; padding: clamp(1.5rem, 4vw, 4rem); color: var(--ink); text-decoration: none; border-right: var(--heavy-rule); }
   .project-chapter__copy { padding: clamp(2rem, 5vw, 5rem); }
   .project-chapter__number { margin: 0 0 var(--space-xl); font-size: .78rem; font-weight: 800; }
-  .project-chapter h3 { margin: var(--space-sm) 0; font-family: var(--font-sans); font-size: clamp(2rem, 3vw, 3.6rem); font-weight: 750; letter-spacing: -.045em; line-height: 1; }
+  .project-chapter h3 { margin: var(--space-sm) 0; font-family: var(--font-sans); font-size: var(--home-subhead); font-weight: 750; letter-spacing: -.04em; line-height: 1.03; }
   .project-chapter h3 a { text-decoration: none; }
-  .project-chapter__description { margin: var(--space-md) 0; font-family: var(--font-serif); font-size: var(--step-1); line-height: 1.48; color: var(--ink-soft); }
+  .project-chapter__description { margin: var(--space-md) 0; font-family: var(--font-serif); font-size: var(--home-copy); line-height: 1.58; color: var(--ink-soft); }
   .project-chapter__org { margin: 0 0 var(--space-lg); font-size: var(--step--1); font-weight: 700; }
   .evidence-visual { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 34rem; padding: clamp(1.4rem, 3vw, 3rem); overflow: hidden; border: var(--heavy-rule); box-shadow: .65rem .65rem 0 var(--ink); }
   .evidence-visual > p { position: relative; z-index: 1; margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
@@ -256,12 +268,12 @@ const projectVisuals = [
   .notes__list a { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 11rem 1rem; gap: clamp(1rem, 3vw, 3rem); align-items: start; padding-block: clamp(1.5rem, 3vw, 2.5rem); text-decoration: none; }
   .notes__number, .notes__publisher { font-size: .72rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
   .notes__main { display: grid; gap: .55rem; }
-  .notes__main strong { max-width: 32ch; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.4vw, 2.4rem); font-weight: 550; letter-spacing: -.02em; line-height: 1.08; }
-  .notes__main > span { max-width: 60ch; color: var(--ink-soft); }
+  .notes__main strong { max-width: 32ch; font-family: var(--font-serif); font-size: var(--home-subhead); font-weight: 550; letter-spacing: -.02em; line-height: 1.08; }
+  .notes__main > span { max-width: 60ch; font-size: var(--home-copy); color: var(--ink-soft); }
   .closing-panel { padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); background: var(--blue-dark); color: var(--paper); box-shadow: 0 0 0 100vmax var(--blue-dark); clip-path: inset(0 -100vmax); }
   .closing-panel > div { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .65fr); gap: clamp(2rem, 8vw, 9rem); align-items: end; }
-  .closing-panel h2 { max-width: 13ch; font-family: var(--font-sans); font-size: clamp(3rem, 6.5vw, 7rem); font-weight: 750; letter-spacing: -.06em; line-height: .9; }
-  .closing-panel p { font-family: var(--font-serif); font-size: var(--step-1); line-height: 1.5; color: color-mix(in srgb, var(--paper) 82%, transparent); }
+  .closing-panel h2 { max-width: 15ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 750; letter-spacing: -.05em; line-height: .98; }
+  .closing-panel p { font-family: var(--font-serif); font-size: var(--home-copy); line-height: 1.6; color: color-mix(in srgb, var(--paper) 82%, transparent); }
   @media (max-width: 64rem) {
     .cover, .thesis__grid, .closing-panel > div { grid-template-columns: 1fr; }
     .cover__portrait { width: min(100%, 42rem); max-height: none; aspect-ratio: 4 / 3; }
@@ -272,7 +284,6 @@ const projectVisuals = [
   }
   @media (max-width: 44rem) {
     .cover { min-height: auto; padding-top: 3rem; }
-    .cover h1 { font-size: clamp(3rem, 13vw, 4.5rem); }
     .cover__portrait { aspect-ratio: 16 / 10; }
     .section-intro { grid-template-columns: 1fr; }
     .section-intro h2 { grid-column: auto; grid-row: auto; }
