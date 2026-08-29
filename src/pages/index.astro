@@ -99,8 +99,10 @@ const projectVisuals = [
   <section class="projects wrap-wide" id="selected-work" aria-labelledby="work-title">
     <header class="section-intro">
       <p class="chapter-label"><span>02</span> Selected work</p>
-      <h2 id="work-title">Three stories about turning information into something people can use.</h2>
-      <a href="/work" class="text-link">See all work <span aria-hidden="true">→</span></a>
+      <div class="section-intro__main">
+        <h2 id="work-title">Three stories about turning information into something people can use.</h2>
+        <a href="/work" class="text-link">See all work <span aria-hidden="true">→</span></a>
+      </div>
     </header>
 
     <div class="project-chapters">
@@ -154,8 +156,10 @@ const projectVisuals = [
   <section class="notes wrap-wide" aria-labelledby="notes-title">
     <header class="section-intro section-intro--compact">
       <p class="chapter-label"><span>03</span> Field notes</p>
-      <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
-      <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
+      <div class="section-intro__main">
+        <h2 id="notes-title">Selected writing across travel, technology, finance, and culture.</h2>
+        <a href="/writing" class="text-link">All writing <span aria-hidden="true">→</span></a>
+      </div>
     </header>
 
     <ol class="notes__list">
@@ -232,9 +236,10 @@ const projectVisuals = [
   .thesis__grid { display: grid; grid-template-columns: 1fr .8fr; gap: clamp(2rem, 8vw, 9rem); align-items: start; }
   .thesis h2 { max-width: 15ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 750; letter-spacing: -.05em; line-height: .98; }
   .thesis__body { max-width: 38rem; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.5; color: color-mix(in srgb, var(--paper) 82%, transparent); }
-  .projects, .notes { padding-top: clamp(5rem, 10vw, 10rem); padding-bottom: clamp(5rem, 10vw, 10rem); }
-  .section-intro { display: grid; grid-template-columns: 1fr minmax(18rem, 1.5fr) auto; gap: 2rem; align-items: end; margin-bottom: var(--space-xl); }
+  .projects, .notes { padding-top: clamp(3.5rem, 6vw, 6rem); padding-bottom: clamp(3.5rem, 7vw, 7rem); }
+  .section-intro { display: grid; grid-template-columns: minmax(10rem, .3fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 7rem); align-items: start; margin-bottom: clamp(2.5rem, 4vw, 4rem); }
   .section-intro .chapter-label { align-self: start; margin: 0; }
+  .section-intro__main { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: end; }
   .section-intro h2 { max-width: 22ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 740; letter-spacing: -.045em; line-height: 1; }
   .project-chapters { border-top: var(--heavy-rule); }
   .project-chapter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, .82fr); border-bottom: var(--heavy-rule); }
@@ -262,7 +267,7 @@ const projectVisuals = [
   .panorama figure { margin: 0; }
   .panorama :global(img) { width: 100%; max-height: 82vh; object-fit: cover; object-position: center; filter: saturate(.8) contrast(1.04); }
   .panorama figcaption { display: flex; justify-content: space-between; gap: 2rem; padding-top: .8rem; padding-bottom: .8rem; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-  .section-intro--compact { margin-bottom: var(--space-lg); }
+  .section-intro--compact { margin-bottom: clamp(2.5rem, 4vw, 4rem); }
   .notes__list { margin: 0; padding: 0; border-top: var(--heavy-rule); list-style: none; }
   .notes__list li { border-bottom: var(--heavy-rule); }
   .notes__list a { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 11rem 1rem; gap: clamp(1rem, 3vw, 3rem); align-items: start; padding-block: clamp(1.5rem, 3vw, 2.5rem); text-decoration: none; }
@@ -270,23 +275,22 @@ const projectVisuals = [
   .notes__main { display: grid; gap: .55rem; }
   .notes__main strong { max-width: 32ch; font-family: var(--font-serif); font-size: var(--home-subhead); font-weight: 550; letter-spacing: -.02em; line-height: 1.08; }
   .notes__main > span { max-width: 60ch; font-size: var(--home-copy); color: var(--ink-soft); }
-  .closing-panel { padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); background: var(--blue-dark); color: var(--paper); box-shadow: 0 0 0 100vmax var(--blue-dark); clip-path: inset(0 -100vmax); }
-  .closing-panel > div { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .65fr); gap: clamp(2rem, 8vw, 9rem); align-items: end; }
-  .closing-panel h2 { max-width: 15ch; font-family: var(--font-sans); font-size: var(--home-section); font-weight: 750; letter-spacing: -.05em; line-height: .98; }
-  .closing-panel p { font-family: var(--font-serif); font-size: var(--home-copy); line-height: 1.6; color: color-mix(in srgb, var(--paper) 82%, transparent); }
+  .closing-panel { padding-top: clamp(4rem, 6vw, 6rem); padding-bottom: clamp(4rem, 6vw, 6rem); background: var(--blue-dark); color: var(--paper); box-shadow: 0 0 0 100vmax var(--blue-dark); clip-path: inset(0 -100vmax); }
+  .closing-panel > div { display: grid; grid-template-columns: minmax(0, .95fr) minmax(22rem, .75fr); gap: clamp(3rem, 7vw, 8rem); align-items: center; }
+  .closing-panel h2 { max-width: 19ch; font-family: var(--font-sans); font-size: clamp(2.5rem, 3.6vw, 4rem); font-weight: 750; letter-spacing: -.045em; line-height: 1; }
+  .closing-panel p { max-width: 36rem; font-family: var(--font-serif); font-size: var(--home-lede); line-height: 1.52; color: color-mix(in srgb, var(--paper) 86%, transparent); }
   @media (max-width: 64rem) {
     .cover, .thesis__grid, .closing-panel > div { grid-template-columns: 1fr; }
     .cover__portrait { width: min(100%, 42rem); max-height: none; aspect-ratio: 4 / 3; }
-    .section-intro { grid-template-columns: 1fr auto; }
-    .section-intro h2 { grid-column: 1 / -1; grid-row: 2; }
+    .section-intro { grid-template-columns: minmax(8rem, .25fr) minmax(0, 1fr); }
+    .section-intro__main { grid-template-columns: 1fr; align-items: start; }
     .project-chapter { grid-template-columns: 1fr; }
     .project-chapter__visual { border-right: 0; border-bottom: var(--heavy-rule); }
   }
   @media (max-width: 44rem) {
     .cover { min-height: auto; padding-top: 3rem; }
     .cover__portrait { aspect-ratio: 16 / 10; }
-    .section-intro { grid-template-columns: 1fr; }
-    .section-intro h2 { grid-column: auto; grid-row: auto; }
+    .section-intro { grid-template-columns: 1fr; gap: 1.5rem; }
     .evidence-visual { min-height: 27rem; }
     .project-chapter__copy { padding-inline: 0; }
     .notes__list a { grid-template-columns: 2rem minmax(0, 1fr) 1rem; }
