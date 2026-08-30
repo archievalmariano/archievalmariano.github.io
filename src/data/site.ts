@@ -15,10 +15,10 @@ export const ga4Id = 'G-YQ3HPJ2GJZ';
 // Default social preview image (Open Graph / Twitter). `path` is resolved to an
 // absolute URL against `site` in BaseHead, so it's not hardcoded per page.
 export const ogImage = {
-  path: '/og-editorial-photo.png',
+  path: '/og-services-photo.png',
   width: 1200,
   height: 630,
-  alt: 'Archieval Mariano overlooking the Singapore skyline, alongside his name and areas of work.',
+  alt: 'Archieval Mariano overlooking the Singapore skyline, with audience intelligence, digital strategy and growth, and content and digital operations.',
 };
 
 export const hero = {
