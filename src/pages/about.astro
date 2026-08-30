@@ -144,7 +144,13 @@ const workOn = [
           loading="lazy"
           draggable="false"
         />
-        <figcaption>A very vertical panorama, Chang&rsquo;an West Road, Taipei <span>Personal archive</span></figcaption>
+        <figcaption>
+          <span class="outside__caption-copy">
+            <strong>A very vertical panorama</strong>
+            <span lang="zh-Hant">長安西路，臺北</span>
+          </span>
+          <span class="outside__credit">Personal archive</span>
+        </figcaption>
       </figure>
       <figure class="outside__photo outside__photo--cat">
         <Image
@@ -157,7 +163,7 @@ const workOn = [
           loading="lazy"
           draggable="false"
         />
-        <figcaption>Sunday morning along the baywalk, Pasay <span>Personal archive</span></figcaption>
+        <figcaption>Sunday morning along the baywalk, Pasay <span class="outside__credit">Personal archive</span></figcaption>
       </figure>
       <figure class="outside__photo outside__photo--bridge">
         <Image
@@ -170,7 +176,7 @@ const workOn = [
           loading="lazy"
           draggable="false"
         />
-        <figcaption>Beneath Esplanade Bridge, Singapore <span>Personal archive</span></figcaption>
+        <figcaption>Beneath Esplanade Bridge, Singapore <span class="outside__credit">Personal archive</span></figcaption>
       </figure>
     </div>
   </section>
@@ -218,7 +224,10 @@ const workOn = [
   .outside__photo :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
   .outside__photo--taipei :global(img) { object-position: 50% 50%; }
   .outside__photo figcaption { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; gap: 1rem; padding: .7rem .9rem; background: color-mix(in srgb, var(--ink) 92%, transparent); color: var(--paper); font-family: var(--font-sans); font-size: .66rem; font-weight: 750; line-height: 1.35; letter-spacing: .06em; text-transform: uppercase; }
-  .outside__photo figcaption span { flex: 0 0 auto; color: color-mix(in srgb, var(--paper) 65%, transparent); }
+  .outside__caption-copy { display: grid; gap: .15rem; }
+  .outside__caption-copy strong { font: inherit; }
+  .outside__caption-copy span { color: color-mix(in srgb, var(--paper) 72%, transparent); font-size: .72rem; letter-spacing: .04em; text-transform: none; }
+  .outside__credit { flex: 0 0 auto; color: color-mix(in srgb, var(--paper) 65%, transparent); }
   @media (max-width: 52rem) {
     .about-cover { grid-template-columns: 1fr; }
     .origin, .work-map, .philosophy, .outside { grid-template-columns: 2rem 1fr; }
