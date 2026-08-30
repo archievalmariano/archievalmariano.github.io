@@ -40,7 +40,7 @@ tags:
   - Analytics
   - Internal Product
 confidentialityNote: Internal screens, data, account details, vendor usage details, and proprietary configuration are withheld. Sanitized visuals will be added separately.
-featured: false
+featured: true
 order: 1.5
 draft: false
 ---

@@ -31,7 +31,7 @@ tags:
   - Short-form Video
   - Editorial
 confidentialityNote: Revenue figures, internal planning documents, and unpublished materials are withheld to protect confidential company information.
-featured: true
+featured: false
 order: 2
 draft: false
 ---

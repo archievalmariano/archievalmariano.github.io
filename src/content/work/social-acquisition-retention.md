@@ -1,28 +1,34 @@
 ---
-title: Building a digital commerce funnel for an offline-heavy consumer brand
+title: Reframing social media as the beginning of an owned-commerce funnel
 year: '2025–26'
 category: Digital Growth & E-commerce
-companyOrClient: Independent consulting
-anonymized: false
-shortDescription: Developed social acquisition and paid-media plans for a consumer health brand while advising on strategies to grow online sales and strengthen its owned e-commerce channel.
-overview: "A consumer health brand brought us in after becoming dissatisfied with how its previous agency handled social media. While our direct remit focused on social, the broader business challenge was commercial: support the brand’s push toward a larger online sales mix while reducing dependence on third-party marketplaces over time."
-role: I handled the social media strategy, including content planning and paid-media recommendations, while also advising the client on ways to strengthen website conversion and connect marketplace activity back to its owned e-commerce channel.
+companyOrClient: Confidential consumer brand
+anonymized: true
+shortDescription: Developed a content and paid-media system that connected social discovery, marketplace acquisition, direct-site conversion, and repeat purchase for a confidential consumer brand.
+overview: A consumer brand initially brought us in to improve its social media presence. As the engagement developed, it became clear that social was only one part of the problem. Social media was already the brand's main source of traffic to its e-commerce channels, but increasing that traffic would have limited value if the path from discovery to purchase, and eventually repeat purchase, remained disconnected.
+role: The engagement involved me and a former colleague. I handled the words and the strategy, including copy, content planning, paid-media recommendations, and the broader commercial thinking behind how social connected with the brand's sales channels. My collaborator handled the visual expression, producing graphics, infographics, images, and video.
 context:
-  - The brand’s sales were still overwhelmingly driven by offline drugstore channels, while management wanted e-commerce to become a much larger part of the business.
-  - It was already selling through its own website and multiple third-party marketplaces, while social activity ran across Facebook, Instagram, and TikTok.
-  - "Our social media remit therefore had a broader commercial purpose: support online acquisition, improve the efficiency of digital spend, and gradually direct more customers toward the brand’s owned website instead of relying entirely on third-party platforms."
+  - The client had become dissatisfied with its previous agency arrangement. According to the client, the agency had focused heavily on e-commerce operations because those activities translated more directly into sales, while the brand's social media accounts received less attention.
+  - The client did not want social media to become a continuous sales feed. It wanted a balanced approach that could direct audiences toward its products while also publishing editorial and lifestyle content consistent with the brand.
+  - Social visits to the brand's e-commerce destinations increased, but the sales figures reported back to us did not rise in proportion to the additional traffic.
+  - Social advertising could bring people to a marketplace or website, but marketplace operations belonged to the incumbent agency and sat outside our direct remit. Sending more traffic into the same system would not necessarily improve sales.
 approach:
-  - Built social content calendars around acquisition and commerce objectives
-  - Planned paid-media spending across key social channels
-  - Used Facebook, Instagram, and TikTok as traffic drivers toward e-commerce destinations
-  - Recommended ways to make the website a more attractive purchase channel
-  - Advised on tactics to convert marketplace customers into owned-channel customers
-  - Proposed including a QR-code insert in marketplace orders that directed buyers to the website with a first-order incentive
-  - Framed acquisition as the first step, with retention becoming more efficient once customers could be brought into a repeatable owned-channel system
+  - Developed a working content mix that separated posts intended to sell from editorial and lifestyle posts intended to build relevance and familiarity with the brand.
+  - Gave commercial posts a clear route toward purchase while allowing non-commercial content to participate in the audience's interests without turning every interaction into a product pitch.
+  - Created a paid-media allocation designed to use the available budget more efficiently across Facebook, Instagram, and TikTok.
+  - Reframed social media as both a brand environment and an acquisition channel rather than treating those purposes as mutually exclusive.
+  - Proposed treating the first marketplace purchase as customer acquisition, then encouraging a future purchase through the brand's owned store.
+  - Designed a package-insert concept that thanked the customer, introduced the owned website, and used a QR code to reduce the friction of reaching it.
+  - Recommended a dedicated discount code as a customer incentive and a way to attribute direct-site orders to the insert. The discount could use part of what the brand would otherwise have paid in marketplace fees while preserving value from the direct transaction.
 outcome:
-  - The client implemented several recommendations, including the QR-code insert designed to encourage marketplace buyers to make future purchases through the website.
-  - Over time, the brand also saw more customers checking out directly through its owned site.
-  - The work helped shift the role of social media from a standalone content function toward a broader acquisition and retention system connecting social, marketplaces, and the brand’s website.
+  - The client implemented the package insert and dedicated discount-code recommendation.
+  - Customers subsequently completed purchases through the owned website using those codes. Because the codes were created specifically for the insert, their redemption provided direct evidence that customers had followed the proposed route to the brand's store.
+  - As the content and media mix was refined, Meta reporting showed more link clicks, engagement, and video views even as paid spend decreased.
+  - The engagement began as a request for better social media management and developed into a more connected acquisition and retention system spanning content, paid media, marketplaces, and the brand's owned store.
+limitations:
+  - Our remit did not include operation of the third-party marketplaces or the client's website. We could identify where traffic and reported sales appeared misaligned, recommend changes, and measure activity visible through our channels, but we could not independently diagnose every step of the purchasing experience.
+  - Marketplace requirements can change. The package-insert tactic is presented as something the client implemented within that operating environment, not as general guidance for bypassing marketplace rules.
+  - Exact content ratios, targeting recommendations, budget allocations, discount values, sales figures, and marketplace terms are withheld.
 tools:
   - Social Media Strategy
   - Paid Media Planning
@@ -36,7 +42,7 @@ tags:
   - Paid Social
   - Acquisition
   - Retention
-confidentialityNote: Internal sales figures, channel mix, marketplace performance, and other commercially sensitive data are withheld to protect client confidentiality.
+confidentialityNote: The client and its industry are withheld, along with internal sales figures, channel mix, marketplace performance, content ratios, budget allocations, discount values, and other commercially sensitive information.
 featured: true
 order: 3
 draft: false
