@@ -28,14 +28,14 @@ const archiveWork = work.filter((entry) => !entry.data.featured);
     <section class="work-group" aria-labelledby="selected-work-heading">
       <h2 class="work-group__heading" id="selected-work-heading">Selected case studies</h2>
       <ul class="work-list">
-        {selectedWork.map((entry) => <WorkCard entry={entry} variant="selected" />)}
+        {selectedWork.map((entry, index) => <WorkCard entry={entry} variant="selected" number={index + 1} />)}
       </ul>
     </section>
 
     <section class="work-group work-group--archive" aria-labelledby="archive-heading">
       <h2 class="work-group__heading" id="archive-heading">More from the archive</h2>
       <ul class="work-list">
-        {archiveWork.map((entry) => <WorkCard entry={entry} variant="archive" />)}
+        {archiveWork.map((entry, index) => <WorkCard entry={entry} variant="archive" number={selectedWork.length + index + 1} />)}
       </ul>
     </section>
   </div>
@@ -91,12 +91,8 @@ const archiveWork = work.filter((entry) => !entry.data.featured);
     color: var(--ink);
   }
 
-  .work-groups {
-    counter-reset: project;
-  }
-
-  .work-group + .work-group {
-    margin-top: clamp(5rem, 10vw, 10rem);
+  .work-group--archive {
+    padding-top: clamp(5rem, 10vw, 10rem);
   }
 
   .work-group__heading {

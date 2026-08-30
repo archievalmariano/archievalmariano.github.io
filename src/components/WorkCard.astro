@@ -5,9 +5,10 @@ import { hasCaseStudy } from '../utils/work';
 interface Props {
   entry: CollectionEntry<'work'>;
   variant?: 'selected' | 'archive';
+  number?: number;
 }
 
-const { entry, variant = 'selected' } = Astro.props;
+const { entry, variant = 'selected', number } = Astro.props;
 const d = entry.data;
 
 const org = d.anonymized ? 'Confidential' : d.companyOrClient;
@@ -18,7 +19,7 @@ const clickable = hasCaseStudy(entry);
 const Wrapper = clickable ? 'a' : 'div';
 ---
 
-<li class:list={['work-card', `work-card--${variant}`]}>
+<li class:list={['work-card', `work-card--${variant}`]} data-number={number ? String(number).padStart(2, '0') : undefined}>
   <Wrapper
     class:list={['work-card__link', { 'work-card__link--static': !clickable }]}
     {...(clickable ? { href: `/work/${entry.slug}` } : {})}
@@ -44,13 +45,12 @@ const Wrapper = clickable ? 'a' : 'div';
   .work-card {
     position: relative;
     display: flex;
-    counter-increment: project;
     border-right: var(--heavy-rule);
     border-bottom: var(--heavy-rule);
   }
 
   .work-card::before {
-    content: counter(project, decimal-leading-zero);
+    content: attr(data-number);
     position: absolute;
     padding: 1.1rem;
     font-size: .7rem;
@@ -135,7 +135,7 @@ const Wrapper = clickable ? 'a' : 'div';
   .work-card:nth-child(4n + 3) { background: var(--paper); }
   .work-card:nth-child(4n) { background: color-mix(in srgb, var(--coral) 76%, var(--paper)); }
 
-  .work-card--archive {
+  .work-card.work-card--archive {
     background: var(--paper);
   }
 
