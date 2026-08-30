@@ -1,25 +1,26 @@
 ---
-title: Optimizing branded-content campaigns against guaranteed performance targets
+title: Making branded content perform beyond publication
 year: '2019–21'
 category: Branded content and performance
 companyOrClient: GMA New Media Inc.
 anonymized: false
-shortDescription: Managed native advertising campaigns across articles, social, and video, combining editorial adaptation with paid distribution and performance optimization against guaranteed targets.
-overview: I managed native advertising campaigns across GMA digital properties, adapting client-supplied material to fit GMA’s editorial standards while also monitoring performance against guaranteed campaign targets. The work combined editorial judgment with paid distribution, audience targeting, and day-to-day optimization across articles, social posts, and video.
-role: I handled the editorial adaptation and performance management of assigned campaigns. This included revising client material to meet GMA’s native-content standards, determining the appropriate site section for publication, monitoring campaign delivery, and adjusting paid and owned distribution when performance was behind target. Client communication remained primarily with the account teams.
+shortDescription: Managed a steady stream of native articles, social posts, and video campaigns, using editorial adaptation, audience targeting, paid media, and on-site discovery to deliver guaranteed targets within campaign budgets.
+overview: At GMA, online branded content was often sold as an extension of a client’s broader broadcast campaign. The flow averaged at least three assignments a week across native articles, social posts, and video. Publication was only the beginning. Each format carried its own guaranteed metric, and I was responsible for helping the work reach it without exhausting the available media budget.
+role: I adapted client-approved material to fit GMA’s native-content standards, determined where articles should appear, and managed their performance after publication. I owned the distribution strategy and personally set up and optimized paid campaigns, with execution support from a teammate. Client communication remained primarily with the account teams.
 context:
-  - GMA’s branded-content campaigns were sold with guaranteed performance targets, including pageviews, engagement, and video views, typically within a defined campaign period and media budget.
-  - Client materials were handed over through the network’s sales and account teams. Native content needed to feel appropriate for GMA’s editorial environment rather than read like conventional advertising, while still delivering the performance commitments sold to the client.
-  - Over time, the mix expanded from primarily native articles to include more social and video deliverables, requiring campaign management across different formats and distribution channels.
+  - Many assignments extended campaigns that already had television components, with digital presented as an additional way to reach audiences online.
+  - Each format was measured differently. Native articles carried pageview guarantees, social posts were measured through engagement, and videos were measured through views, all within defined campaign periods and media budgets.
+  - Native articles were usually the hardest to move because they required people to leave the feed and open the story. Even with Facebook Instant Articles available, that was a larger action than watching a video or engaging with an in-feed post.
+  - Some client-approved topics had limited natural appeal for GMA’s audience. Once an article had been approved, the subject could not always be changed, so performance had to be improved through discoverability and distribution.
 approach:
   - Edited and reshaped client-supplied material to fit GMA’s native-content guidelines and editorial tone
   - Determined appropriate publication sections based on the subject and format of each piece
-  - Monitored pageviews, engagement, and video-view delivery throughout active campaigns
-  - Managed paid social distribution within campaign budgets
-  - Tested new ad copy and audience targeting when content was underperforming
-  - Used additional distribution channels, including Outbrain and on-site recommendation placements, when needed
-  - Balanced stronger-performing social and video campaigns against more expensive article traffic to manage overall delivery efficiently
-outcome: Campaigns were actively managed against their guaranteed performance commitments rather than treated as publish-and-forget content. Daily monitoring and cross-channel optimization allowed underperforming deliverables to be adjusted through changes in copy, targeting, and distribution while keeping campaign delivery within the available media budget.
+  - Set up on-site discovery through widgets, related-story placements, recommendation modules, and Outbrain where appropriate
+  - Personally configured and optimized paid social distribution within each campaign’s budget
+  - Monitored delivery throughout active campaigns and refined ad copy, audience targeting, and channel allocation when a piece was behind target
+  - Treated pageviews, engagement, and video views as distinct commitments rather than combining unlike metrics into one performance total
+  - Continued paid distribution when a campaign remained short, escalating only the rare cases that required an approved replacement deliverable
+outcome: My assigned campaigns generally reached their guaranteed targets within the available media budget. The exceptions were rare and usually involved highly niche article topics with limited audience fit. When continued distribution could not close the remaining gap, the client could receive an approved social post as a make-good, but this required multiple approvals because the placement was itself a paid product. The process made branded content something that was actively managed after publication rather than simply handed off and left to perform on its own.
 tools:
   - Paid Social
   - Audience Targeting
