@@ -1,5 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import baywalkCat from '../assets/photos/about-baywalk-cat.jpg';
+import esplanadeBridge from '../assets/photos/about-esplanade-bridge.jpg';
+import taipeiStreet from '../assets/photos/about-taipei.jpg';
 import { siteLinks } from '../data/site';
 
 const workOn = [
@@ -127,6 +131,48 @@ const workOn = [
         <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">View my full record on LinkedIn<span class="visually-hidden"> (opens in new tab)</span></a>
       </div>
     </div>
+
+    <div class="outside__gallery" aria-label="Selected photographs from my personal archive" oncontextmenu="return false">
+      <figure class="outside__photo outside__photo--taipei">
+        <Image
+          src={taipeiStreet}
+          alt="A vertical view along Chang'an West Road in Taipei, framed by buildings and road markings"
+          widths={[444, 666, 888]}
+          sizes="(max-width: 832px) 100vw, 34vw"
+          format="webp"
+          quality={74}
+          loading="lazy"
+          draggable="false"
+        />
+        <figcaption>A very vertical panorama, Chang&rsquo;an West Road, Taipei <span>Personal archive</span></figcaption>
+      </figure>
+      <figure class="outside__photo outside__photo--cat">
+        <Image
+          src={baywalkCat}
+          alt="A black-and-white cat walking beside Manila Bay on a bright Sunday morning"
+          widths={[720, 1100, 1600]}
+          sizes="(max-width: 832px) 100vw, 58vw"
+          format="webp"
+          quality={74}
+          loading="lazy"
+          draggable="false"
+        />
+        <figcaption>Sunday morning along the baywalk, Pasay <span>Personal archive</span></figcaption>
+      </figure>
+      <figure class="outside__photo outside__photo--bridge">
+        <Image
+          src={esplanadeBridge}
+          alt="A brightly lit convenience store framed by the dark underside of Esplanade Bridge in Singapore"
+          widths={[720, 1100, 1600]}
+          sizes="(max-width: 832px) 100vw, 58vw"
+          format="webp"
+          quality={74}
+          loading="lazy"
+          draggable="false"
+        />
+        <figcaption>Beneath Esplanade Bridge, Singapore <span>Personal archive</span></figcaption>
+      </figure>
+    </div>
   </section>
 </BaseLayout>
 
@@ -165,13 +211,24 @@ const workOn = [
   .outside__lead { margin-top: 0; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.15; color: var(--ink); }
   .outside__links { display: flex; flex-wrap: wrap; gap: 1.5rem 2rem; align-items: center; margin-top: var(--space-lg); font-family: var(--font-sans); font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
   .outside__links .button { padding: .8rem 1rem; color: var(--paper); background: var(--ink); text-decoration: none; border: 2px solid var(--ink); box-shadow: .3rem .3rem 0 var(--coral); }
+  .outside__gallery { grid-column: 2 / 4; display: grid; grid-template-columns: minmax(16rem, .52fr) minmax(0, 1fr); grid-template-rows: 1fr 1fr; gap: clamp(1rem, 2vw, 2rem); margin-top: clamp(2rem, 5vw, 5rem); user-select: none; }
+  .outside__photo { position: relative; min-width: 0; margin: 0; overflow: hidden; background: var(--ink); border: var(--heavy-rule); }
+  .outside__photo--taipei { grid-row: 1 / 3; }
+  .outside__photo--cat, .outside__photo--bridge { aspect-ratio: 3 / 2; }
+  .outside__photo :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .outside__photo--taipei :global(img) { object-position: 50% 50%; }
+  .outside__photo figcaption { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; gap: 1rem; padding: .7rem .9rem; background: color-mix(in srgb, var(--ink) 92%, transparent); color: var(--paper); font-family: var(--font-sans); font-size: .66rem; font-weight: 750; line-height: 1.35; letter-spacing: .06em; text-transform: uppercase; }
+  .outside__photo figcaption span { flex: 0 0 auto; color: color-mix(in srgb, var(--paper) 65%, transparent); }
   @media (max-width: 52rem) {
     .about-cover { grid-template-columns: 1fr; }
     .origin, .work-map, .philosophy, .outside { grid-template-columns: 2rem 1fr; }
-    .origin__body, .work-map ol, .philosophy blockquote, .philosophy__body, .outside__body { grid-column: 2; }
+    .origin__body, .work-map ol, .philosophy blockquote, .philosophy__body, .outside__body, .outside__gallery { grid-column: 2; }
+    .outside__gallery { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .outside__photo--taipei { grid-row: auto; aspect-ratio: 2 / 3; }
     .experience-band__inner { grid-template-columns: 1fr; }
   }
   @media (max-width: 36rem) {
     .work-map ol, .experience-band ul { grid-template-columns: 1fr; }
+    .outside__photo figcaption { align-items: flex-start; flex-direction: column; gap: .2rem; }
   }
 </style>
