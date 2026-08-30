@@ -1,7 +1,7 @@
 ---
 title: Optimizing branded-content campaigns against guaranteed performance targets
 year: '2019–21'
-category: Branded Content & Performance
+category: Branded content and performance
 companyOrClient: GMA New Media Inc.
 anonymized: false
 shortDescription: Managed native advertising campaigns across articles, social, and video, combining editorial adaptation with paid distribution and performance optimization against guaranteed targets.
@@ -34,6 +34,6 @@ tags:
   - Performance
 confidentialityNote: Internal campaign budgets, guaranteed delivery figures, pricing, client materials, and performance reports are withheld to protect confidential company information.
 featured: false
-order: 4
+order: 5
 draft: false
 ---

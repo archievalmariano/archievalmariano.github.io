@@ -1,7 +1,7 @@
 ---
 title: Turning nine legacy audiences into a system of roughly 40 targetable segments
 year: '2024–26'
-category: Audience Strategy & Analytics
+category: Audience strategy and analytics
 companyOrClient: GMA New Media Inc.
 anonymized: false
 shortDescription: Rebuilt nine legacy audiences in GA4, expanded them into roughly 40 targetable segments, and automated the monthly reporting process used across Sales, product, and editorial teams.
@@ -39,6 +39,6 @@ tags:
   - Reporting
 confidentialityNote: Exact audience definitions, signals, thresholds, membership figures, pricing, campaign details, screenshots, account configurations, and internal bulletin files are withheld. Segment totals are approximate.
 featured: true
-order: 1
+order: 2
 draft: false
 ---

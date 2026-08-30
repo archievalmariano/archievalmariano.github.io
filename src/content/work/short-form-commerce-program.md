@@ -1,7 +1,7 @@
 ---
 title: Designing an editorial layer for a short-form commerce program
 year: '2026'
-category: Content Strategy & Commerce
+category: Content strategy and commerce
 companyOrClient: GMA New Media Inc.
 anonymized: false
 shortDescription: Developed the editorial strategy, topic pipeline, and first 20 scripts for a short-form affiliate program across TikTok, Reels, and YouTube Shorts.
@@ -32,6 +32,6 @@ tags:
   - Editorial
 confidentialityNote: Revenue figures, internal planning documents, and unpublished materials are withheld to protect confidential company information.
 featured: false
-order: 2
+order: 4
 draft: false
 ---

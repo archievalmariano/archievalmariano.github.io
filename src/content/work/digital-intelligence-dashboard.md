@@ -1,7 +1,7 @@
 ---
 title: Turning a seven-year-old digital command center idea into a working intelligence dashboard
 year: '2026'
-category: Audience Intelligence & Digital Product
+category: Audience intelligence and digital product
 companyOrClient: GMA New Media Inc.
 anonymized: false
 shortDescription: At GMA New Media Inc., I turned a digital command center idea first discussed in 2019 into a working, source-labeled intelligence dashboard through an AI-assisted development workflow.
@@ -41,6 +41,6 @@ tags:
   - Internal Product
 confidentialityNote: Internal screens, data, account details, vendor usage details, and proprietary configuration are withheld. Sanitized visuals will be added separately.
 featured: true
-order: 1.5
+order: 1
 draft: false
 ---

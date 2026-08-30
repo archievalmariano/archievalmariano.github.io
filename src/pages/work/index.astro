@@ -6,6 +6,9 @@ import WorkCard from '../../components/WorkCard.astro';
 const work = (await getCollection('work', ({ data }) => !data.draft)).sort(
   (a, b) => (a.data.order ?? 99) - (b.data.order ?? 99)
 );
+
+const selectedWork = work.filter((entry) => entry.data.featured);
+const archiveWork = work.filter((entry) => !entry.data.featured);
 ---
 
 <BaseLayout
@@ -21,11 +24,21 @@ const work = (await getCollection('work', ({ data }) => !data.draft)).sort(
     </p>
   </section>
 
-  <section class="wrap">
-    <ul class="work-list">
-      {work.map((entry) => <WorkCard entry={entry} />)}
-    </ul>
-  </section>
+  <div class="wrap work-groups">
+    <section class="work-group" aria-labelledby="selected-work-heading">
+      <h2 class="work-group__heading" id="selected-work-heading">Selected case studies</h2>
+      <ul class="work-list">
+        {selectedWork.map((entry) => <WorkCard entry={entry} variant="selected" />)}
+      </ul>
+    </section>
+
+    <section class="work-group work-group--archive" aria-labelledby="archive-heading">
+      <h2 class="work-group__heading" id="archive-heading">More from the archive</h2>
+      <ul class="work-list">
+        {archiveWork.map((entry) => <WorkCard entry={entry} variant="archive" />)}
+      </ul>
+    </section>
+  </div>
 </BaseLayout>
 
 <style>
@@ -78,10 +91,27 @@ const work = (await getCollection('work', ({ data }) => !data.draft)).sort(
     color: var(--ink);
   }
 
+  .work-groups {
+    counter-reset: project;
+  }
+
+  .work-group + .work-group {
+    margin-top: clamp(5rem, 10vw, 10rem);
+  }
+
+  .work-group__heading {
+    margin: 0;
+    padding-bottom: var(--space-md);
+    font-family: var(--font-sans);
+    font-size: clamp(1.5rem, 2.5vw, 2.4rem);
+    font-weight: 740;
+    letter-spacing: -.035em;
+    line-height: 1;
+  }
+
   .work-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    counter-reset: project;
     list-style: none;
     margin: 0;
     padding: 0;

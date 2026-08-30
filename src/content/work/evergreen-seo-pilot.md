@@ -1,7 +1,7 @@
 ---
 title: Using evergreen content to demonstrate the value of search-led publishing
 year: '2019–20'
-category: SEO & Editorial Strategy
+category: SEO and editorial strategy
 companyOrClient: GMA New Media Inc.
 anonymized: false
 shortDescription: Commissioned and optimized a portfolio of evergreen articles as a practical SEO pilot, using search traffic data to demonstrate the value of search-led editorial publishing.
@@ -38,6 +38,6 @@ tags:
   - Search
 confidentialityNote: Internal traffic figures, reports, comparison data, and editorial materials are withheld to protect confidential company information.
 featured: false
-order: 5
+order: 6
 draft: false
 ---

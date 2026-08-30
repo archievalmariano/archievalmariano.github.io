@@ -1,7 +1,7 @@
 ---
 title: Reframing social media as the beginning of an owned-commerce funnel
 year: '2025–26'
-category: Digital Growth & E-commerce
+category: Digital growth and e-commerce
 companyOrClient: Confidential consumer brand
 anonymized: true
 shortDescription: Developed a content and paid-media system that connected social discovery, marketplace acquisition, direct-site conversion, and repeat purchase for a confidential consumer brand.

@@ -4,9 +4,10 @@ import { hasCaseStudy } from '../utils/work';
 
 interface Props {
   entry: CollectionEntry<'work'>;
+  variant?: 'selected' | 'archive';
 }
 
-const { entry } = Astro.props;
+const { entry, variant = 'selected' } = Astro.props;
 const d = entry.data;
 
 const org = d.anonymized ? 'Confidential' : d.companyOrClient;
@@ -17,7 +18,7 @@ const clickable = hasCaseStudy(entry);
 const Wrapper = clickable ? 'a' : 'div';
 ---
 
-<li class="work-card">
+<li class:list={['work-card', `work-card--${variant}`]}>
   <Wrapper
     class:list={['work-card__link', { 'work-card__link--static': !clickable }]}
     {...(clickable ? { href: `/work/${entry.slug}` } : {})}
@@ -133,6 +134,18 @@ const Wrapper = clickable ? 'a' : 'div';
   .work-card:nth-child(4n + 2) { background: var(--yellow); }
   .work-card:nth-child(4n + 3) { background: var(--paper); }
   .work-card:nth-child(4n) { background: color-mix(in srgb, var(--coral) 76%, var(--paper)); }
+
+  .work-card--archive {
+    background: var(--paper);
+  }
+
+  .work-card--archive .work-card__link {
+    min-height: 25rem;
+  }
+
+  .work-card--archive .work-card__title {
+    font-size: clamp(1.75rem, 2.6vw, 2.8rem);
+  }
 
   @media (max-width: 44rem) {
     .work-card {
