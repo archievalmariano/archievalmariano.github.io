@@ -175,6 +175,8 @@ const experiments = [
   }
 
   .experiments__copy {
+    display: grid;
+    gap: clamp(1.25rem, 2vw, 2rem);
     max-width: 38rem;
   }
 
@@ -184,10 +186,6 @@ const experiments = [
     font-size: clamp(1.15rem, 1.7vw, 1.5rem);
     line-height: 1.5;
     color: color-mix(in srgb, var(--paper) 76%, transparent);
-  }
-
-  .experiments__copy p + p {
-    margin-top: 1em;
   }
 
   .experiments__list {
