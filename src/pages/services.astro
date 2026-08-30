@@ -5,14 +5,15 @@ import { services } from '../data/site';
 
 <BaseLayout
   title="Services — Archieval Mariano"
-  description="Digital strategy, audience and performance, and content and digital operations — how Archieval Mariano can help teams turn ideas and data into working programs."
+  description="Audience intelligence, digital strategy and growth, and content and digital operations for teams that need clearer decisions and working systems."
 >
   <section class="wrap page-head">
     <p class="page-head__chapter"><span>04</span> Services</p>
-    <h1>Problems I can help make clearer.</h1>
+    <h1>What I can help you figure out.</h1>
     <p class="page-head__intro">
-      I work with teams that have a digital problem, an opportunity, or a pile of
-      data and aren&rsquo;t quite sure what to do next.
+      Some problems need a strategy. Others need a system, a second pair of eyes,
+      or someone willing to trace what is actually happening. My work usually
+      falls into three areas.
     </p>
   </section>
 
@@ -21,25 +22,31 @@ import { services } from '../data/site';
       services.map((service) => (
         <section class="service">
           <h2 class="service__title">{service.title}</h2>
-          <p class="service__desc">{service.description}</p>
-          <p class="service__label">Typical work</p>
-          <ul class="service__work">
-            {service.work.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
+          <div class="service__details">
+            <div class="service__detail">
+              <p class="service__label">When this is useful</p>
+              <p>{service.need}</p>
+            </div>
+            <div class="service__detail">
+              <p class="service__label">How I help</p>
+              <p>{service.approach}</p>
+            </div>
+            <div class="service__detail">
+              <p class="service__label">What changes</p>
+              <p>{service.outcome}</p>
+            </div>
+          </div>
         </section>
       ))
     }
 
     <section class="services-close">
       <p>
-        Need something that doesn&rsquo;t fit neatly into one category?
-        That&rsquo;s usually fine. Much of my work sits between strategy, content,
-        analytics, and execution.
+        Not every problem fits neatly into one category. That is usually where
+        the interesting work begins.
       </p>
       <a class="services-close__link" href="/contact">
-        Get in touch <span aria-hidden="true">&rarr;</span>
+        Tell me what you&rsquo;re working on <span aria-hidden="true">&rarr;</span>
       </a>
     </section>
   </div>
@@ -87,7 +94,6 @@ import { services } from '../data/site';
   }
 
   .service__title {
-    grid-row: 1 / span 3;
     max-width: 11ch;
     font-family: var(--font-sans);
     font-size: clamp(2.2rem, 4vw, 4.4rem);
@@ -96,11 +102,24 @@ import { services } from '../data/site';
     line-height: .96;
   }
 
-  .service__desc {
-    margin: var(--space-sm) 0 var(--space-md);
+  .service__details {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .service__detail {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, .28fr) minmax(0, 1fr);
+    gap: 1rem var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--rule);
+  }
+
+  .service__detail > p:last-child {
+    margin: 0;
     max-width: var(--measure);
     font-family: var(--font-serif);
-    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    font-size: clamp(1.1rem, 1.55vw, 1.4rem);
     line-height: 1.5;
     color: var(--ink-soft);
   }
@@ -111,32 +130,7 @@ import { services } from '../data/site';
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    margin: 0 0 var(--space-sm);
-  }
-
-  .service__work {
-    list-style: none;
     margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.35rem var(--space-lg);
-    max-width: var(--measure);
-  }
-
-  .service__work li {
-    position: relative;
-    padding-left: 1rem;
-    padding-block: .45rem;
-    border-bottom: 1px solid var(--rule);
-    color: var(--ink-soft);
-  }
-
-  .service__work li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--ink-faint);
   }
 
   .services-close {
@@ -168,7 +162,7 @@ import { services } from '../data/site';
     .page-head, .service { grid-template-columns: 1fr; }
     .page-head h1, .page-head__intro, .page-head__chapter { grid-column: 1; grid-row: auto; }
     .service__title { grid-row: auto; }
-    .service__work {
+    .service__detail {
       grid-template-columns: 1fr;
     }
   }

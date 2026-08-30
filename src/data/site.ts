@@ -30,47 +30,38 @@ export const hero = {
 
 export interface ServiceGroup {
   title: string;
-  description: string;
-  work: string[];
+  need: string;
+  approach: string;
+  outcome: string;
 }
 
-// Shared by the Services page and the home Services preview (single source).
+// Editable content for the Services page.
 export const services: ServiceGroup[] = [
   {
-    title: 'Strategy & Growth',
-    description:
-      'Audience development, digital growth strategy, channel planning, market and competitor analysis, and new-program development.',
-    work: [
-      'Growth audits',
-      'Strategy roadmaps',
-      'Audience plans',
-      'New channel or program frameworks',
-      'E-commerce acquisition planning',
-    ],
+    title: 'Audience intelligence',
+    need:
+      'You have plenty of audience and performance data, but it lives across different platforms, reports, and teams. It is difficult to tell which information matters or what should happen next.',
+    approach:
+      'I identify the useful signals, define the right audiences and metrics, and turn them into reporting systems, dashboards, or audience frameworks people can actually understand.',
+    outcome:
+      'A clearer view of your audience and a practical way to use data in editorial, commercial, campaign, or product decisions.',
   },
   {
-    title: 'Audience & Performance',
-    description:
-      'Making audience and campaign data useful enough to inform actual decisions.',
-    work: [
-      'GA4 analysis',
-      'Audience segmentation',
-      'Performance reporting',
-      'Dashboard planning',
-      'Campaign analysis',
-      'Measurement frameworks',
-    ],
+    title: 'Digital strategy and growth',
+    need:
+      'Traffic, engagement, or campaigns are moving, but the business result is unclear. Or your team sees an opportunity and does not yet know which channel, program, or experiment is worth pursuing.',
+    approach:
+      'I examine the audience, customer journey, channels, and existing performance to find where the real problem or opportunity sits. From there, I shape a strategy, roadmap, or pilot around it.',
+    outcome:
+      'Clearer priorities, practical recommendations, and a plan that can be tested instead of another presentation that disappears after the meeting.',
   },
   {
-    title: 'Content & Digital Operations',
-    description: 'Designing the systems behind repeatable digital work.',
-    work: [
-      'Editorial and content workflows',
-      'Content pipelines',
-      'Short-form program design',
-      'Lifecycle communications',
-      'Campaign systems',
-      'Cross-functional workflow design',
-    ],
+    title: 'Content and digital operations',
+    need:
+      'A content, commerce, or campaign idea is promising, but the process behind it is manual, inconsistent, or too dependent on individual people keeping everything together.',
+    approach:
+      'I help define the workflow, roles, cadence, tools, and decisions needed to turn the idea into something repeatable. This may include editorial systems, content pipelines, reporting automation, or cross-functional processes.',
+    outcome:
+      'A working system that is easier to run, easier to improve, and less likely to fall apart as the workload grows.',
   },
 ];
