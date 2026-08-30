@@ -29,6 +29,7 @@ const work = defineCollection({
       heroImage: image().optional(),
       images: z.array(image()).optional(), // optional gallery
       confidentialityNote: z.string().optional(),
+      privateCaseStudy: z.boolean().default(false), // list the work without publishing its case study
       featured: z.boolean().default(false),
       order: z.number().optional(), // configurable ordering (lower = earlier)
       draft: z.boolean().default(false), // hide incomplete case studies from production

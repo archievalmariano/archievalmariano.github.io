@@ -32,6 +32,6 @@ tags:
   - Editorial
 confidentialityNote: Revenue figures, internal planning documents, and unpublished materials are withheld to protect confidential company information.
 featured: false
-order: 4
+order: 5
 draft: false
 ---

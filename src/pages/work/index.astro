@@ -9,6 +9,23 @@ const work = (await getCollection('work', ({ data }) => !data.draft)).sort(
 
 const selectedWork = work.filter((entry) => entry.data.featured);
 const archiveWork = work.filter((entry) => !entry.data.featured);
+
+const experiments = [
+  {
+    title: 'Pinned Shop',
+    label: 'Commerce prototype',
+    description:
+      'A concept storefront for enamel pins and small collectibles, exploring how voice, collections, saving, cart, and checkout can make a fictional brand feel complete.',
+    href: 'https://archievalmariano.com/pinned-shop/',
+  },
+  {
+    title: 'Pinned Travel',
+    label: 'Travel check-in prototype',
+    description:
+      'A private trip check-in concept built around routes, check-in windows, and sharing the latest plan with people you trust.',
+    href: 'https://archievalmariano.com/pinned-travel/',
+  },
+];
 ---
 
 <BaseLayout
@@ -37,6 +54,35 @@ const archiveWork = work.filter((entry) => !entry.data.featured);
       <ul class="work-list">
         {archiveWork.map((entry, index) => <WorkCard entry={entry} variant="archive" number={selectedWork.length + index + 1} />)}
       </ul>
+    </section>
+
+    <section class="experiments" aria-labelledby="experiments-heading">
+      <div class="experiments__head">
+        <h2 id="experiments-heading">Product experiments</h2>
+        <p>
+          Proofs of concept used to explore a product idea and its interactions.
+          These are prototypes, not launched products or claims of measured outcomes.
+        </p>
+      </div>
+
+      <div class="experiments__list">
+        {
+          experiments.map((experiment, index) => (
+            <a class="experiment" href={experiment.href} target="_blank" rel="noopener">
+              <span class="experiment__number">P{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <p class="experiment__label">{experiment.label}</p>
+                <h3>{experiment.title}</h3>
+                <p class="experiment__description">{experiment.description}</p>
+              </div>
+              <span class="experiment__link">
+                Open prototype <span aria-hidden="true">↗</span>
+                <span class="visually-hidden"> (opens in a new tab)</span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
     </section>
   </div>
 </BaseLayout>
@@ -95,6 +141,97 @@ const archiveWork = work.filter((entry) => !entry.data.featured);
     padding-top: clamp(5rem, 10vw, 10rem);
   }
 
+  .experiments {
+    margin-top: clamp(5rem, 10vw, 10rem);
+    padding: clamp(2rem, 5vw, 5rem);
+    background: var(--blue-dark);
+    border: var(--heavy-rule);
+    color: var(--paper);
+  }
+
+  .experiments__head {
+    display: grid;
+    grid-template-columns: minmax(12rem, .55fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-bottom: clamp(2rem, 5vw, 5rem);
+  }
+
+  .experiments__head h2 {
+    max-width: 10ch;
+    font-family: var(--font-sans);
+    font-size: clamp(2.3rem, 4vw, 4.4rem);
+    font-weight: 740;
+    letter-spacing: -.05em;
+    line-height: .96;
+  }
+
+  .experiments__head p {
+    max-width: 38rem;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--paper) 76%, transparent);
+  }
+
+  .experiments__list {
+    border-top: 1px solid color-mix(in srgb, var(--paper) 45%, transparent);
+  }
+
+  .experiment {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    gap: var(--space-lg);
+    align-items: start;
+    padding-block: clamp(2rem, 4vw, 3.5rem);
+    border-bottom: 1px solid color-mix(in srgb, var(--paper) 45%, transparent);
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .experiment:hover {
+    color: var(--yellow);
+  }
+
+  .experiment__number,
+  .experiment__label,
+  .experiment__link {
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+
+  .experiment__number,
+  .experiment__label {
+    color: color-mix(in srgb, var(--paper) 62%, transparent);
+  }
+
+  .experiment__label {
+    margin: 0 0 var(--space-xs);
+  }
+
+  .experiment h3 {
+    font-family: var(--font-sans);
+    font-size: clamp(1.9rem, 3vw, 3.2rem);
+    font-weight: 740;
+    letter-spacing: -.045em;
+    line-height: 1;
+  }
+
+  .experiment__description {
+    max-width: 42rem;
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--paper) 76%, transparent);
+  }
+
+  .experiment__link {
+    white-space: nowrap;
+  }
+
   .work-group__heading {
     margin: 0;
     padding-bottom: var(--space-md);
@@ -119,5 +256,8 @@ const archiveWork = work.filter((entry) => !entry.data.featured);
     .page-head { grid-template-columns: 1fr; }
     .page-head h1, .page-head__intro, .page-head__chapter { grid-column: 1; grid-row: auto; }
     .work-list { grid-template-columns: 1fr; border-right: var(--heavy-rule); }
+    .experiments__head { grid-template-columns: 1fr; }
+    .experiment { grid-template-columns: 2.5rem minmax(0, 1fr); }
+    .experiment__link { grid-column: 2; }
   }
 </style>

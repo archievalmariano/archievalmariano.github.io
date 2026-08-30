@@ -15,7 +15,7 @@ const org = d.anonymized ? 'Confidential' : d.companyOrClient;
 const metaTop = [d.year, d.category].filter(Boolean).join(' · ');
 
 // Listing-only projects render as static content, not links.
-const clickable = hasCaseStudy(entry);
+const clickable = hasCaseStudy(entry) && !d.privateCaseStudy;
 const Wrapper = clickable ? 'a' : 'div';
 ---
 
@@ -38,6 +38,7 @@ const Wrapper = clickable ? 'a' : 'div';
       )
     }
     {clickable && <span class="work-card__arrow" aria-hidden="true">Read the story →</span>}
+    {d.privateCaseStudy && <span class="work-card__status">Private case study</span>}
   </Wrapper>
 </li>
 
@@ -128,6 +129,18 @@ const Wrapper = clickable ? 'a' : 'div';
     font-weight: 800;
     letter-spacing: .07em;
     text-transform: uppercase;
+  }
+
+  .work-card__status {
+    display: block;
+    width: fit-content;
+    margin-top: auto;
+    padding-top: var(--space-lg);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
   .work-card:nth-child(4n + 1) { background: var(--blue-soft); }
