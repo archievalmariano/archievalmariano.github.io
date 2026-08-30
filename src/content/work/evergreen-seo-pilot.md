@@ -1,5 +1,5 @@
 ---
-title: 'Building #Pinned as an evergreen SEO pilot'
+title: Using evergreen content to demonstrate the value of search-led publishing
 year: '2020–21'
 category: SEO and editorial strategy
 companyOrClient: GMA New Media Inc.
