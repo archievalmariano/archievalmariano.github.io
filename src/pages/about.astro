@@ -3,12 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteLinks } from '../data/site';
 
 const workOn = [
-  'Audience growth and digital strategy',
-  'Analytics, segmentation, and performance measurement',
-  'Content and campaign systems',
-  'E-commerce acquisition and lifecycle strategy',
-  'New digital programs and platform opportunities',
-  'Cross-functional workflows and operational design',
+  'Audience intelligence and segmentation',
+  'Digital audits and strategy',
+  'Analytics and reporting systems',
+  'Content strategy and editorial direction',
+  'E-commerce acquisition and retention',
+  'Automation, prototypes, and operational design',
 ];
 ---
 
@@ -22,30 +22,35 @@ const workOn = [
       <p class="about-cover__kicker">A working introduction</p>
       <h1>Archieval<br />Mariano</h1>
       <p class="about-cover__lede">
-        I&rsquo;m a digital strategy and audience growth professional based in the
-        Philippines. I work across content, analytics, e-commerce, and digital
-        operations &mdash; usually in the space between a good idea and the systems
-        needed to make it work.
+        I used to call myself the bored storyteller. The name still fits, although
+        these days the stories are as likely to begin with an audience, a dashboard,
+        or a stubborn operational problem as they are with a blank page.
       </p>
     </div>
   </header>
 
   <section class="origin wrap" aria-labelledby="origin-title">
     <p class="section-number">01</p>
-    <h2 id="origin-title">The longer version</h2>
+    <h2 id="origin-title">The heart of it</h2>
     <div class="origin__body">
       <p class="origin__lead">
-        I started my career in digital publishing as a writer and editor.
+        The heart of it has always been writing.
       </p>
       <p>
-        Over time, the questions I found myself working on became larger: Who are we
-        trying to reach? Why does something perform? How do we build a repeatable process
-        around it? What should we measure? And what should we try next?
+        I was drawn to the way a word can change meaning through context, placement,
+        or tone. I still enjoy taking a familiar fact, trope, or saying and turning it
+        on its head. For me, writing has always been part expression and part puzzle.
       </p>
       <p>
-        That progression has taken me through editorial, branded content, creative
-        strategy, client management, e-commerce, analytics, audience development,
-        partnerships, and digital strategy.
+        That instinct eventually led me beyond copy. Data is another way of finding a
+        narrative. Strategy is deciding which patterns matter and what to do with them.
+        Operations turn that conclusion into something people can repeat. They are
+        different materials, but I approach them with the same desire to make something
+        complicated clearer.
+      </p>
+      <p>
+        The path has taken me through editorial, branded content, e-commerce, analytics,
+        audience development, digital strategy, and the systems that connect them.
       </p>
     </div>
   </section>
@@ -75,23 +80,51 @@ const workOn = [
     <p class="section-number section-number--light">03</p>
     <h2 id="philosophy-title">How I work</h2>
     <blockquote>
-      Strategy should survive contact with actual work.
+      I usually see the ending first.
     </blockquote>
     <div class="philosophy__body">
       <p>
-        That usually means understanding the audience first, using data without
-        mistaking it for judgment, and building processes that people can realistically
-        maintain.
+        When I was writing, I often knew the final line, the kicker, or the quote I wanted
+        to end on before I had written the opening. The difficult and interesting part was
+        finding the right way there.
       </p>
       <p>
-        My background in writing still shapes how I approach digital work: clarity
-        matters, context matters, and the person on the other side of the screen is never
-        merely a metric.
+        I work similarly now. Whether I am building a dashboard, testing an automation,
+        developing a proof of concept, or auditing a digital program, I begin with a clear
+        outcome and work backward through the decisions needed to reach it.
       </p>
       <p>
-        You can reach me on the <a href="/contact">contact page</a>, or view my full
-        record on <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">LinkedIn<span class="visually-hidden"> (opens in new tab)</span></a>.
+        The result still has to survive contact with actual work. It should make sense to
+        the people using it, respect the limits they work within, and remain useful after
+        the presentation ends.
       </p>
+    </div>
+  </section>
+
+  <section class="outside wrap" aria-labelledby="outside-title">
+    <p class="section-number">04</p>
+    <h2 id="outside-title">Away from the dashboards</h2>
+    <div class="outside__body">
+      <p class="outside__lead">Pretends to be a photographer and a good writer.</p>
+      <p>
+        That is how I describe myself on Instagram, where I post photographs and the
+        occasional poem or piece of prose. It captures my discomfort with calling myself
+        a photographer or a poet, even after spending years doing both.
+      </p>
+      <p>
+        In my twenties, I built trips around hostels and long journeys over land, saving
+        on comfort so I could spend more on experience. I still travel, but I no longer
+        treat discomfort as proof that a trip mattered. I move more slowly now, chase
+        fewer attractions, and leave more room to notice what is actually there.
+      </p>
+      <p>
+        I am told I am an amazing conversationalist. I choose to interpret that as being
+        an acquired taste.
+      </p>
+      <div class="outside__links">
+        <a class="button" href="/contact">Find out for yourself</a>
+        <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">View my full record on LinkedIn<span class="visually-hidden"> (opens in new tab)</span></a>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -109,9 +142,9 @@ const workOn = [
   .about-cover__kicker { margin: 0 0 var(--space-sm); font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--coral); }
   .about-cover h1 { max-width: 9ch; font-family: var(--font-sans); font-size: clamp(4.2rem, 11vw, 11rem); font-weight: 780; letter-spacing: -.025em; line-height: .8; }
   .about-cover__lede { max-width: 48rem; margin: clamp(2.5rem, 6vw, 6rem) 0 0; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.4vw, 2.3rem); line-height: 1.42; }
-  .origin, .work-map, .philosophy { display: grid; grid-template-columns: 4rem minmax(15rem, .45fr) minmax(0, 1fr); gap: clamp(1.2rem, 4vw, 4rem); padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); border-top: var(--heavy-rule); }
-  .origin h2, .work-map h2, .philosophy h2 { max-width: 12ch; font-family: var(--font-sans); font-size: clamp(2.4rem, 4vw, 4.8rem); font-weight: 750; letter-spacing: -.05em; line-height: .95; }
-  .origin__body, .philosophy__body { max-width: 46rem; font-family: var(--font-serif); font-size: clamp(1.15rem, 1.7vw, 1.5rem); line-height: 1.58; }
+  .origin, .work-map, .philosophy, .outside { display: grid; grid-template-columns: 4rem minmax(15rem, .45fr) minmax(0, 1fr); gap: clamp(1.2rem, 4vw, 4rem); padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); border-top: var(--heavy-rule); }
+  .origin h2, .work-map h2, .philosophy h2, .outside h2 { max-width: 12ch; font-family: var(--font-sans); font-size: clamp(2.4rem, 4vw, 4.8rem); font-weight: 750; letter-spacing: -.05em; line-height: .95; }
+  .origin__body, .philosophy__body, .outside__body { max-width: 46rem; font-family: var(--font-serif); font-size: clamp(1.15rem, 1.7vw, 1.5rem); line-height: 1.58; }
   .origin__lead { font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.15; color: var(--ink); }
   .experience-band { background: var(--yellow); border-block: var(--heavy-rule); }
   .experience-band__inner { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 15rem; gap: clamp(1.5rem, 5vw, 5rem); align-items: start; padding-top: clamp(2rem, 4vw, 4rem); padding-bottom: clamp(2rem, 4vw, 4rem); }
@@ -127,10 +160,13 @@ const workOn = [
   .philosophy blockquote { max-width: 13ch; margin: 0; font-family: var(--font-sans); font-size: clamp(2.5rem, 5vw, 5.5rem); font-weight: 750; letter-spacing: -.055em; line-height: .95; }
   .philosophy__body { grid-column: 3; color: color-mix(in srgb, var(--paper) 82%, transparent); }
   .philosophy a { color: var(--paper); text-decoration-color: var(--yellow); }
+  .outside__lead { margin-top: 0; font-family: var(--font-sans); font-size: clamp(2rem, 4vw, 4.4rem); font-weight: 750; letter-spacing: -.05em; line-height: .98; }
+  .outside__links { display: flex; flex-wrap: wrap; gap: 1.5rem 2rem; align-items: center; margin-top: var(--space-lg); font-family: var(--font-sans); font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .outside__links .button { padding: .8rem 1rem; color: var(--paper); background: var(--ink); text-decoration: none; border: 2px solid var(--ink); box-shadow: .3rem .3rem 0 var(--coral); }
   @media (max-width: 52rem) {
     .about-cover { grid-template-columns: 1fr; }
-    .origin, .work-map, .philosophy { grid-template-columns: 2rem 1fr; }
-    .origin__body, .work-map ol, .philosophy blockquote, .philosophy__body { grid-column: 2; }
+    .origin, .work-map, .philosophy, .outside { grid-template-columns: 2rem 1fr; }
+    .origin__body, .work-map ol, .philosophy blockquote, .philosophy__body, .outside__body { grid-column: 2; }
     .experience-band__inner { grid-template-columns: 1fr; }
   }
   @media (max-width: 36rem) {
