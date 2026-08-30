@@ -145,10 +145,7 @@ const workOn = [
           draggable="false"
         />
         <figcaption>
-          <span class="outside__caption-copy">
-            <strong>A very vertical panorama</strong>
-            <span lang="zh-Hant">長安西路，臺北</span>
-          </span>
+          <span class="outside__caption-copy">A very vertical panorama somewhere in Taipei</span>
           <span class="outside__credit">Personal archive</span>
         </figcaption>
       </figure>
@@ -163,7 +160,7 @@ const workOn = [
           loading="lazy"
           draggable="false"
         />
-        <figcaption>Sunday morning along the baywalk, Pasay <span class="outside__credit">Personal archive</span></figcaption>
+        <figcaption><span class="outside__caption-copy">Sunday morning along the Pasay Baywalk</span><span class="outside__credit">Personal archive</span></figcaption>
       </figure>
       <figure class="outside__photo outside__photo--bridge">
         <Image
@@ -176,7 +173,7 @@ const workOn = [
           loading="lazy"
           draggable="false"
         />
-        <figcaption>Beneath Esplanade Bridge, Singapore <span class="outside__credit">Personal archive</span></figcaption>
+        <figcaption><span class="outside__caption-copy">Beneath Esplanade Bridge in Singapore</span><span class="outside__credit">Personal archive</span></figcaption>
       </figure>
     </div>
   </section>
@@ -223,10 +220,8 @@ const workOn = [
   .outside__photo--cat, .outside__photo--bridge { aspect-ratio: 3 / 2; }
   .outside__photo :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
   .outside__photo--taipei :global(img) { object-position: 50% 50%; }
-  .outside__photo figcaption { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; gap: 1rem; padding: .7rem .9rem; background: color-mix(in srgb, var(--ink) 92%, transparent); color: var(--paper); font-family: var(--font-sans); font-size: .66rem; font-weight: 750; line-height: 1.35; letter-spacing: .06em; text-transform: uppercase; }
-  .outside__caption-copy { display: grid; gap: .15rem; }
-  .outside__caption-copy strong { font: inherit; }
-  .outside__caption-copy span { color: color-mix(in srgb, var(--paper) 72%, transparent); font-size: .72rem; letter-spacing: .04em; text-transform: none; }
+  .outside__photo figcaption { position: absolute; inset: auto 0 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 1rem; padding: .7rem .9rem; background: color-mix(in srgb, var(--ink) 92%, transparent); color: var(--paper); font-family: var(--font-sans); font-size: .66rem; font-weight: 750; line-height: 1.35; letter-spacing: .06em; text-transform: uppercase; }
+  .outside__caption-copy { min-width: 0; }
   .outside__credit { flex: 0 0 auto; color: color-mix(in srgb, var(--paper) 65%, transparent); }
   @media (max-width: 52rem) {
     .about-cover { grid-template-columns: 1fr; }
@@ -238,6 +233,6 @@ const workOn = [
   }
   @media (max-width: 36rem) {
     .work-map ol, .experience-band ul { grid-template-columns: 1fr; }
-    .outside__photo figcaption { align-items: flex-start; flex-direction: column; gap: .2rem; }
+    .outside__photo figcaption { grid-template-columns: 1fr; gap: .2rem; }
   }
 </style>
