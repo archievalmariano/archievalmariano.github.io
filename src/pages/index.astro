@@ -185,7 +185,7 @@ const projectVisuals = [
               <a href={href} {...(isExternal ? { target: '_blank', rel: 'noopener' } : {})}>
                 <span class="notes__number">0{index + 1}</span>
                 <span class="notes__main">
-                  <strong>{d.title}</strong>
+                  <strong>{d.displayTitle ?? d.title}</strong>
                   <span>{d.description}</span>
                 </span>
                 <span class="notes__publisher">{d.publisher ?? 'Field note'}</span>

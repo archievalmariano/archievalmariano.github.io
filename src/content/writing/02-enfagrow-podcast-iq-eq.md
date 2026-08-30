@@ -1,5 +1,6 @@
 ---
 title: "S1 EPISODE 1: Times Are Changing: Is IQ No Longer Enough For A Child To Succeed In The Era of Homeschooling?"
+displayTitle: "Times Are Changing: Is IQ No Longer Enough For A Child To Succeed In The Era of Homeschooling?"
 classification: commissioned
 publisher: Smart Parenting
 clientOrCampaign: Enfagrow

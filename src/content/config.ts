@@ -43,6 +43,7 @@ const writing = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
+    displayTitle: z.string().optional(), // shorter editorial title for curated listings
     classification: z.enum(['commissioned', 'personal']),
     publisher: z.string().optional(),
     clientOrCampaign: z.string().optional(),

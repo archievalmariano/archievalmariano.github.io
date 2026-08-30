@@ -1,5 +1,6 @@
 ---
 title: "#PINNED: Debunking the most common investing misconceptions in the Philippines"
+displayTitle: Debunking the most common investing misconceptions in the Philippines
 classification: commissioned
 publisher: GMA News Online
 format: SEO / Service Journalism
