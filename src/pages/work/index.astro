@@ -59,19 +59,10 @@ const experiments = [
     <section class="experiments" aria-labelledby="experiments-heading">
       <div class="experiments__head">
         <h2 id="experiments-heading">Product experiments</h2>
-        <div class="experiments__copy">
-          <p>
-            Pinned is a callback to #Pinned, a label a collaborator and I conceived
-            and developed for an evergreen SEO project at GMA. Editorial then
-            approved its use to distinguish search-focused, lasting service pieces
-            from regular editorial articles.
-          </p>
-          <p>
-            These independent prototypes explore what that idea might become beyond
-            an editorial label. They are not launched products or claims of measured
-            outcomes.
-          </p>
-        </div>
+        <p class="experiments__intro">
+          Independent prototypes exploring product ideas and interactions. These
+          are not launched products or claims of measured outcomes.
+        </p>
       </div>
 
       <div class="experiments__list">
@@ -92,6 +83,12 @@ const experiments = [
           ))
         }
       </div>
+
+      <p class="experiments__note">
+        The name is a callback to #Pinned, a label a colleague and I conceived and
+        developed for an evergreen SEO project at GMA. Editorial later approved its
+        use for search-focused service pieces designed to remain relevant over time.
+      </p>
     </section>
   </div>
 </BaseLayout>
@@ -174,13 +171,8 @@ const experiments = [
     line-height: .96;
   }
 
-  .experiments__copy {
-    display: grid;
-    gap: clamp(1.25rem, 2vw, 2rem);
+  .experiments__intro {
     max-width: 38rem;
-  }
-
-  .experiments__copy p {
     margin: 0;
     font-family: var(--font-serif);
     font-size: clamp(1.15rem, 1.7vw, 1.5rem);
@@ -190,6 +182,16 @@ const experiments = [
 
   .experiments__list {
     border-top: 1px solid color-mix(in srgb, var(--paper) 45%, transparent);
+  }
+
+  .experiments__note {
+    max-width: 54rem;
+    margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 1.35vw, 1.2rem);
+    font-style: italic;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--paper) 68%, transparent);
   }
 
   .experiment {
