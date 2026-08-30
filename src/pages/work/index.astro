@@ -59,10 +59,19 @@ const experiments = [
     <section class="experiments" aria-labelledby="experiments-heading">
       <div class="experiments__head">
         <h2 id="experiments-heading">Product experiments</h2>
-        <p>
-          Proofs of concept used to explore a product idea and its interactions.
-          These are prototypes, not launched products or claims of measured outcomes.
-        </p>
+        <div class="experiments__copy">
+          <p>
+            Pinned is a callback to #Pinned, a label a collaborator and I conceived
+            and developed for an evergreen SEO project at GMA. Editorial then
+            approved its use to distinguish search-focused, lasting service pieces
+            from regular editorial articles.
+          </p>
+          <p>
+            These independent prototypes explore what that idea might become beyond
+            an editorial label. They are not launched products or claims of measured
+            outcomes.
+          </p>
+        </div>
       </div>
 
       <div class="experiments__list">
@@ -165,13 +174,20 @@ const experiments = [
     line-height: .96;
   }
 
-  .experiments__head p {
+  .experiments__copy {
     max-width: 38rem;
+  }
+
+  .experiments__copy p {
     margin: 0;
     font-family: var(--font-serif);
     font-size: clamp(1.15rem, 1.7vw, 1.5rem);
     line-height: 1.5;
     color: color-mix(in srgb, var(--paper) 76%, transparent);
+  }
+
+  .experiments__copy p + p {
+    margin-top: 1em;
   }
 
   .experiments__list {
