@@ -6,6 +6,6 @@ clientOrCampaign: TriNoma
 format: Branded Editorial / Lifestyle
 externalURL: https://www.spot.ph/eatdrink/57219/10-reasons-why-trinoma-is-a-foodie-mecca
 description: Branded lifestyle editorial commissioned by Spot.ph for TriNoma, with additional involvement in the accompanying shoot, art direction, and on-site coordination with the client team.
-featured: true
+featured: false
 draft: false
 ---

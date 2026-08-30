@@ -10,7 +10,7 @@ const featuredWork = (await getCollection('work', ({ data }) => !data.draft && d
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
   .slice(0, 3);
 
-const recentWriting = (await getCollection('writing', ({ data }) => !data.draft))
+const recentWriting = (await getCollection('writing', ({ data }) => !data.draft && data.featured))
   .sort((a, b) => (a.slug < b.slug ? -1 : 1))
   .slice(0, 3);
 
