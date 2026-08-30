@@ -1,12 +1,14 @@
 ---
-title: Building a private multi-client content operations engine
+title: Building a private, modular content operations engine
 year: '2026'
-category: Content operations and automation
+category: Content, reporting and billing automation
 anonymized: true
-shortDescription: A private, multi-client system for recurring social content work. The case study, client information, screens, workflow, and product details are intentionally withheld.
+shortDescription: A private, modular, multi-client system that automates recurring content preparation and month-end reporting, then prepares the corresponding billing through a connected module. Review and approval points remain intact. Client information, integrations, screens, workflows, and implementation details are intentionally withheld.
 tools: []
 tags:
   - Content operations
+  - Reporting
+  - Billing
   - Automation
   - Multi-client systems
 privateCaseStudy: true
