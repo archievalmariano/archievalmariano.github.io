@@ -148,14 +148,27 @@ import { services } from '../data/site';
   }
 
   .services-close__link {
-    display: inline-block;
-    margin-top: var(--space-sm);
+    display: inline-flex;
+    align-items: center;
+    min-height: 3.2rem;
+    margin-top: var(--space-md);
+    padding: .75rem 1.1rem;
+    background: var(--ink);
+    border: 2px solid var(--ink);
+    box-shadow: .3rem .3rem 0 var(--yellow);
     font-family: var(--font-sans);
     font-size: var(--step--1);
+    font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     text-decoration: none;
-    color: var(--accent);
+    color: var(--paper);
+  }
+
+  .services-close__link:hover {
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
   }
 
   @media (max-width: 34rem) {
