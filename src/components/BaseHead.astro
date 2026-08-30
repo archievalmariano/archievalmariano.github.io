@@ -27,12 +27,6 @@ const ogImageURL = new URL(ogImage.path, Astro.site);
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="sitemap" href="/sitemap-index.xml" />
-<link
-  rel="alternate"
-  type="application/rss+xml"
-  title="Writing — Archieval Mariano"
-  href={new URL('rss.xml', Astro.site)}
-/>
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />
@@ -44,6 +38,8 @@ const ogImageURL = new URL(ogImage.path, Astro.site);
 <meta property="og:image:height" content={String(ogImage.height)} />
 <meta property="og:image:alt" content={ogImage.alt} />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageURL} />
 
 <meta name="theme-color" content="#f4f0e5" />

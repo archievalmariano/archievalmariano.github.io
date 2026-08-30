@@ -148,6 +148,20 @@ const Wrapper = clickable ? 'a' : 'div';
   .work-card:nth-child(4n + 3) { background: var(--coral); }
   .work-card:nth-child(4n) { background: color-mix(in srgb, var(--coral) 76%, var(--paper)); }
 
+  .work-card--selected .work-card__meta,
+  .work-card--selected .work-card__desc,
+  .work-card--selected .work-card__org,
+  .work-card--selected .tags li {
+    color: var(--ink-soft);
+  }
+
+  .work-card--selected:nth-child(4n + 3) .work-card__meta,
+  .work-card--selected:nth-child(4n + 3) .work-card__desc,
+  .work-card--selected:nth-child(4n + 3) .work-card__org,
+  .work-card--selected:nth-child(4n + 3) .tags li {
+    color: var(--ink);
+  }
+
   .work-card.work-card--archive {
     background: var(--paper);
   }
