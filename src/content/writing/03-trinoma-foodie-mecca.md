@@ -1,5 +1,6 @@
 ---
 title: 10 Reasons Why TriNoma is a Foodie Mecca
+displayTitle: 10 reasons why TriNoma is a foodie mecca
 classification: commissioned
 publisher: Spot.ph
 clientOrCampaign: TriNoma

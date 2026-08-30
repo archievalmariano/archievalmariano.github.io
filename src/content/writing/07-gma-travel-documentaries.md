@@ -1,5 +1,6 @@
 ---
 title: "#PINNED: Get immersed in local and out-of-this-world travel through these documentaries"
+displayTitle: Get immersed in local and out-of-this-world travel through these documentaries
 classification: commissioned
 publisher: GMA Entertainment
 format: Entertainment Editorial

@@ -1,5 +1,6 @@
 ---
 title: Hong Kong Has More Hidden Gems Waiting To Be Discovered, And These Influencers Can Vouch For It
+displayTitle: Hong Kong has more hidden gems waiting to be discovered, and these influencers can vouch for it
 classification: commissioned
 publisher: Esquire Philippines
 clientOrCampaign: Hong Kong Tourism

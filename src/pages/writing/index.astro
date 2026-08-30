@@ -41,7 +41,7 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
                 <div class="entry-list__body">
                 {d.format && <p class="meta entry-list__type">{d.format}</p>}
                 <div class="entry-list__title">
-                  {d.title}
+                  {d.displayTitle ?? d.title}
                   {isExternal && <span class="ext" aria-hidden="true"> ↗</span>}
                   {isExternal && <span class="visually-hidden"> (opens in new tab)</span>}
                 </div>
