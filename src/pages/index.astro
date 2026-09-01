@@ -17,17 +17,17 @@ const recentWriting = (await getCollection('writing', ({ data }) => !data.draft 
 const projectVisuals = [
   {
     className: 'visual--audience',
-    kicker: 'Audience system',
-    stat: '≈40',
-    statLabel: 'targetable audience segments',
-    marks: ['Automotive', 'Online shoppers', 'Gamers', 'Beauty', 'Entrepreneurs'],
-  },
-  {
-    className: 'visual--editorial',
     kicker: 'Decision interface',
     stat: '05',
     statLabel: 'source-labeled intelligence platforms',
     marks: ['GA4', 'Similarweb', 'Semrush', 'Chartbeat', 'Google Trends'],
+  },
+  {
+    className: 'visual--editorial',
+    kicker: 'Audience system',
+    stat: '≈40',
+    statLabel: 'targetable audience segments',
+    marks: ['Automotive', 'Online shoppers', 'Gamers', 'Beauty', 'Entrepreneurs'],
   },
   {
     className: 'visual--commerce',
