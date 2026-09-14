@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Project Goto — Archieval Mariano"
+  description="GOTO is a limited morning (GOTO) and evening (TOGO) news reader for non-touch e-ink devices running CrossPoint Reader."
+>
+  <section class="wrap goto">
+    <header class="goto__head">
+      <p class="eyebrow">Project</p>
+      <h1>GOTO</h1>
+      <p class="goto__tagline">A limited news reader for e-ink devices.</p>
+    </header>
+
+    <p class="goto__lede">
+      GOTO/TOGO delivers a limited morning (GOTO) and evening (TOGO) news briefing
+      to non-touch e-ink readers running CrossPoint Reader. Open an edition, read a
+      fixed set of story leads, and scan a QR code if you want to continue a story
+      on your phone. That’s it. No endless feed, and no need to read every story in
+      full.
+    </p>
+
+    <section class="goto__section">
+      <h2>Concept</h2>
+      <p>
+        Each edition is a fixed set of stories chosen for that morning or evening.
+        GOTO is the morning paper. TOGO is the evening takeaway. The names play on
+        something being prepared and ready to pick up, with the edition waiting for
+        you when you open it. Once you reach the end, you are done.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="goto__section">
+      <h2>Supported hardware</h2>
+      <p>
+        Built first for the non-touch XTEINK X4 running CrossPoint Reader. Support
+        for other CrossPoint-compatible e-ink devices may follow as the project
+        develops.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="goto__section">
+      <h2>Installation</h2>
+      <p>
+        A public build is not available yet. Installation instructions will be
+        added once the hosted edition service and release firmware are ready.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="goto__section">
+      <h2>Notes</h2>
+      <p>
+        Project Goto is still in active development. The current version uses GMA
+        News as its source.
+      </p>
+    </section>
+
+    <p class="goto__note">
+      Part of Archieval Mariano’s e-ink / CrossPoint projects. Stories and reporting
+      remain with their original publishers.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .goto {
+    max-width: var(--measure);
+    padding-block: var(--space-lg) var(--space-xl);
+  }
+  .goto__head {
+    border-bottom: var(--heavy-rule);
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+  .goto__head h1 {
+    font-size: var(--step-3);
+    letter-spacing: 0.02em;
+    margin-top: var(--space-xs);
+  }
+  .goto__tagline {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    margin: var(--space-sm) 0 0;
+  }
+  .goto__lede {
+    font-size: var(--step-0);
+    line-height: 1.72;
+    color: var(--ink);
+    max-width: 42rem;
+    margin-bottom: var(--space-lg);
+  }
+  .goto__section {
+    margin-block: var(--space-lg);
+  }
+  .goto__section h2 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-xs);
+  }
+  .goto__section p {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0;
+  }
+  .goto__note {
+    margin-top: var(--space-lg);
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+</style>
