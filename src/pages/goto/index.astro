@@ -42,11 +42,57 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </section>
 
     <hr class="rule" />
-    <section class="goto__section">
-      <h2>Installation</h2>
+    <section class="goto__section" id="download">
+      <h2>Download</h2>
       <p>
-        A public build is not available yet. Installation instructions will be
-        added once the hosted edition service and release firmware are ready.
+        Project Goto v1.0.0 is available for the XTEINK X4 running CrossPoint
+        Reader 1.6.0.
+      </p>
+
+      <dl class="goto__meta">
+        <div><dt>Supported hardware</dt><dd>XTEINK X4</dd></div>
+        <div><dt>CrossPoint base</dt><dd>1.6.0</dd></div>
+        <div><dt>On-device identity</dt><dd>v1.6.0 · GOTO v1.0.0</dd></div>
+        <div><dt>Current release</dt><dd>Project Goto v1.0.0</dd></div>
+      </dl>
+
+      <p class="goto__actions">
+        <a
+          class="goto__download"
+          href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.0.0/GOTO_X4_v1.0.0.bin"
+        >Download for XTEINK X4</a>
+      </p>
+
+      <p class="goto__links">
+        <a href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.0.0/INSTALL.md" target="_blank" rel="noopener">Installation guide</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.0.0" target="_blank" rel="noopener">Release notes</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/archievalmariano/crosspoint-reader/tree/goto-v1.0.0" target="_blank" rel="noopener">Source code</a>
+      </p>
+
+      <p class="goto__sha">
+        <span class="goto__sha-label">SHA-256</span>
+        <code>67a7fb20158b0eb2f9258421b4c5b0e625183674db1ea1de1020be8e629f085a</code>
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="goto__section">
+      <h2>Installing</h2>
+      <ol class="goto__steps">
+        <li>Download <code>GOTO_X4_v1.0.0.bin</code>.</li>
+        <li>Copy it to the root of a microSD card.</li>
+        <li>On the X4, open Settings → System → SD Card Firmware Update.</li>
+        <li>Select the Goto firmware and install it.</li>
+        <li>Reconnect Wi-Fi manually if needed, then open GOTO.</li>
+      </ol>
+      <p class="goto__install-more">
+        See the <a href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.0.0/INSTALL.md" target="_blank" rel="noopener">full installation guide</a> for details.
+      </p>
+      <p class="goto__limitation">
+        Saved Wi-Fi may need to be manually reconnected after sleep or reboot on the
+        X4/CrossPoint environment.
       </p>
     </section>
 
@@ -111,5 +157,98 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     color: var(--ink-faint);
     font-size: var(--step--1);
     line-height: 1.55;
+  }
+
+  /* Release / download */
+  .goto__meta {
+    margin: var(--space-md) 0 0;
+    display: grid;
+    gap: var(--space-xs) var(--space-md);
+  }
+  .goto__meta div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em var(--space-sm);
+    align-items: baseline;
+  }
+  .goto__meta dt {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    letter-spacing: 0.03em;
+    min-width: 12rem;
+  }
+  .goto__meta dd {
+    margin: 0;
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+  .goto__actions {
+    margin: var(--space-md) 0 0;
+  }
+  .goto__download {
+    display: inline-block;
+    padding: 0.7rem 1.15rem;
+    border: var(--heavy-rule);
+    color: var(--ink);
+    background: var(--paper);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .goto__download:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .goto__links {
+    margin: var(--space-md) 0 0;
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+  .goto__links span {
+    margin: 0 0.5em;
+    color: var(--rule);
+  }
+  .goto__sha {
+    margin: var(--space-md) 0 0;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .goto__sha-label {
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    margin-right: 0.6em;
+  }
+  .goto__sha code {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.82em;
+    word-break: break-all;
+    color: var(--ink);
+  }
+  .goto__steps {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0;
+    padding-left: 1.25rem;
+    line-height: 1.7;
+  }
+  .goto__steps code,
+  .goto__install-more code {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.85em;
+  }
+  .goto__install-more {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: var(--space-sm) 0 0;
+  }
+  .goto__limitation {
+    margin: var(--space-md) 0 0;
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    line-height: 1.55;
+    max-width: 42rem;
   }
 </style>
