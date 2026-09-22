@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.1.0';
+const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/goto-v1.1.0';
+const downloadUrl =
+  'https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.1.0/GOTO_X4PRO_v1.1.0.bin';
+const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99';
+---
+
+<BaseLayout
+  title="Install Project GOTO on the XTEINK X4 Pro — Archieval Mariano"
+  description="A guide to installing Project GOTO v1.1.0 on the XTEINK X4 Pro over USB using esptool."
+>
+  <section class="wrap install">
+    <p class="install__back"><a href="/goto/">&larr; Project GOTO</a></p>
+
+    <header class="install__head">
+      <p class="eyebrow">Project GOTO</p>
+      <h1>Install Project GOTO on the XTEINK X4 Pro</h1>
+    </header>
+
+    <p class="install__lede">
+      Project GOTO v1.1.0 adds support for the XTEINK X4 Pro. The X4 Pro installs
+      over <strong>USB</strong> (direct flashing with <code>esptool</code>), not the
+      microSD updater the original X4 uses.
+    </p>
+    <p class="install__note">
+      Have the original XTEINK X4 instead? Use the
+      <a href="/goto/install/">microSD installation guide</a> — the download and steps
+      are different.
+    </p>
+
+    <dl class="install__meta">
+      <div><dt>Firmware</dt><dd><code>GOTO_X4PRO_v1.1.0.bin</code> (factory image)</dd></div>
+      <div><dt>Flash at</dt><dd><code>0x0</code></dd></div>
+      <div><dt>SHA-256</dt><dd><code class="install__sha">{sha256}</code></dd></div>
+      <div><dt>On-device identity</dt><dd><code>v1.6.0 · GOTO v1.1.0</code></dd></div>
+    </dl>
+
+    <p class="install__actions">
+      <a class="install__download" href={downloadUrl}>Download GOTO_X4PRO_v1.1.0.bin</a>
+    </p>
+
+    <p class="install__warn">This overwrites the device’s internal firmware and may reset internal flash state.</p>
+    <p class="install__note">
+      Saved <strong>Wi-Fi credentials</strong>, <strong>device/app settings</strong>,
+      the <strong>NVS/configuration</strong> store, and <strong>OTA metadata /
+      partition state</strong> can all be erased or reset. Do not expect internal
+      settings to be preserved. This is separate from your <strong>microSD card</strong>,
+      whose contents are not erased by flashing internal firmware.
+    </p>
+
+    <hr class="rule" />
+    <section class="install__section">
+      <h2>Which file do I download?</h2>
+      <p>
+        Download <code>GOTO_X4PRO_v1.1.0.bin</code> — the <strong>factory image</strong>.
+        It is the primary, first-time installation file for an X4 Pro coming from its
+        OEM/current firmware, and it is flashed at address <code>0x0</code>.
+      </p>
+      <p>
+        The release also includes <code>GOTO_X4PRO_v1.1.0.app.bin</code> — an advanced
+        app-slot / OTA image for updating an existing CrossPoint install. It is
+        <strong>not</strong> the normal installation file, and you must
+        <strong>never flash it at <code>0x0</code></strong>. If you are not sure, use
+        the factory image above.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="install__section">
+      <h2>What you need</h2>
+      <ul class="install__list">
+        <li>Your XTEINK X4 Pro, charged.</li>
+        <li>A USB-C cable that carries data (not charge-only).</li>
+        <li>A computer (macOS, Linux, or Windows).</li>
+        <li><strong>esptool</strong>, the standard Espressif flashing tool.</li>
+      </ul>
+      <p>Verify the download before flashing (the value must match the SHA-256 above):</p>
+      <pre class="install__code"><code>shasum -a 256 GOTO_X4PRO_v1.1.0.bin</code></pre>
+    </section>
+
+    <hr class="rule" />
+    <section class="install__section">
+      <h2>1. Install esptool</h2>
+      <p>With Python 3 installed:</p>
+      <pre class="install__code"><code>pip install esptool</code></pre>
+      <p>Then check it runs:</p>
+      <pre class="install__code"><code>esptool version</code></pre>
+    </section>
+
+    <section class="install__section">
+      <h2>2. Connect the X4 Pro and find its port</h2>
+      <p>Plug the X4 Pro into the computer, then find the serial port:</p>
+      <ul class="install__list">
+        <li><strong>macOS:</strong> <code>ls /dev/cu.usbmodem*</code> → e.g. <code>/dev/cu.usbmodem101</code></li>
+        <li><strong>Linux:</strong> <code>ls /dev/ttyACM* /dev/ttyUSB*</code> → e.g. <code>/dev/ttyACM0</code></li>
+        <li><strong>Windows:</strong> Device Manager → Ports (COM &amp; LPT) → e.g. <code>COM5</code></li>
+      </ul>
+    </section>
+
+    <section class="install__section">
+      <h2>3. Flash Project GOTO</h2>
+      <p>Run the command for your platform, in the folder that holds the downloaded file. Point <code>--port</code> at what you found above.</p>
+      <p class="install__subhead">macOS / Linux</p>
+      <pre class="install__code"><code>esptool --chip esp32s3 --port /dev/cu.usbmodem101 --baud 921600 write_flash 0x0 GOTO_X4PRO_v1.1.0.bin</code></pre>
+      <p class="install__subhead">Windows</p>
+      <pre class="install__code"><code>esptool --chip esp32s3 --port COM5 --baud 921600 write_flash 0x0 GOTO_X4PRO_v1.1.0.bin</code></pre>
+      <p>It takes about 40 seconds. Near the end you should see <code>Hash of data verified.</code> and the device reboots itself into CrossPoint.</p>
+    </section>
+
+    <hr class="rule" />
+    <section class="install__section">
+      <h2>4. First boot</h2>
+      <p>The X4 Pro restarts into CrossPoint. Open <strong>GOTO</strong> from the menu to read the current edition. In Settings, the version reads <code>v1.6.0 · GOTO v1.1.0</code>.</p>
+      <p class="install__subhead">Controls on the X4 Pro</p>
+      <ul class="install__list">
+        <li><strong>Left key</strong> → previous story · <strong>Right key</strong> → next story (wraps around)</li>
+        <li>Tap the on-screen <strong>FULL STORY</strong> bar → show the article QR; tap the screen to go back</li>
+        <li><strong>Home</strong> → exit GOTO to the CrossPoint home screen</li>
+      </ul>
+    </section>
+
+    <hr class="rule" />
+    <section class="install__section">
+      <h2>Troubleshooting</h2>
+      <ul class="install__list">
+        <li><strong>esptool can’t connect.</strong> Hold the <strong>left navigation button</strong> while you plug in the USB cable (it doubles as the boot-select pin), keep holding for a second, then run the flash command again. Release once it starts writing.</li>
+        <li><strong>Wrong or missing port.</strong> Try a different USB-C cable (many are charge-only), a different port, and re-check the port name while the device is plugged in.</li>
+        <li><strong>Permission denied on Linux.</strong> Add yourself to the <code>dialout</code> group (<code>sudo usermod -aG dialout $USER</code>), then log out and back in.</li>
+        <li><strong>It flashed but looks frozen.</strong> Give the first e-ink refresh a few seconds; if still stuck, re-run the flash command (it is safe to repeat).</li>
+      </ul>
+    </section>
+
+    <p class="install__links">
+      <a href={releaseUrl} target="_blank" rel="noopener">Release notes</a>
+      <span aria-hidden="true">·</span>
+      <a href={sourceUrl} target="_blank" rel="noopener">Source code</a>
+      <span aria-hidden="true">·</span>
+      <a href="/goto/">Project GOTO</a>
+    </p>
+
+    <p class="install__note">
+      Project GOTO v1.1.0 · XTEINK X4 Pro (ESP32-S3). The original XTEINK X4 remains on
+      v1.0.0 with its microSD install unchanged.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .install {
+    max-width: var(--measure);
+    padding-block: var(--space-lg) var(--space-xl);
+  }
+  .install__back {
+    font-size: var(--step--1);
+    margin: 0 0 var(--space-md);
+  }
+  .install__head {
+    border-bottom: var(--heavy-rule);
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+  .install__head h1 {
+    font-size: var(--step-3);
+    letter-spacing: 0.01em;
+    margin-top: var(--space-xs);
+  }
+  .install__lede {
+    font-size: var(--step-0);
+    line-height: 1.72;
+    color: var(--ink);
+    max-width: 42rem;
+    margin: 0 0 var(--space-sm);
+  }
+  .install__meta {
+    margin: var(--space-md) 0 0;
+    display: grid;
+    gap: var(--space-xs) var(--space-md);
+  }
+  .install__meta div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em var(--space-sm);
+    align-items: baseline;
+  }
+  .install__meta dt {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    letter-spacing: 0.03em;
+    min-width: 8rem;
+  }
+  .install__meta dd {
+    margin: 0;
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+  .install__sha {
+    word-break: break-all;
+  }
+  .install__actions {
+    margin: var(--space-md) 0 0;
+  }
+  .install__download {
+    display: inline-block;
+    padding: 0.7rem 1.15rem;
+    border: var(--heavy-rule);
+    color: var(--ink);
+    background: var(--paper);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .install__download:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .install__section {
+    margin-block: var(--space-lg);
+  }
+  .install__section h2 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-sm);
+  }
+  .install__subhead {
+    font-size: var(--step-0);
+    margin: var(--space-md) 0 var(--space-xs);
+    color: var(--ink-faint);
+    letter-spacing: 0.03em;
+  }
+  .install__section p {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0 0 var(--space-sm);
+    line-height: 1.7;
+  }
+  .install__list {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0 0 var(--space-sm);
+    padding-left: 1.25rem;
+    line-height: 1.7;
+  }
+  .install__list li {
+    margin-bottom: 0.35rem;
+  }
+  .install__note {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    line-height: 1.55;
+    max-width: 42rem;
+    margin: var(--space-sm) 0 0;
+  }
+  .install__warn {
+    color: var(--ink);
+    font-weight: 700;
+    max-width: 42rem;
+    margin: var(--space-md) 0 var(--space-xs);
+  }
+  .install__code {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    padding: var(--space-sm) var(--space-md);
+    overflow-x: auto;
+    max-width: 42rem;
+    margin: 0 0 var(--space-md);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.82em;
+    line-height: 1.5;
+  }
+  .install__code code {
+    font-size: inherit;
+    white-space: pre;
+  }
+  .install__links {
+    margin: var(--space-lg) 0 var(--space-sm);
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+  .install__links span {
+    margin: 0 0.5em;
+    color: var(--rule);
+  }
+  code {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.85em;
+  }
+</style>

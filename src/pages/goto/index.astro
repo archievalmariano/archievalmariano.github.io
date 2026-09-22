@@ -35,9 +35,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <section class="goto__section">
       <h2>Supported hardware</h2>
       <p>
-        Built first for the non-touch XTEINK X4 running CrossPoint Reader. Support
-        for other CrossPoint-compatible e-ink devices may follow as the project
-        develops.
+        Runs on the <strong>XTEINK X4</strong> and the <strong>XTEINK X4 Pro</strong>
+        running CrossPoint Reader. Not sure which you have? The X4 Pro has a
+        touchscreen and a warm/cool frontlight; the original X4 does not. Support for
+        other CrossPoint-compatible e-ink devices may follow as the project develops.
       </p>
     </section>
 
@@ -45,41 +46,62 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <section class="goto__section" id="download">
       <h2>Download</h2>
       <p>
-        Project GOTO v1.0.0 is available for the XTEINK X4 running CrossPoint
-        Reader 1.6.0.
+        Project GOTO runs on two devices, each with its own installer. Choose your
+        hardware below.
       </p>
 
-      <dl class="goto__meta">
-        <div><dt>Supported hardware</dt><dd>XTEINK X4</dd></div>
-        <div><dt>CrossPoint base</dt><dd>1.6.0</dd></div>
-        <div><dt>On-device identity</dt><dd>v1.6.0 · GOTO v1.0.0</dd></div>
-        <div><dt>Current release</dt><dd>Project GOTO v1.0.0</dd></div>
-      </dl>
+      <div class="goto__devices">
+        <article class="goto__device">
+          <h3 class="goto__device-name">XTEINK X4 <span class="goto__device-method">· microSD update</span></h3>
+          <dl class="goto__meta">
+            <div><dt>Release</dt><dd>Project GOTO v1.0.0</dd></div>
+            <div><dt>On-device identity</dt><dd>v1.6.0 · GOTO v1.0.0</dd></div>
+          </dl>
+          <p class="goto__actions">
+            <a
+              class="goto__download"
+              href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.0.0/GOTO_X4_v1.0.0.bin"
+            >Download for XTEINK X4</a>
+          </p>
+          <p class="goto__links">
+            <a href="/goto/install/">Installation guide</a> · microSD updater
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.0.0" target="_blank" rel="noopener">Release notes</a>
+          </p>
+          <p class="goto__sha">
+            <span class="goto__sha-label">SHA-256</span>
+            <code>67a7fb20158b0eb2f9258421b4c5b0e625183674db1ea1de1020be8e629f085a</code>
+          </p>
+        </article>
 
-      <p class="goto__actions">
-        <a
-          class="goto__download"
-          href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.0.0/GOTO_X4_v1.0.0.bin"
-        >Download for XTEINK X4</a>
-      </p>
-
-      <p class="goto__links">
-        <a href="/goto/install/">Installation guide</a>
-        <span aria-hidden="true">·</span>
-        <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.0.0" target="_blank" rel="noopener">Release notes</a>
-        <span aria-hidden="true">·</span>
-        <a href="https://github.com/archievalmariano/crosspoint-reader/tree/goto-v1.0.0" target="_blank" rel="noopener">Source code</a>
-      </p>
-
-      <p class="goto__sha">
-        <span class="goto__sha-label">SHA-256</span>
-        <code>67a7fb20158b0eb2f9258421b4c5b0e625183674db1ea1de1020be8e629f085a</code>
-      </p>
+        <article class="goto__device">
+          <h3 class="goto__device-name">XTEINK X4 Pro <span class="goto__device-method">· USB flashing</span></h3>
+          <dl class="goto__meta">
+            <div><dt>Release</dt><dd>Project GOTO v1.1.0</dd></div>
+            <div><dt>On-device identity</dt><dd>v1.6.0 · GOTO v1.1.0</dd></div>
+          </dl>
+          <p class="goto__actions">
+            <a
+              class="goto__download"
+              href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.1.0/GOTO_X4PRO_v1.1.0.bin"
+            >Download for XTEINK X4 Pro</a>
+          </p>
+          <p class="goto__links">
+            <a href="/goto/install/x4-pro/">Installation guide</a> · USB (esptool)
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.1.0" target="_blank" rel="noopener">Release notes</a>
+          </p>
+          <p class="goto__sha">
+            <span class="goto__sha-label">SHA-256</span>
+            <code>126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99</code>
+          </p>
+        </article>
+      </div>
     </section>
 
     <hr class="rule" />
     <section class="goto__section">
-      <h2>Installing</h2>
+      <h2>Installing on the XTEINK X4</h2>
       <ol class="goto__steps">
         <li>Download <code>GOTO_X4_v1.0.0.bin</code>.</li>
         <li>Copy it to the root of a microSD card.</li>
@@ -88,7 +110,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <li>Reconnect Wi-Fi manually if needed, then open GOTO.</li>
       </ol>
       <p class="goto__install-more">
-        See the <a href="/goto/install/">full installation guide</a> for details.
+        See the <a href="/goto/install/">full X4 installation guide</a> for details.
+      </p>
+      <p class="goto__install-more">
+        On the <strong>XTEINK X4 Pro</strong>, installation is over USB (direct
+        flashing) instead — see the <a href="/goto/install/x4-pro/">X4 Pro installation
+        guide</a>.
       </p>
       <p class="goto__limitation">
         Saved Wi-Fi may need to be manually reconnected after sleep or reboot on the
@@ -160,6 +187,28 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
 
   /* Release / download */
+  .goto__devices {
+    display: grid;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
+  }
+  .goto__device {
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--rule);
+  }
+  .goto__device:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .goto__device-name {
+    font-size: var(--step-0);
+    margin: 0;
+  }
+  .goto__device-method {
+    color: var(--ink-faint);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
   .goto__meta {
     margin: var(--space-md) 0 0;
     display: grid;
