@@ -1,13 +1,13 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
-import imgSettings from '../../../assets/photos/goto-install-01-settings-system.jpg';
-import imgPicker from '../../../assets/photos/goto-install-02-firmware-picker.jpg';
-import imgConfirm from '../../../assets/photos/goto-install-03-confirm.jpg';
-import imgUpdating from '../../../assets/photos/goto-install-04-updating.jpg';
-import imgComplete from '../../../assets/photos/goto-install-05-complete.jpg';
-import imgHome from '../../../assets/photos/goto-install-06-home.jpg';
-import imgApps from '../../../assets/photos/goto-install-07-apps.jpg';
+import imgSettings from '../../../../assets/photos/goto-install-01-settings-system.jpg';
+import imgPicker from '../../../../assets/photos/goto-install-02-firmware-picker.jpg';
+import imgConfirm from '../../../../assets/photos/goto-install-03-confirm.jpg';
+import imgUpdating from '../../../../assets/photos/goto-install-04-updating.jpg';
+import imgComplete from '../../../../assets/photos/goto-install-05-complete.jpg';
+import imgHome from '../../../../assets/photos/goto-install-06-home.jpg';
+import imgApps from '../../../../assets/photos/goto-install-07-apps.jpg';
 
 const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.2';
 const downloadUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.2/firmware-x4-g.bin';
@@ -23,7 +23,7 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
   description="An illustrated guide to installing Project GOTO (release v1.0.2) on the XTEINK X4 using CrossPoint Reader's SD card firmware updater."
 >
   <section class="wrap install">
-    <p class="install__back"><a href="/goto/">&larr; Project GOTO</a></p>
+    <p class="install__back"><a href="/desk/goto/">&larr; Project GOTO</a></p>
 
     <header class="install__head">
       <p class="eyebrow">Project GOTO</p>
@@ -58,7 +58,7 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
         <li><code>{fileName}</code></li>
         <li>Wi-Fi for retrieving the current edition</li>
       </ul>
-      <p class="install__note">This file is for the original XTEINK X4. The X4 Pro installs over USB instead: see the <a href="/goto/install/x4-pro/">X4 Pro guide</a>.</p>
+      <p class="install__note">This file is for the original XTEINK X4. The X4 Pro installs over USB instead: see the <a href="/desk/goto/install/x4-pro/">X4 Pro guide</a>.</p>
     </section>
 
     <hr class="rule" />
@@ -240,7 +240,7 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
       <span aria-hidden="true">·</span>
       <a href={sourceUrl} target="_blank" rel="noopener">Source code</a>
       <span aria-hidden="true">·</span>
-      <a href="/goto/">Project GOTO</a>
+      <a href="/desk/goto/">Project GOTO</a>
     </p>
   </section>
 </BaseLayout>

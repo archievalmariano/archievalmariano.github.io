@@ -1,0 +1,446 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+
+const release = 'https://github.com/archievalmariano/crosspoint-reader/releases';
+
+// Bundled routes in the current release, in the order the device lists them.
+const routes = [
+  { route: 'Balagtas ↔ TriNoma', operator: 'Bulacan P2P', days: 'Weekday and weekend / holiday timetables' },
+  { route: 'Caypombo ↔ SM North EDSA', operator: 'Precious Grace', days: 'Daily' },
+  { route: 'Clark Airport ↔ Baguio', operator: 'Genesis', days: 'Daily' },
+  { route: 'Clark Airport ↔ NAIA T3', operator: 'Genesis', days: 'Daily' },
+  { route: 'Cubao ↔ Clark Airport', operator: 'Genesis', days: 'Daily' },
+  { route: 'NAIA T3 ↔ PITX', operator: 'UBE Express', days: 'Daily' },
+  { route: 'TriNoma ↔ Clark Airport', operator: 'Genesis', days: 'Daily' },
+];
+
+const packages = [
+  {
+    name: 'ON POINT',
+    file: 'firmware-x4pro-p.factory.bin',
+    identity: '1.6.0-A1.0.2-P',
+    sha256: 'e90e4b359175643ebe50bd2f199862b3a4a03e8c2bd862103d27de8595e5d488',
+  },
+  {
+    name: 'GOTO + ON POINT',
+    file: 'firmware-x4pro-gp.factory.bin',
+    identity: '1.6.0-A1.0.2-GP',
+    sha256: 'de11d14645183e46fed271dfb7c80e44bbdae63cda9cb94d556f3826e2a25280',
+  },
+];
+---
+
+<BaseLayout
+  title="ON POINT — Archieval Mariano"
+  description="ON POINT is an offline departure board for scheduled bus routes on the XTEINK X4 Pro, with seven Philippine P2P and airport routes from the operators' published timetables."
+>
+  <section class="wrap op">
+    <p class="op__back"><a href="/desk/">&larr; Desk</a></p>
+    <header class="op__head">
+      <p class="eyebrow">Project</p>
+      <h1>ON POINT</h1>
+      <p class="op__tagline">An offline departure board for scheduled bus routes.</p>
+    </header>
+
+    <p class="op__lede">
+      ON POINT keeps published timetables on the XTEINK X4 Pro and tells you what
+      leaves next, and how long you have, without a network connection. It currently
+      carries seven Philippine P2P and airport bus routes, each taken from its
+      operator’s published schedule.
+    </p>
+
+    <div class="op__gallery">
+      <figure>
+        <MediaPlaceholder label="Apps → ON POINT on the X4 Pro" />
+      </figure>
+      <figure>
+        <MediaPlaceholder label="Route list: main route and all routes" />
+      </figure>
+      <figure>
+        <MediaPlaceholder label="Departure board with countdown" />
+      </figure>
+    </div>
+
+    <section class="op__section">
+      <h2>Why it exists</h2>
+      <p>
+        It started with one commute. P2P buses here run to fixed timetables, but those
+        timetables mostly live in operator posts and on terminal signs, and the question
+        at the stop is always the same: when does the next one leave, and is it the last?
+        ON POINT answers that for the routes it carries, from the device’s own clock,
+        with no signal needed.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section">
+      <h2>What it shows</h2>
+      <ul class="op__list">
+        <li>The next departure, with a countdown in minutes.</li>
+        <li>The departures after it, plus the first and last trip of the day.</li>
+        <li>A clear warning when the next bus is the final trip.</li>
+        <li>
+          <strong>Service ended</strong> or <strong>No service today</strong>, with the
+          next scheduled trip.
+        </li>
+        <li>Both directions of each route. Left and Right switch direction.</li>
+        <li>A main route that opens first. Hold a route in the list to make it your main route.</li>
+      </ul>
+      <p class="op__aside">
+        ON POINT never guesses the time. It reads the X4 Pro’s built-in clock, and if
+        the clock has not been set it says so instead of showing a countdown. Routes
+        from an operator’s own published schedule are labelled <strong>PUBLISHED</strong>
+        on screen.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section" id="routes">
+      <h2>Routes</h2>
+      <p>The current release includes these routes.</p>
+      <table class="op__routes">
+        <thead>
+          <tr><th scope="col">Route</th><th scope="col">Operator</th><th scope="col">Timetable</th></tr>
+        </thead>
+        <tbody>
+          {
+            routes.map((r) => (
+              <tr>
+                <th scope="row">{r.route}</th>
+                <td>{r.operator}</td>
+                <td>{r.days}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="op__aside">
+        Schedules come from each operator’s published timetable. Philippine public
+        holidays for 2026 use a route’s holiday timetable where it has one. Operators
+        change schedules without notice, so check with them before a trip that matters.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section" id="your-routes">
+      <h2>Your own routes</h2>
+      <p>
+        For now, routes come bundled with the firmware. Custom route support is planned.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section">
+      <h2>Supported hardware</h2>
+      <p>
+        Runs on the <strong>XTEINK X4 Pro</strong> running CrossPoint Reader. ON POINT
+        needs a real-time clock to count down to departures, and the original XTEINK X4
+        does not have one, so it is not offered for the X4.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section" id="download">
+      <h2>Download</h2>
+      <p>
+        ON POINT installs on the X4 Pro over USB. Choose ON POINT on its own, or together
+        with <a href="/desk/goto/">GOTO</a>. Either way, it lives in the
+        <strong>Apps</strong> menu on the CrossPoint home screen.
+      </p>
+
+      <div class="op__packages">
+        {
+          packages.map((pkg) => (
+            <article class="op__package">
+              <h3 class="op__package-name">
+                {pkg.name} <span class="op__package-method">· XTEINK X4 Pro · USB flashing</span>
+              </h3>
+              <dl class="op__meta">
+                <div><dt>Release</dt><dd>v1.0.2 · CrossPoint 1.6.0 + Apps 1.0.2</dd></div>
+                <div><dt>On-device identity</dt><dd>{pkg.identity}</dd></div>
+              </dl>
+              <p class="op__actions">
+                <a class="op__download" href={`${release}/download/v1.0.2/${pkg.file}`}>
+                  Download {pkg.name}
+                </a>
+              </p>
+              <p class="op__links">
+                <code>{pkg.file}</code>
+                <span aria-hidden="true">·</span>
+                <a href={`${release}/tag/v1.0.2`} target="_blank" rel="noopener">Release notes</a>
+              </p>
+              <p class="op__sha">
+                <span class="op__sha-label">SHA-256</span>
+                <code>{pkg.sha256}</code>
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section">
+      <h2>Installing on the XTEINK X4 Pro</h2>
+      <ol class="op__steps">
+        <li>Download the factory image for the package you want.</li>
+        <li>
+          Connect the X4 Pro over USB and flash it at <code>0x0</code> with esptool:
+          <pre class="op__code"><code>esptool --chip esp32s3 --port /dev/cu.usbmodem101 --baud 921600 write_flash 0x0 firmware-x4pro-p.factory.bin</code></pre>
+        </li>
+        <li>After it restarts, connect to Wi-Fi once. The X4 Pro sets its clock and keeps it.</li>
+        <li>Open Apps → ON POINT.</li>
+      </ol>
+      <p class="op__install-more">
+        The <a href="/desk/goto/install/x4-pro/">X4 Pro USB guide</a> covers installing
+        esptool, finding the port and troubleshooting. It is written for GOTO, and the
+        steps are the same with the ON POINT file.
+      </p>
+      <p class="op__limitation">
+        Flashing a factory image replaces the internal firmware and may reset settings
+        and saved Wi-Fi. Your microSD card is not affected. Later releases install over
+        Wi-Fi from Settings → System → Check for updates and keep the package you chose.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section">
+      <h2>Notes</h2>
+      <p>
+        ON POINT is an independent project and is not affiliated with the bus operators.
+        Timetables are subject to change by the operators without notice.
+      </p>
+    </section>
+  </section>
+</BaseLayout>
+
+<style>
+  .op {
+    max-width: var(--measure);
+    padding-block: var(--space-lg) var(--space-xl);
+  }
+  .op__back {
+    font-size: var(--step--1);
+    margin: 0 0 var(--space-md);
+  }
+  .op__head {
+    border-bottom: var(--heavy-rule);
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+  .op__head h1 {
+    font-size: var(--step-3);
+    letter-spacing: 0.02em;
+    margin-top: var(--space-xs);
+  }
+  .op__tagline {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    margin: var(--space-sm) 0 0;
+  }
+  .op__lede {
+    font-size: var(--step-0);
+    line-height: 1.72;
+    color: var(--ink);
+    max-width: 42rem;
+    margin-bottom: var(--space-lg);
+  }
+  .op__gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-lg);
+  }
+  .op__gallery figure {
+    margin: 0;
+  }
+  .op__section {
+    margin-block: var(--space-lg);
+  }
+  .op__section h2 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-xs);
+  }
+  .op__section p {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0;
+  }
+  .op__section p + p,
+  .op__section .op__aside {
+    margin-top: var(--space-sm);
+  }
+  .op__list,
+  .op__steps {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0;
+    padding-left: 1.25rem;
+    line-height: 1.7;
+  }
+  .op__aside {
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--ink-faint) !important;
+  }
+
+  /* Routes */
+  .op__routes {
+    width: 100%;
+    margin: var(--space-md) 0 0;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+  }
+  .op__routes th,
+  .op__routes td {
+    padding: .6rem .75rem .6rem 0;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--rule);
+  }
+  .op__routes thead th {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: .68rem;
+    color: var(--ink-faint);
+    border-bottom: var(--heavy-rule);
+  }
+  .op__routes tbody th {
+    font-weight: 650;
+    color: var(--ink);
+  }
+  .op__routes td {
+    color: var(--ink-soft);
+  }
+
+  /* Download */
+  .op__packages {
+    display: grid;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
+  }
+  .op__package {
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--rule);
+  }
+  .op__package:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .op__package-name {
+    font-size: var(--step-0);
+    margin: 0;
+  }
+  .op__package-method {
+    color: var(--ink-faint);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+  .op__meta {
+    margin: var(--space-md) 0 0;
+    display: grid;
+    gap: var(--space-xs) var(--space-md);
+  }
+  .op__meta div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em var(--space-sm);
+    align-items: baseline;
+  }
+  .op__meta dt {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    letter-spacing: 0.03em;
+    min-width: 12rem;
+  }
+  .op__meta dd {
+    margin: 0;
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+  .op__actions {
+    margin: var(--space-md) 0 0 !important;
+  }
+  .op__download {
+    display: inline-block;
+    padding: 0.7rem 1.15rem;
+    border: var(--heavy-rule);
+    color: var(--ink);
+    background: var(--paper);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .op__download:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .op__links {
+    margin: var(--space-md) 0 0 !important;
+    color: var(--ink-faint) !important;
+    font-size: var(--step--1);
+  }
+  .op__links span {
+    margin: 0 0.5em;
+    color: var(--rule);
+  }
+  .op__sha {
+    margin: var(--space-sm) 0 0 !important;
+    font-size: var(--step--1);
+  }
+  .op__sha-label {
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    margin-right: 0.6em;
+  }
+  .op__sha code,
+  .op__links code,
+  .op__steps code,
+  .op__code {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.82em;
+    word-break: break-all;
+    color: var(--ink);
+  }
+  .op__code {
+    display: block;
+    margin: var(--space-xs) 0;
+    padding: var(--space-sm);
+    background: var(--paper-raised);
+    white-space: pre-wrap;
+  }
+  .op__install-more {
+    margin: var(--space-sm) 0 0 !important;
+  }
+  .op__limitation {
+    margin: var(--space-md) 0 0 !important;
+    color: var(--ink-faint) !important;
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+
+  @media (max-width: 40rem) {
+    .op__gallery {
+      gap: var(--space-xs);
+    }
+    .op__gallery :global(.media-placeholder) {
+      padding: .6rem;
+    }
+    .op__gallery :global(.media-placeholder__note) {
+      font-size: .5rem;
+    }
+    .op__gallery :global(.media-placeholder__label) {
+      font-size: .78rem;
+    }
+    .op__meta dt {
+      min-width: 0;
+    }
+  }
+</style>

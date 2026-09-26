@@ -1,0 +1,46 @@
+---
+// Marked stand-in for a photo that has not been taken yet. Renders at the
+// same 3:4 ratio as the device photos, so swapping in the real image later
+// does not change the layout.
+interface Props {
+  label: string;
+  note?: string;
+}
+
+const { label, note = 'Photo to come' } = Astro.props;
+---
+
+<div class="media-placeholder" role="img" aria-label={`${note}: ${label}`}>
+  <span class="media-placeholder__note">{note}</span>
+  <span class="media-placeholder__label">{label}</span>
+</div>
+
+<style>
+  .media-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: .35rem;
+    aspect-ratio: 3 / 4;
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--paper-raised);
+    border: 1px dashed var(--rule);
+  }
+
+  .media-placeholder__note {
+    font-family: var(--font-sans);
+    font-size: .63rem;
+    font-weight: 750;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .media-placeholder__label {
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.35;
+    color: var(--ink-soft);
+  }
+</style>

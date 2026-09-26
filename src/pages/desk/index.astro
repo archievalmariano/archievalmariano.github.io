@@ -1,0 +1,259 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MediaPlaceholder from '../../components/MediaPlaceholder.astro';
+import imgGotoApps from '../../assets/photos/goto-install-07-apps.jpg';
+
+// Public-ready projects, in the order they appear. `image` is optional: a
+// project without a photo yet renders a marked placeholder.
+const projects = [
+  {
+    name: 'GOTO',
+    subtitle: 'GOTO / TOGO',
+    href: '/desk/goto/',
+    purpose: 'A limited morning and evening news briefing for e-ink readers.',
+    facts: ['XTEINK X4 + X4 Pro', 'Philippine news', 'Updates twice daily'],
+    image: imgGotoApps,
+    imageAlt: 'The Apps screen on an XTEINK X4 listing TOGO, the evening edition of GOTO.',
+  },
+  {
+    name: 'ON POINT',
+    subtitle: 'ON POINT',
+    href: '/desk/on-point/',
+    purpose: 'An offline departure board for scheduled bus routes.',
+    facts: ['XTEINK X4 Pro', 'Works offline', '7 published routes'],
+    placeholder: 'ON POINT departure board on the XTEINK X4 Pro',
+  },
+];
+---
+
+<BaseLayout
+  title="Desk — Archieval Mariano"
+  description="Things from my digital desk that I’ve decided to share: GOTO, a limited news reader, and ON POINT, an offline departure board, for XTEINK e-ink devices."
+>
+  <section class="wrap page-head">
+    <p class="page-head__chapter"><span>05</span> Desk</p>
+    <h1>Desk</h1>
+    <p class="page-head__intro">
+      Things from my digital desk that I’ve decided to share. Some can be useful,
+      definitely specific, and occasionally unnecessary.
+    </p>
+  </section>
+
+  <div class="wrap desk">
+    <ul class="desk__list">
+      {
+        projects.map((project) => (
+          <li class="desk-panel">
+            <a class="desk-panel__link" href={project.href}>
+              <div class="desk-panel__media">
+                {project.image ? (
+                  <Image
+                    src={project.image}
+                    alt={project.imageAlt}
+                    widths={[360, 560, 760]}
+                    sizes="(max-width: 48rem) 88vw, 380px"
+                    format="webp"
+                    quality={74}
+                    loading="lazy"
+                  />
+                ) : (
+                  <MediaPlaceholder label={project.placeholder} />
+                )}
+              </div>
+              <div class="desk-panel__body">
+                <h2 class="desk-panel__name">{project.name}</h2>
+                <p class="desk-panel__purpose">{project.purpose}</p>
+                <ul class="desk-panel__facts">
+                  {project.facts.map((fact) => (
+                    <li>{fact}</li>
+                  ))}
+                </ul>
+                <span class="desk-panel__cta">View project →</span>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="desk__context">
+      The current projects run on CrossPoint Reader, an open firmware for XTEINK e-ink
+      readers. Each project page covers its own downloads and installation.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    display: grid;
+    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-top: clamp(4rem, 9vw, 9rem);
+    padding-bottom: clamp(3rem, 7vw, 7rem);
+    max-width: var(--wrap);
+  }
+
+  .page-head h1 {
+    grid-column: 2;
+    max-width: 14ch;
+    font-family: var(--font-sans);
+    font-size: clamp(3.3rem, 7vw, 7.8rem);
+    font-weight: 760;
+    letter-spacing: -.065em;
+    line-height: .9;
+  }
+
+  .page-head__intro {
+    grid-column: 2;
+    max-width: 44rem;
+    margin: var(--space-md) 0 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.85rem);
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+
+  .page-head__chapter {
+    grid-row: 1 / span 2;
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .page-head__chapter span {
+    display: block;
+    width: fit-content;
+    margin-bottom: .65rem;
+    padding: .35rem .5rem;
+    background: var(--yellow);
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+
+  .desk {
+    padding-bottom: var(--space-xxl);
+  }
+
+  .desk__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: var(--heavy-rule);
+    border-left: var(--heavy-rule);
+  }
+
+  .desk-panel {
+    display: flex;
+    border-right: var(--heavy-rule);
+    border-bottom: var(--heavy-rule);
+  }
+
+  .desk-panel__link {
+    display: grid;
+    grid-template-columns: minmax(8rem, 13rem) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: start;
+    width: 100%;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .desk-panel__media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .desk-panel__name {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: clamp(2rem, 3vw, 3rem);
+    font-weight: 760;
+    letter-spacing: -.045em;
+    line-height: 1;
+  }
+
+  .desk-panel__purpose {
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.35;
+    color: var(--ink-soft);
+  }
+
+  .desk-panel__facts {
+    list-style: none;
+    margin: var(--space-md) 0 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .desk-panel__facts li {
+    padding: .3rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .desk-panel__facts li:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .desk-panel__cta {
+    display: inline-block;
+    margin-top: var(--space-lg);
+    font-family: var(--font-sans);
+    font-size: .72rem;
+    font-weight: 750;
+    letter-spacing: .075em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: .2rem;
+  }
+
+  .desk-panel__link:hover .desk-panel__name,
+  .desk-panel__link:hover .desk-panel__cta {
+    color: var(--accent);
+  }
+
+  .desk__context {
+    max-width: 44rem;
+    margin: var(--space-lg) 0 0;
+    font-size: var(--step--1);
+    line-height: 1.55;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 40rem) {
+    .page-head {
+      grid-template-columns: 1fr;
+    }
+
+    .page-head h1,
+    .page-head__intro {
+      grid-column: 1;
+    }
+
+    .page-head__chapter {
+      grid-row: auto;
+    }
+
+    .desk-panel__link {
+      grid-template-columns: 1fr;
+    }
+
+    .desk-panel__media {
+      max-width: 11rem;
+    }
+  }
+</style>
