@@ -1,16 +1,16 @@
 ---
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 
-const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.1.0';
-const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/goto-v1.1.0';
-const downloadUrl =
-  'https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.1.0/GOTO_X4PRO_v1.1.0.bin';
-const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99';
+const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.2';
+const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.2';
+const fileName = 'firmware-x4pro-g.factory.bin';
+const downloadUrl = `https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.2/${fileName}`;
+const sha256 = 'a12479d9df5f6fd9f678b2a15cdb3b5a8e246133efab788969cec70ae0155d86';
 ---
 
 <BaseLayout
   title="Install Project GOTO on the XTEINK X4 Pro — Archieval Mariano"
-  description="A guide to installing Project GOTO v1.1.0 on the XTEINK X4 Pro over USB using esptool."
+  description="A guide to installing Project GOTO (release v1.0.2) on the XTEINK X4 Pro over USB using esptool."
 >
   <section class="wrap install">
     <p class="install__back"><a href="/goto/">&larr; Project GOTO</a></p>
@@ -21,9 +21,10 @@ const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99
     </header>
 
     <p class="install__lede">
-      Project GOTO v1.1.0 adds support for the XTEINK X4 Pro. The X4 Pro installs
-      over <strong>USB</strong> (direct flashing with <code>esptool</code>), not the
-      microSD updater the original X4 uses.
+      The current release is v1.0.2 (CrossPoint 1.6.0 + Apps 1.0.2). The X4 Pro
+      installs over <strong>USB</strong> (direct flashing with <code>esptool</code>),
+      not the microSD updater the original X4 uses. After that first install, later
+      releases arrive over Wi-Fi.
     </p>
     <p class="install__note">
       Have the original XTEINK X4 instead? Use the
@@ -32,14 +33,14 @@ const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99
     </p>
 
     <dl class="install__meta">
-      <div><dt>Firmware</dt><dd><code>GOTO_X4PRO_v1.1.0.bin</code> (factory image)</dd></div>
+      <div><dt>Firmware</dt><dd><code>{fileName}</code> (factory image)</dd></div>
       <div><dt>Flash at</dt><dd><code>0x0</code></dd></div>
       <div><dt>SHA-256</dt><dd><code class="install__sha">{sha256}</code></dd></div>
-      <div><dt>On-device identity</dt><dd><code>v1.6.0 · GOTO v1.1.0</code></dd></div>
+      <div><dt>On-device identity</dt><dd><code>1.6.0-A1.0.2-G</code></dd></div>
     </dl>
 
     <p class="install__actions">
-      <a class="install__download" href={downloadUrl}>Download GOTO_X4PRO_v1.1.0.bin</a>
+      <a class="install__download" href={downloadUrl}>Download {fileName}</a>
     </p>
 
     <p class="install__warn">This overwrites the device’s internal firmware and may reset internal flash state.</p>
@@ -55,16 +56,21 @@ const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99
     <section class="install__section">
       <h2>Which file do I download?</h2>
       <p>
-        Download <code>GOTO_X4PRO_v1.1.0.bin</code> — the <strong>factory image</strong>.
-        It is the primary, first-time installation file for an X4 Pro coming from its
-        OEM/current firmware, and it is flashed at address <code>0x0</code>.
+        Download <code>{fileName}</code>, the <strong>factory image</strong>. It is the
+        normal installation file, and it is flashed at address <code>0x0</code>.
       </p>
       <p>
-        The release also includes <code>GOTO_X4PRO_v1.1.0.app.bin</code> — an advanced
-        app-slot / OTA image for updating an existing CrossPoint install. It is
-        <strong>not</strong> the normal installation file, and you must
-        <strong>never flash it at <code>0x0</code></strong>. If you are not sure, use
-        the factory image above.
+        Want ON POINT, a P2P bus departure board, as well? Use
+        <code>firmware-x4pro-gp.factory.bin</code> (GOTO + ON POINT) from the
+        <a href={releaseUrl} target="_blank" rel="noopener">same release</a> instead,
+        and check it against <code>SHA256SUMS.txt</code> there. Everything below works
+        the same way with that file name.
+      </p>
+      <p>
+        The release also lists files without <code>.factory</code>, such as
+        <code>firmware-x4pro-g.bin</code>. Those are app images used by the Wi-Fi
+        updater. They are <strong>not</strong> installation files: <strong>never flash
+        them at <code>0x0</code></strong>.
       </p>
     </section>
 
@@ -78,7 +84,7 @@ const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99
         <li><strong>esptool</strong>, the standard Espressif flashing tool.</li>
       </ul>
       <p>Verify the download before flashing (the value must match the SHA-256 above):</p>
-      <pre class="install__code"><code>shasum -a 256 GOTO_X4PRO_v1.1.0.bin</code></pre>
+      <pre class="install__code"><code>shasum -a 256 {fileName}</code></pre>
     </section>
 
     <hr class="rule" />
@@ -104,22 +110,38 @@ const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99
       <h2>3. Flash Project GOTO</h2>
       <p>Run the command for your platform, in the folder that holds the downloaded file. Point <code>--port</code> at what you found above.</p>
       <p class="install__subhead">macOS / Linux</p>
-      <pre class="install__code"><code>esptool --chip esp32s3 --port /dev/cu.usbmodem101 --baud 921600 write_flash 0x0 GOTO_X4PRO_v1.1.0.bin</code></pre>
+      <pre class="install__code"><code>esptool --chip esp32s3 --port /dev/cu.usbmodem101 --baud 921600 write_flash 0x0 {fileName}</code></pre>
       <p class="install__subhead">Windows</p>
-      <pre class="install__code"><code>esptool --chip esp32s3 --port COM5 --baud 921600 write_flash 0x0 GOTO_X4PRO_v1.1.0.bin</code></pre>
+      <pre class="install__code"><code>esptool --chip esp32s3 --port COM5 --baud 921600 write_flash 0x0 {fileName}</code></pre>
       <p>It takes about 40 seconds. Near the end you should see <code>Hash of data verified.</code> and the device reboots itself into CrossPoint.</p>
     </section>
 
     <hr class="rule" />
     <section class="install__section">
       <h2>4. First boot</h2>
-      <p>The X4 Pro restarts into CrossPoint. Open <strong>GOTO</strong> from the menu to read the current edition. In Settings, the version reads <code>v1.6.0 · GOTO v1.1.0</code>.</p>
+      <p>
+        The X4 Pro restarts into CrossPoint. Open <strong>Apps</strong> on the home
+        screen, then <strong>GOTO</strong> (it reads TOGO in the evening). In Settings,
+        the version reads <code>1.6.0-A1.0.2-G</code>, or <code>1.6.0-A1.0.2-GP</code>
+        with ON POINT.
+      </p>
       <p class="install__subhead">Controls on the X4 Pro</p>
       <ul class="install__list">
         <li><strong>Left key</strong> → previous story · <strong>Right key</strong> → next story (wraps around)</li>
         <li>Tap the on-screen <strong>FULL STORY</strong> bar → show the article QR; tap the screen to go back</li>
-        <li><strong>Home</strong> → exit GOTO to the CrossPoint home screen</li>
+        <li><strong>Back</strong> → return to Apps · <strong>Home</strong> → the CrossPoint home screen</li>
       </ul>
+    </section>
+
+    <hr class="rule" />
+    <section class="install__section">
+      <h2>Updating</h2>
+      <p>
+        Later releases install over Wi-Fi: connect to Wi-Fi, then open Settings &rarr;
+        System &rarr; Check for updates. The update keeps the package you installed
+        (GOTO, or GOTO + ON POINT). To switch packages, flash the other factory image
+        over USB as above.
+      </p>
     </section>
 
     <hr class="rule" />
@@ -142,8 +164,8 @@ const sha256 = '126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99
     </p>
 
     <p class="install__note">
-      Project GOTO v1.1.0 · XTEINK X4 Pro (ESP32-S3). The original XTEINK X4 remains on
-      v1.0.0 with its microSD install unchanged.
+      Release v1.0.2 · XTEINK X4 Pro (ESP32-S3). The original XTEINK X4 installs the
+      same release from microSD.
     </p>
   </section>
 </BaseLayout>

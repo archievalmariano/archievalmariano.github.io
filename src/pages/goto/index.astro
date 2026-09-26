@@ -47,53 +47,60 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <h2>Download</h2>
       <p>
         Project GOTO runs on two devices, each with its own installer. Choose your
-        hardware below.
+        hardware below. After installing, GOTO lives in the <strong>Apps</strong>
+        menu on the CrossPoint home screen, and later releases install over Wi-Fi
+        from Settings → System → Check for updates.
       </p>
 
       <div class="goto__devices">
         <article class="goto__device">
           <h3 class="goto__device-name">XTEINK X4 <span class="goto__device-method">· microSD update</span></h3>
           <dl class="goto__meta">
-            <div><dt>Release</dt><dd>Project GOTO v1.0.0</dd></div>
-            <div><dt>On-device identity</dt><dd>v1.6.0 · GOTO v1.0.0</dd></div>
+            <div><dt>Release</dt><dd>v1.0.2 · CrossPoint 1.6.0 + Apps 1.0.2</dd></div>
+            <div><dt>On-device identity</dt><dd>1.6.0-A1.0.2-G</dd></div>
           </dl>
           <p class="goto__actions">
             <a
               class="goto__download"
-              href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.0.0/GOTO_X4_v1.0.0.bin"
+              href="https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.2/firmware-x4-g.bin"
             >Download for XTEINK X4</a>
           </p>
           <p class="goto__links">
             <a href="/goto/install/">Installation guide</a> · microSD updater
             <span aria-hidden="true">·</span>
-            <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.0.0" target="_blank" rel="noopener">Release notes</a>
+            <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.2" target="_blank" rel="noopener">Release notes</a>
           </p>
           <p class="goto__sha">
             <span class="goto__sha-label">SHA-256</span>
-            <code>67a7fb20158b0eb2f9258421b4c5b0e625183674db1ea1de1020be8e629f085a</code>
+            <code>63f82f49da7ea7d1e8a19a1b96ef1daccf589ce995b313c7c215c796e12aaa77</code>
           </p>
         </article>
 
         <article class="goto__device">
           <h3 class="goto__device-name">XTEINK X4 Pro <span class="goto__device-method">· USB flashing</span></h3>
           <dl class="goto__meta">
-            <div><dt>Release</dt><dd>Project GOTO v1.1.0</dd></div>
-            <div><dt>On-device identity</dt><dd>v1.6.0 · GOTO v1.1.0</dd></div>
+            <div><dt>Release</dt><dd>v1.0.2 · CrossPoint 1.6.0 + Apps 1.0.2</dd></div>
+            <div><dt>On-device identity</dt><dd>1.6.0-A1.0.2-G</dd></div>
           </dl>
           <p class="goto__actions">
             <a
               class="goto__download"
-              href="https://github.com/archievalmariano/crosspoint-reader/releases/download/goto-v1.1.0/GOTO_X4PRO_v1.1.0.bin"
+              href="https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.2/firmware-x4pro-g.factory.bin"
             >Download for XTEINK X4 Pro</a>
           </p>
           <p class="goto__links">
             <a href="/goto/install/x4-pro/">Installation guide</a> · USB (esptool)
             <span aria-hidden="true">·</span>
-            <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.1.0" target="_blank" rel="noopener">Release notes</a>
+            <a href="https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.2" target="_blank" rel="noopener">Release notes</a>
           </p>
           <p class="goto__sha">
             <span class="goto__sha-label">SHA-256</span>
-            <code>126b60048871a14ebea0b0f8a933b36e6e9373e63462dfa4c2fd295b6b570a99</code>
+            <code>a12479d9df5f6fd9f678b2a15cdb3b5a8e246133efab788969cec70ae0155d86</code>
+          </p>
+          <p class="goto__install-more">
+            Also want ON POINT, a P2P bus departure board? The X4 Pro has a combined
+            GOTO + ON POINT package, <code>firmware-x4pro-gp.factory.bin</code>, in the
+            same release.
           </p>
         </article>
       </div>
@@ -103,11 +110,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <section class="goto__section">
       <h2>Installing on the XTEINK X4</h2>
       <ol class="goto__steps">
-        <li>Download <code>GOTO_X4_v1.0.0.bin</code>.</li>
+        <li>Download <code>firmware-x4-g.bin</code>.</li>
         <li>Copy it to the root of a microSD card.</li>
         <li>On the X4, open Settings → System → SD Card Firmware Update.</li>
         <li>Select the GOTO firmware and install it.</li>
-        <li>Reconnect Wi-Fi manually if needed, then open GOTO.</li>
+        <li>Reconnect Wi-Fi manually if needed, then open Apps → GOTO.</li>
       </ol>
       <p class="goto__install-more">
         See the <a href="/goto/install/">full X4 installation guide</a> for details.

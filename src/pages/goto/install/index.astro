@@ -7,17 +7,20 @@ import imgConfirm from '../../../assets/photos/goto-install-03-confirm.jpg';
 import imgUpdating from '../../../assets/photos/goto-install-04-updating.jpg';
 import imgComplete from '../../../assets/photos/goto-install-05-complete.jpg';
 import imgHome from '../../../assets/photos/goto-install-06-home.jpg';
+import imgApps from '../../../assets/photos/goto-install-07-apps.jpg';
 
-const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/goto-v1.0.0';
-const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/goto-v1.0.0';
-const sha256 = '67a7fb20158b0eb2f9258421b4c5b0e625183674db1ea1de1020be8e629f085a';
+const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.2';
+const downloadUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.2/firmware-x4-g.bin';
+const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.2';
+const fileName = 'firmware-x4-g.bin';
+const sha256 = '63f82f49da7ea7d1e8a19a1b96ef1daccf589ce995b313c7c215c796e12aaa77';
 const stepWidths = [400, 620, 820];
 const stepSizes = '(max-width: 520px) 88vw, 400px';
 ---
 
 <BaseLayout
   title="Install Project GOTO on the XTEINK X4 — Archieval Mariano"
-  description="An illustrated guide to installing Project GOTO v1.0.0 on the XTEINK X4 using CrossPoint Reader's SD card firmware updater."
+  description="An illustrated guide to installing Project GOTO (release v1.0.2) on the XTEINK X4 using CrossPoint Reader's SD card firmware updater."
 >
   <section class="wrap install">
     <p class="install__back"><a href="/goto/">&larr; Project GOTO</a></p>
@@ -28,7 +31,9 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
     </header>
 
     <p class="install__lede">
-      Project GOTO v1.0.0 is built for the XTEINK X4 running CrossPoint Reader 1.6.0.
+      Project GOTO is built for the XTEINK X4 running CrossPoint Reader 1.6.0. The
+      current release is v1.0.2 (CrossPoint 1.6.0 + Apps 1.0.2), with GOTO in the
+      Apps menu.
     </p>
     <p class="install__lede">
       Installation uses CrossPoint Reader’s built-in SD card firmware updater. You do
@@ -36,11 +41,11 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
     </p>
 
     <dl class="install__meta">
-      <div><dt>Firmware</dt><dd><code>GOTO_X4_v1.0.0.bin</code></dd></div>
+      <div><dt>Firmware</dt><dd><code>{fileName}</code></dd></div>
       <div><dt>SHA-256</dt><dd><code class="install__sha">{sha256}</code></dd></div>
     </dl>
     <p class="install__actions">
-      <a class="install__download" href={releaseUrl} target="_blank" rel="noopener">Download Project GOTO v1.0.0</a>
+      <a class="install__download" href={downloadUrl}>Download {fileName}</a>
     </p>
 
     <hr class="rule" />
@@ -50,17 +55,17 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
         <li>an XTEINK X4</li>
         <li>CrossPoint Reader already installed</li>
         <li>a microSD card readable by the X4</li>
-        <li><code>GOTO_X4_v1.0.0.bin</code></li>
+        <li><code>{fileName}</code></li>
         <li>Wi-Fi for retrieving the current edition</li>
       </ul>
-      <p class="install__note">Project GOTO v1.0.0 has only been tested on the XTEINK X4.</p>
+      <p class="install__note">This file is for the original XTEINK X4. The X4 Pro installs over USB instead: see the <a href="/goto/install/x4-pro/">X4 Pro guide</a>.</p>
     </section>
 
     <hr class="rule" />
     <section class="install__section">
       <h2>1. Copy the firmware to the microSD card</h2>
       <p>
-        Download <code>GOTO_X4_v1.0.0.bin</code> and place it in the root of the
+        Download <code>{fileName}</code> and place it in the root of the
         microSD card, not inside a folder.
       </p>
       <p>
@@ -68,9 +73,9 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
         may leave it there as the intended rollback option.
       </p>
       <p class="install__caption-lead">macOS:</p>
-      <pre class="install__code"><code>{'COPYFILE_DISABLE=1 cp GOTO_X4_v1.0.0.bin "/Volumes/<YOUR_SD>/"'}</code></pre>
+      <pre class="install__code"><code>{'COPYFILE_DISABLE=1 cp firmware-x4-g.bin "/Volumes/<YOUR_SD>/"'}</code></pre>
       <p>
-        If a <code>{'._GOTO_X4_v1.0.0.bin'}</code> file appears, remove it before
+        If a <code>{'._firmware-x4-g.bin'}</code> file appears, remove it before
         ejecting the card.
       </p>
       <p>Safely eject the microSD card, then insert it into the X4.</p>
@@ -79,9 +84,9 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
       <p>The file’s SHA-256 checksum should be:</p>
       <pre class="install__code"><code>{sha256}</code></pre>
       <p class="install__caption-lead">macOS:</p>
-      <pre class="install__code"><code>shasum -a 256 GOTO_X4_v1.0.0.bin</code></pre>
+      <pre class="install__code"><code>shasum -a 256 firmware-x4-g.bin</code></pre>
       <p class="install__caption-lead">Linux:</p>
-      <pre class="install__code"><code>sha256sum GOTO_X4_v1.0.0.bin</code></pre>
+      <pre class="install__code"><code>sha256sum firmware-x4-g.bin</code></pre>
     </section>
 
     <hr class="rule" />
@@ -89,7 +94,7 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
       <h2>2. Open the firmware updater</h2>
       <p>On the X4, open Settings &rarr; System &rarr; SD Card Firmware Update.</p>
       <figure class="install__figure">
-        <Image src={imgSettings} alt="The XTEINK X4 Settings screen on the System tab, with SD Card Firmware Update highlighted." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
+        <Image src={imgSettings} alt="The XTEINK X4 Settings screen on the System tab, with SD Card Firmware Update highlighted and the version 1.6.0-A1.0.2-G in the header." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
         <figcaption>Open Settings, switch to System, then select SD Card Firmware Update.</figcaption>
       </figure>
     </section>
@@ -97,10 +102,10 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
     <hr class="rule" />
     <section class="install__section">
       <h2>3. Select the Project GOTO firmware</h2>
-      <p>In the firmware picker, select <code>GOTO_X4_v1.0.0.bin</code>.</p>
+      <p>In the firmware picker, select <code>{fileName}</code>.</p>
       <figure class="install__figure">
-        <Image src={imgPicker} alt="The firmware file picker on the XTEINK X4 with GOTO_X4_v1.0.0.bin selected." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
-        <figcaption>Select GOTO_X4_v1.0.0.bin from the microSD card.</figcaption>
+        <Image src={imgPicker} alt="The firmware file picker on the XTEINK X4 with firmware-x4-g.bin selected, below CROSSPOINT_OFFICIAL_X4.bin." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
+        <figcaption>Select firmware-x4-g.bin from the microSD card.</figcaption>
       </figure>
     </section>
 
@@ -109,10 +114,10 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
       <h2>4. Confirm the update</h2>
       <p>
         The X4 will validate the firmware and show a confirmation screen. Check that
-        the filename is <code>GOTO_X4_v1.0.0.bin</code>, then select Confirm.
+        the filename is <code>{fileName}</code>, then select Confirm.
       </p>
       <figure class="install__figure">
-        <Image src={imgConfirm} alt="The XTEINK X4 confirmation dialog reading Update firmware? for GOTO_X4_v1.0.0.bin, with Confirm selected." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
+        <Image src={imgConfirm} alt="The XTEINK X4 confirmation dialog reading Update firmware? for firmware-x4-g.bin, with Confirm selected." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
         <figcaption>Confirm the update after checking the firmware filename.</figcaption>
       </figure>
     </section>
@@ -145,23 +150,35 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
     <hr class="rule" />
     <section class="install__section">
       <h2>7. Open Project GOTO</h2>
-      <p>After reboot, GOTO appears on the CrossPoint home screen.</p>
+      <p>
+        After reboot, the CrossPoint home screen has an <strong>Apps</strong> entry.
+        Open Apps, then select <strong>GOTO</strong>. In the evening it reads
+        <strong>TOGO</strong>, after the evening edition.
+      </p>
       <figure class="install__figure">
-        <Image src={imgHome} alt="The CrossPoint Reader home screen on the XTEINK X4 with GOTO highlighted in the menu." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
-        <figcaption>Project GOTO appears on the CrossPoint home screen after installation.</figcaption>
+        <Image src={imgHome} alt="The CrossPoint Reader home screen on the XTEINK X4 with Apps highlighted below Settings." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
+        <figcaption>Apps appears on the CrossPoint home screen after installation.</figcaption>
       </figure>
-      <p>You can also confirm the installed version under Settings:</p>
-      <p class="install__version"><code>v1.6.0 · GOTO v1.0.0</code></p>
+      <figure class="install__figure">
+        <Image src={imgApps} alt="The Apps screen on the XTEINK X4 listing TOGO, the evening edition of GOTO." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
+        <figcaption>Inside Apps, GOTO reads TOGO once the evening edition is out.</figcaption>
+      </figure>
+      <p>You can also confirm the installed version in the Settings header:</p>
+      <p class="install__version"><code>1.6.0-A1.0.2-G</code></p>
       <figure class="install__figure install__figure--small">
-        <Image src={imgSettings} alt="The XTEINK X4 Settings header showing the version string v1.6.0 · GOTO v1.0.0." widths={[260, 420, 520]} sizes="(max-width: 520px) 60vw, 260px" format="webp" quality={74} loading="lazy" />
+        <Image src={imgSettings} alt="The XTEINK X4 Settings header showing the version string 1.6.0-A1.0.2-G." widths={[260, 420, 520]} sizes="(max-width: 520px) 60vw, 260px" format="webp" quality={74} loading="lazy" />
         <figcaption>The installed version shown in Settings.</figcaption>
       </figure>
+      <p class="install__note">
+        <code>1.6.0</code> is the CrossPoint base, <code>A1.0.2</code> the release, and
+        <code>G</code> the package (GOTO).
+      </p>
     </section>
 
     <hr class="rule" />
     <section class="install__section">
       <h2>First launch</h2>
-      <p>Connect the X4 to Wi-Fi, then open GOTO.</p>
+      <p>Connect the X4 to Wi-Fi, then open Apps → GOTO.</p>
       <p>
         Project GOTO will retrieve the current edition from the hosted service and
         save a local cached copy after a successful fetch.
@@ -190,6 +207,17 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
         Stories and reporting remain with GMA Network and GMA News Online. Each
         article link opens the original source.
       </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="install__section">
+      <h2>Updating</h2>
+      <p>
+        From v1.0.2 onward, new releases install over Wi-Fi: connect to Wi-Fi, then open
+        Settings &rarr; System &rarr; Check for updates. The update keeps the same
+        package you installed.
+      </p>
+      <p>You can also repeat the microSD steps above with a newer file.</p>
     </section>
 
     <hr class="rule" />
