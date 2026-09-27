@@ -1,0 +1,28 @@
+---
+// A moved page. GitHub Pages cannot send HTTP redirects, so this forwards in
+// the browser: the script keeps the query string and #fragment (campaign tags,
+// section links), and the meta refresh covers browsers without JavaScript.
+interface Props {
+  to: string;
+}
+
+const { to } = Astro.props;
+const canonical = new URL(to, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting to {to}</title>
+    <script is:inline define:vars={{ to }}>
+      location.replace(to + location.search + location.hash);
+    </script>
+    <meta http-equiv="refresh" content={`0;url=${to}`} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={canonical} />
+  </head>
+  <body>
+    <a href={to}>Redirecting to {to}</a>
+  </body>
+</html>

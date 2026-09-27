@@ -43,6 +43,28 @@ const isActive = (href: string) =>
   </div>
 </header>
 
+<script>
+  // On narrow screens the nav scrolls sideways. Mark which edges have more
+  // links past them, and bring the current page's link into view.
+  const nav = document.querySelector<HTMLElement>('.site-head nav');
+  if (nav) {
+    const update = () => {
+      const max = nav.scrollWidth - nav.clientWidth;
+      nav.toggleAttribute('data-more-start', nav.scrollLeft > 4);
+      nav.toggleAttribute('data-more-end', max - nav.scrollLeft > 4);
+    };
+    const current = nav.querySelector('[aria-current="page"]');
+    if (current) {
+      const link = current.getBoundingClientRect();
+      const edge = nav.getBoundingClientRect().right - 48;
+      if (link.right > edge) nav.scrollLeft += link.right - edge;
+    }
+    update();
+    nav.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+  }
+</script>
+
 <style>
   .site-head {
     position: relative;
@@ -151,6 +173,19 @@ const isActive = (href: string) =>
 
     nav::-webkit-scrollbar {
       display: none;
+    }
+
+    /* Fade the edge that has more links past it, so the row reads as scrollable. */
+    nav[data-more-end] {
+      mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+    }
+
+    nav[data-more-start] {
+      mask-image: linear-gradient(to left, #000 calc(100% - 3rem), transparent);
+    }
+
+    nav[data-more-start][data-more-end] {
+      mask-image: linear-gradient(to right, transparent, #000 3rem, #000 calc(100% - 3rem), transparent);
     }
 
     nav ul {

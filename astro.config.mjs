@@ -7,14 +7,11 @@ import mdx from '@astrojs/mdx';
 // so `site` is set and `base` is intentionally omitted.
 export default defineConfig({
   site: 'https://archievalmariano.com',
-  integrations: [mdx(), sitemap()],
-  // GOTO moved under DESK. GitHub Pages cannot send HTTP redirects, so these
-  // build to pages that refresh immediately and point canonical to the target.
-  redirects: {
-    '/goto': '/desk/goto/',
-    '/goto/install': '/desk/goto/install/',
-    '/goto/install/x4-pro': '/desk/goto/install/x4-pro/',
-  },
+  integrations: [
+    mdx(),
+    // src/pages/goto/** only forward to /desk/goto/ (see RedirectPage.astro).
+    sitemap({ filter: (page) => !new URL(page).pathname.startsWith('/goto/') }),
+  ],
   markdown: {
     shikiConfig: {
       theme: 'css-variables',
