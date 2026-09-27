@@ -26,14 +26,14 @@ const edition = [
   {
     src: imgPhone,
     alt: 'The GOTO morning edition page for 27 September 2026 open in a browser on a Samsung Galaxy Z Fold 7, listing the same stories with links to GMA News.',
-    caption: 'The edition opens on your phone, with a link to each full story.',
+    caption: 'The 27 September 2026 morning edition on a phone, with a link to each full story.',
   },
 ];
 ---
 
 <BaseLayout
   title="Project GOTO — Archieval Mariano"
-  description="GOTO is a limited morning (GOTO) and evening (TOGO) news reader for non-touch e-ink devices running CrossPoint Reader."
+  description="GOTO is a limited morning (GOTO) and evening (TOGO) news reader for e-ink devices running CrossPoint Reader."
 >
   <section class="wrap goto">
     <p class="goto__back"><a href="/desk/">&larr; Desk</a></p>
@@ -45,7 +45,7 @@ const edition = [
 
     <p class="goto__lede">
       GOTO/TOGO delivers a limited morning (GOTO) and evening (TOGO) news briefing
-      to non-touch e-ink readers running CrossPoint Reader. Open an edition, read a
+      to e-ink readers running CrossPoint Reader. Open an edition, read a
       fixed set of story leads, and scan a QR code if you want to continue a story
       on your phone. That’s it. No endless feed, and no need to read every story in
       full.
@@ -66,7 +66,8 @@ const edition = [
       <h2>From the e-ink screen to your phone</h2>
       <p>
         Each story has its own Full Story QR code, and the edition ends with one that
-        opens every story at once. Scan it and the whole edition is on your phone.
+        opens the edition page, with links to every story. Scan it and the whole
+        edition is on your phone.
       </p>
       <div class="goto__edition">
         {

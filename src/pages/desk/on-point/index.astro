@@ -115,7 +115,7 @@ const packages = [
           next scheduled trip.
         </li>
         <li>Both directions of each route. Left and Right switch direction.</li>
-        <li>A main route that opens first. Hold a route in the list to make it your main route.</li>
+        <li>A main route, selected at the top of the route list. Hold a route in the list to make it your main route.</li>
       </ul>
       <p class="op__aside">
         ON POINT never guesses the time. It reads the X4 Pro’s built-in clock, and if
@@ -216,8 +216,16 @@ const packages = [
       <ol class="op__steps">
         <li>Download the factory image for the package you want.</li>
         <li>
-          Connect the X4 Pro over USB and flash it at <code>0x0</code> with esptool:
+          Connect the X4 Pro over USB and find its port. On macOS it looks like
+          <code>/dev/cu.usbmodem101</code>; the guide below covers Linux and Windows.
+        </li>
+        <li>
+          In the folder that holds the download, flash the file for your package at
+          <code>0x0</code> with esptool, replacing the port with yours.
+          <p class="op__cmd-label">ON POINT</p>
           <pre class="op__code"><code>esptool --chip esp32s3 --port /dev/cu.usbmodem101 --baud 921600 write_flash 0x0 firmware-x4pro-p.factory.bin</code></pre>
+          <p class="op__cmd-label">GOTO + ON POINT</p>
+          <pre class="op__code"><code>esptool --chip esp32s3 --port /dev/cu.usbmodem101 --baud 921600 write_flash 0x0 firmware-x4pro-gp.factory.bin</code></pre>
         </li>
         <li>After it restarts, connect to Wi-Fi once. The X4 Pro sets its clock and keeps it.</li>
         <li>Open Apps → ON POINT.</li>
@@ -303,6 +311,14 @@ const packages = [
     font-size: var(--step--1);
     line-height: 1.45;
     color: var(--ink-faint);
+  }
+  .op__cmd-label {
+    margin: var(--space-sm) 0 0 !important;
+    font-size: .72rem;
+    font-weight: 750;
+    letter-spacing: .075em;
+    text-transform: uppercase;
+    color: var(--ink-faint) !important;
   }
   .op__figure {
     margin: var(--space-md) 0 0;
