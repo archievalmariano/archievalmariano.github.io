@@ -11,7 +11,7 @@ const release = 'https://github.com/archievalmariano/crosspoint-reader/releases'
 
 // Bundled routes in the current release, in the order the device lists them.
 const routes = [
-  { route: 'Balagtas ↔ TriNoma', operator: 'Bulacan P2P', days: 'Weekday and weekend / holiday timetables' },
+  { route: 'Balagtas ↔ TriNoma', operator: 'Bulacan P2P', days: 'Daily' },
   { route: 'Caypombo ↔ SM North EDSA', operator: 'Precious Grace', days: 'Daily' },
   { route: 'Clark Airport ↔ Baguio', operator: 'Genesis', days: 'Daily' },
   { route: 'Clark Airport ↔ NAIA T3', operator: 'Genesis', days: 'Daily' },
@@ -64,7 +64,7 @@ const packages = [
 
 <BaseLayout
   title="ON POINT — Archieval Mariano"
-  description="ON POINT is an offline departure board for scheduled bus routes on the XTEINK X4 Pro, with seven Philippine P2P and airport routes from the operators' published timetables."
+  description="ON POINT is an offline departure board for the XTEINK X4 Pro. It carries seven local P2P and airport bus routes, each taken from its operator’s published schedule."
 >
   <section class="wrap op">
     <p class="op__back"><a href="/desk/">&larr; Desk</a></p>
@@ -77,7 +77,7 @@ const packages = [
     <p class="op__lede">
       ON POINT keeps published timetables on the XTEINK X4 Pro and tells you what
       leaves next, and how long you have, without a network connection. It currently
-      carries seven Philippine P2P and airport bus routes, each taken from its
+      carries seven local P2P and airport bus routes, each taken from its
       operator’s published schedule.
     </p>
 
@@ -146,9 +146,9 @@ const packages = [
         </tbody>
       </table>
       <p class="op__aside">
-        Schedules come from each operator’s published timetable. Philippine public
-        holidays for 2026 use a route’s holiday timetable where it has one. Operators
-        change schedules without notice, so check with them before a trip that matters.
+        Public holidays in the Philippines for 2026 use a route’s holiday timetable
+        where it has one. Operators change schedules without notice, so check with them
+        before a trip that matters.
       </p>
     </section>
 
