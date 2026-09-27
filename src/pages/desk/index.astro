@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import MediaPlaceholder from '../../components/MediaPlaceholder.astro';
-import imgGotoApps from '../../assets/photos/goto-install-07-apps.jpg';
+import imgGoto from '../../assets/photos/goto-edition-01-story.jpg';
+import imgOnPoint from '../../assets/photos/onpoint-01-board.jpg';
 
 // Public-ready projects, in the order they appear. `image` is optional: a
 // project without a photo yet renders a marked placeholder.
@@ -13,8 +14,8 @@ const projects = [
     href: '/desk/goto/',
     purpose: 'A limited morning and evening news briefing for e-ink readers.',
     facts: ['XTEINK X4 + X4 Pro', 'Philippine news', 'Updates twice daily'],
-    image: imgGotoApps,
-    imageAlt: 'The Apps screen on an XTEINK X4 listing TOGO, the evening edition of GOTO.',
+    image: imgGoto,
+    imageAlt: 'The top story of a GOTO morning edition on an XTEINK X4 Pro, story 1 of 10.',
   },
   {
     name: 'ON POINT',
@@ -22,7 +23,8 @@ const projects = [
     href: '/desk/on-point/',
     purpose: 'An offline departure board for scheduled bus routes.',
     facts: ['XTEINK X4 Pro', 'Works offline', '7 published routes'],
-    placeholder: 'ON POINT departure board on the XTEINK X4 Pro',
+    image: imgOnPoint,
+    imageAlt: 'ON POINT on an XTEINK X4 Pro showing 15 minutes until the 09:30 bus from Balagtas to TriNoma.',
   },
 ];
 ---

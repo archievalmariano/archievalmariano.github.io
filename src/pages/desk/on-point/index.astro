@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import { Image } from 'astro:assets';
+import imgBoard from '../../../assets/photos/onpoint-01-board.jpg';
+import imgRoutes from '../../../assets/photos/onpoint-02-routes.jpg';
+import imgCubao from '../../../assets/photos/onpoint-03-cubao-clark.jpg';
+import imgRoutes2 from '../../../assets/photos/onpoint-04-routes-page2.jpg';
+import imgApps from '../../../assets/photos/onpoint-05-apps.jpg';
 
 const release = 'https://github.com/archievalmariano/crosspoint-reader/releases';
 
@@ -14,6 +19,32 @@ const routes = [
   { route: 'NAIA T3 ↔ PITX', operator: 'UBE Express', days: 'Daily' },
   { route: 'TriNoma ↔ Clark Airport', operator: 'Genesis', days: 'Daily' },
 ];
+
+const gallery = [
+  {
+    src: imgBoard,
+    alt: 'ON POINT showing 15 minutes until the 09:30 bus from Balagtas to TriNoma, with the next trip at 10:00 and the last at 20:00.',
+    caption: 'The departure board: time left, the scheduled trip, the next one and the last.',
+  },
+  {
+    src: imgRoutes,
+    alt: 'The ON POINT route list with Balagtas to TriNoma as the main route, above Caypombo, Clark Airport to Baguio and Clark Airport to NAIA T3.',
+    caption: 'Your main route sits at the top of the route list.',
+  },
+  {
+    src: imgCubao,
+    alt: 'ON POINT showing 115 minutes until the 11:10 bus from Cubao to Clark Airport, with trips every 120 minutes.',
+    caption: 'Less frequent routes show the gap between trips.',
+  },
+  {
+    src: imgRoutes2,
+    alt: 'The second page of the ON POINT route list: Cubao to Clark Airport, NAIA T3 to PITX and TriNoma to Clark Airport.',
+    caption: 'Hold a route to make it your main route.',
+  },
+];
+
+const galleryWidths = [240, 360, 520];
+const gallerySizes = '(max-width: 40rem) 45vw, 170px';
 
 const packages = [
   {
@@ -51,15 +82,14 @@ const packages = [
     </p>
 
     <div class="op__gallery">
-      <figure>
-        <MediaPlaceholder label="Apps → ON POINT on the X4 Pro" />
-      </figure>
-      <figure>
-        <MediaPlaceholder label="Route list: main route and all routes" />
-      </figure>
-      <figure>
-        <MediaPlaceholder label="Departure board with countdown" />
-      </figure>
+      {
+        gallery.map((photo) => (
+          <figure>
+            <Image src={photo.src} alt={photo.alt} widths={galleryWidths} sizes={gallerySizes} format="webp" quality={74} loading="lazy" />
+            <figcaption>{photo.caption}</figcaption>
+          </figure>
+        ))
+      }
     </div>
 
     <section class="op__section">
@@ -192,6 +222,10 @@ const packages = [
         <li>After it restarts, connect to Wi-Fi once. The X4 Pro sets its clock and keeps it.</li>
         <li>Open Apps → ON POINT.</li>
       </ol>
+      <figure class="op__figure">
+        <Image src={imgApps} alt="The CrossPoint Apps screen on an XTEINK X4 Pro listing GOTO and ON POINT, with ON POINT selected." widths={galleryWidths} sizes="(max-width: 40rem) 60vw, 260px" format="webp" quality={74} loading="lazy" />
+        <figcaption>ON POINT in the Apps menu, installed here alongside GOTO.</figcaption>
+      </figure>
       <p class="op__install-more">
         The <a href="/desk/goto/install/x4-pro/">X4 Pro USB guide</a> covers installing
         esptool, finding the port and troubleshooting. It is written for GOTO, and the
@@ -249,12 +283,30 @@ const packages = [
   }
   .op__gallery {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--space-sm);
     margin: 0 0 var(--space-lg);
   }
   .op__gallery figure {
     margin: 0;
+  }
+  .op__gallery img,
+  .op__figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+  }
+  .op__gallery figcaption,
+  .op__figure figcaption {
+    margin-top: var(--space-xs);
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--ink-faint);
+  }
+  .op__figure {
+    margin: var(--space-md) 0 0;
+    max-width: 260px;
   }
   .op__section {
     margin-block: var(--space-lg);
@@ -428,16 +480,8 @@ const packages = [
 
   @media (max-width: 40rem) {
     .op__gallery {
-      gap: var(--space-xs);
-    }
-    .op__gallery :global(.media-placeholder) {
-      padding: .6rem;
-    }
-    .op__gallery :global(.media-placeholder__note) {
-      font-size: .5rem;
-    }
-    .op__gallery :global(.media-placeholder__label) {
-      font-size: .78rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md) var(--space-sm);
     }
     .op__meta dt {
       min-width: 0;
