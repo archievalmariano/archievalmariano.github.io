@@ -1,16 +1,16 @@
 ---
 import BaseLayout from '../../../../../layouts/BaseLayout.astro';
 
-const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.2';
-const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.2';
+const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.3';
+const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.3';
 const fileName = 'firmware-x4pro-g.factory.bin';
-const downloadUrl = `https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.2/${fileName}`;
-const sha256 = 'a12479d9df5f6fd9f678b2a15cdb3b5a8e246133efab788969cec70ae0155d86';
+const downloadUrl = `https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.3/${fileName}`;
+const sha256 = '4654ad66d75cc64f91e4b76d2b5e10e40236c9dc976d7e84b4c533ca3633360f';
 ---
 
 <BaseLayout
   title="Install Project GOTO on the XTEINK X4 Pro — Archieval Mariano"
-  description="A guide to installing Project GOTO (release v1.0.2) on the XTEINK X4 Pro over USB using esptool."
+  description="A guide to installing Project GOTO (release v1.0.3) on the XTEINK X4 Pro over USB using esptool."
 >
   <section class="wrap install">
     <p class="install__back"><a href="/desk/goto/">&larr; Project GOTO</a></p>
@@ -21,7 +21,7 @@ const sha256 = 'a12479d9df5f6fd9f678b2a15cdb3b5a8e246133efab788969cec70ae0155d86
     </header>
 
     <p class="install__lede">
-      The current release is v1.0.2 (CrossPoint 1.6.0 + Apps 1.0.2). The X4 Pro
+      The current release is v1.0.3 (CrossPoint 1.6.0 + Apps 1.0.3). The X4 Pro
       installs over <strong>USB</strong> (direct flashing with <code>esptool</code>),
       not the microSD updater the original X4 uses. After that first install, later
       releases arrive over Wi-Fi.
@@ -36,7 +36,7 @@ const sha256 = 'a12479d9df5f6fd9f678b2a15cdb3b5a8e246133efab788969cec70ae0155d86
       <div><dt>Firmware</dt><dd><code>{fileName}</code> (factory image)</dd></div>
       <div><dt>Flash at</dt><dd><code>0x0</code></dd></div>
       <div><dt>SHA-256</dt><dd><code class="install__sha">{sha256}</code></dd></div>
-      <div><dt>On-device identity</dt><dd><code>1.6.0-A1.0.2-G</code></dd></div>
+      <div><dt>On-device identity</dt><dd><code>1.6.0-A1.0.3-G</code></dd></div>
     </dl>
 
     <p class="install__actions">
@@ -122,12 +122,18 @@ const sha256 = 'a12479d9df5f6fd9f678b2a15cdb3b5a8e246133efab788969cec70ae0155d86
       <p>
         The X4 Pro restarts into CrossPoint. Open <strong>Apps</strong> on the home
         screen, then <strong>GOTO</strong> (it reads TOGO in the evening). In Settings,
-        the version reads <code>1.6.0-A1.0.2-G</code>, or <code>1.6.0-A1.0.2-GP</code>
+        the version reads <code>1.6.0-A1.0.3-G</code>, or <code>1.6.0-A1.0.3-GP</code>
         with ON POINT.
+      </p>
+      <p>
+        If Wi-Fi is not connected, GOTO opens CrossPoint’s Wi-Fi screen first. It
+        tries your saved network; if that does not connect, choose your network from
+        the list. Press Back to skip it and read the last saved edition.
       </p>
       <p class="install__subhead">Controls on the X4 Pro</p>
       <ul class="install__list">
         <li><strong>Left key</strong> → previous story · <strong>Right key</strong> → next story (wraps around)</li>
+        <li><strong>Swipe left</strong> → next story · <strong>swipe right</strong> → previous story. This follows Settings → Controls → Touch Reader Controls, the same setting as books: Tap uses the screen’s sides instead, and Off turns touch page turns off.</li>
         <li>Tap the on-screen <strong>FULL STORY</strong> bar → show the article QR; tap the screen to go back</li>
         <li><strong>Back</strong> → return to Apps · <strong>Home</strong> → the CrossPoint home screen</li>
       </ul>
@@ -164,7 +170,7 @@ const sha256 = 'a12479d9df5f6fd9f678b2a15cdb3b5a8e246133efab788969cec70ae0155d86
     </p>
 
     <p class="install__note">
-      Release v1.0.2 · XTEINK X4 Pro (ESP32-S3). The original XTEINK X4 installs the
+      Release v1.0.3 · XTEINK X4 Pro (ESP32-S3). The original XTEINK X4 installs the
       same release from microSD.
     </p>
   </section>

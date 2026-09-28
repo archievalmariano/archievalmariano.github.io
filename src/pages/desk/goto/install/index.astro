@@ -9,18 +9,18 @@ import imgComplete from '../../../../assets/photos/goto-install-05-complete.jpg'
 import imgHome from '../../../../assets/photos/goto-install-06-home.jpg';
 import imgApps from '../../../../assets/photos/goto-install-07-apps.jpg';
 
-const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.2';
-const downloadUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.2/firmware-x4-g.bin';
-const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.2';
+const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.3';
+const downloadUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.3/firmware-x4-g.bin';
+const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.3';
 const fileName = 'firmware-x4-g.bin';
-const sha256 = '63f82f49da7ea7d1e8a19a1b96ef1daccf589ce995b313c7c215c796e12aaa77';
+const sha256 = '3e50954f514e09fe70603be95a40a4e1f8024b09db66cade5b465e888f8fc0aa';
 const stepWidths = [400, 620, 820];
 const stepSizes = '(max-width: 520px) 88vw, 400px';
 ---
 
 <BaseLayout
   title="Install Project GOTO on the XTEINK X4 — Archieval Mariano"
-  description="An illustrated guide to installing Project GOTO (release v1.0.2) on the XTEINK X4 using CrossPoint Reader's SD card firmware updater."
+  description="An illustrated guide to installing Project GOTO (release v1.0.3) on the XTEINK X4 using CrossPoint Reader's SD card firmware updater."
 >
   <section class="wrap install">
     <p class="install__back"><a href="/desk/goto/">&larr; Project GOTO</a></p>
@@ -32,7 +32,7 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
 
     <p class="install__lede">
       Project GOTO is built for the XTEINK X4 running CrossPoint Reader 1.6.0. The
-      current release is v1.0.2 (CrossPoint 1.6.0 + Apps 1.0.2), with GOTO in the
+      current release is v1.0.3 (CrossPoint 1.6.0 + Apps 1.0.3), with GOTO in the
       Apps menu.
     </p>
     <p class="install__lede">
@@ -164,13 +164,13 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
         <figcaption>Inside Apps, GOTO reads TOGO once the evening edition is out.</figcaption>
       </figure>
       <p>You can also confirm the installed version in the Settings header:</p>
-      <p class="install__version"><code>1.6.0-A1.0.2-G</code></p>
+      <p class="install__version"><code>1.6.0-A1.0.3-G</code></p>
       <figure class="install__figure install__figure--small">
         <Image src={imgSettings} alt="The XTEINK X4 Settings header showing the version string 1.6.0-A1.0.2-G." widths={[260, 420, 520]} sizes="(max-width: 520px) 60vw, 260px" format="webp" quality={74} loading="lazy" />
-        <figcaption>The installed version shown in Settings.</figcaption>
+        <figcaption>The installed version shown in Settings (pictured on v1.0.2).</figcaption>
       </figure>
       <p class="install__note">
-        <code>1.6.0</code> is the CrossPoint base, <code>A1.0.2</code> the release, and
+        <code>1.6.0</code> is the CrossPoint base, <code>A1.0.3</code> the release, and
         <code>G</code> the package (GOTO).
       </p>
     </section>
@@ -178,17 +178,20 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
     <hr class="rule" />
     <section class="install__section">
       <h2>First launch</h2>
-      <p>Connect the X4 to Wi-Fi, then open Apps → GOTO.</p>
+      <p>Open Apps → GOTO.</p>
       <p>
-        Project GOTO will retrieve the current edition from the hosted service and
-        save a local cached copy after a successful fetch.
+        If the X4 is not connected to Wi-Fi, GOTO opens CrossPoint’s Wi-Fi screen
+        first. It tries your saved network; if that does not connect, choose your
+        network from the list and select Connect.
       </p>
       <p>
-        A saved Wi-Fi network may occasionally need to be reconnected manually after
-        sleep or reboot on the X4/CrossPoint environment. If GOTO cannot reach the
-        service, reconnect through CrossPoint’s Wi-Fi settings and reopen GOTO.
+        Once connected, Project GOTO retrieves the current edition from the hosted
+        service and saves a local cached copy.
       </p>
-      <p>Previously cached editions remain readable without a new fetch.</p>
+      <p>
+        Press Back on the Wi-Fi screen to skip it. The last cached edition stays
+        readable without a new fetch.
+      </p>
     </section>
 
     <hr class="rule" />
