@@ -1,0 +1,245 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import imgCalendar from '../../../assets/photos/tools-01-calendar-x4pro.jpg';
+import imgCalendarX4 from '../../../assets/photos/tools-02-calendar-x4.jpg';
+import imgCalculator from '../../../assets/photos/tools-03-calculator.jpg';
+import imgClock from '../../../assets/photos/tools-04-clock.jpg';
+import imgPicker from '../../../assets/photos/tools-05-month-picker.jpg';
+
+const galleryWidths = [240, 360, 520];
+const gallerySizes = '(max-width: 40rem) 45vw, 170px';
+
+const gallery = [
+  {
+    src: imgCalendar,
+    alt: 'Calendar on an XTEINK X4 Pro showing October 2026, with 1 October selected as today and marked International Coffee Day.',
+    caption: 'Calendar, with the selected day’s details below the month.',
+  },
+  {
+    src: imgPicker,
+    alt: 'The Calendar month picker on an XTEINK X4 Pro showing the twelve months of 2026, with September selected.',
+    caption: 'The month picker, for jumping to any month.',
+  },
+  {
+    src: imgCalculator,
+    alt: 'Calculator on an XTEINK X4 Pro showing 0.3774 above a keypad of digits and operators.',
+    caption: 'Calculator, a basic desk calculator.',
+  },
+  {
+    src: imgClock,
+    alt: 'Clock on an XTEINK X4 Pro showing 01:50, Wednesday 30 September 2026, at UTC+08:00.',
+    caption: 'Clock, on the X4 Pro only.',
+  },
+];
+---
+
+<BaseLayout
+  title="Tools — Archieval Mariano"
+  description="Tools is a small set of everyday apps (Calendar, Calculator and Clock) that comes with every GOTO and ON POINT install for the XTEINK X4 and X4 Pro."
+>
+  <section class="wrap tools">
+    <p class="tools__back"><a href="/desk/">&larr; Desk</a></p>
+    <header class="tools__head">
+      <p class="eyebrow">Project</p>
+      <h1>Tools</h1>
+      <p class="tools__tagline">A calendar, a calculator and a clock that come with every install.</p>
+    </header>
+
+    <p class="tools__lede">
+      Tools is the base layer under <a href="/desk/goto/">GOTO</a> and
+      <a href="/desk/on-point/">ON POINT</a>: a few everyday apps that work offline and
+      stay out of the way. You don’t choose it separately. Whichever package you
+      install, Tools comes with it, and your device decides what it can run.
+    </p>
+
+    <div class="tools__gallery">
+      {
+        gallery.map((photo) => (
+          <figure>
+            <Image src={photo.src} alt={photo.alt} widths={galleryWidths} sizes={gallerySizes} format="webp" quality={74} loading="lazy" />
+            <figcaption>{photo.caption}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <section class="tools__section">
+      <h2>What’s in it</h2>
+      <dl class="tools__apps">
+        <div>
+          <dt>Calendar</dt>
+          <dd>
+            A month view with a details panel for the selected day. Philippine public
+            holidays for 2026 are underlined, and a short list of international and
+            cultural observances get a dotted underline. On the X4 Pro it opens on today
+            once the clock is set. The X4 asks for a month the first time, then opens on the last month you viewed.
+          </dd>
+        </div>
+        <div>
+          <dt>Calculator</dt>
+          <dd>
+            A basic desk calculator. It works left to right, the way a desk calculator
+            does, so 2 + 3 × 4 is 20, and it shows up to 12 digits. Tap the keys on the
+            X4 Pro, or use the buttons on either device.
+          </dd>
+        </div>
+        <div>
+          <dt>Clock <span class="tools__only">X4 Pro only</span></dt>
+          <dd>
+            The time in large digits, with the day and date beneath it, updated each
+            minute. It follows the clock format and UTC offset in Settings → Customise
+            Status Bar. The original X4 has no real-time clock, so Clock is not listed
+            there.
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <hr class="rule" />
+    <section class="tools__section">
+      <h2>On the original X4</h2>
+      <p>
+        Calendar and Calculator run on the XTEINK X4 too, driven by its front buttons,
+        with the button labels along the bottom of the screen. Without a clock, the X4’s
+        Calendar shows your selected day but never marks one as today.
+      </p>
+      <figure class="tools__figure">
+        <Image src={imgCalendarX4} alt="Calendar on an XTEINK X4 showing October 2026 with International Coffee Day selected and button labels for Back, Month, Prev day and Next day." widths={galleryWidths} sizes="(max-width: 40rem) 60vw, 260px" format="webp" quality={74} loading="lazy" />
+        <figcaption>The same day on the X4, with its button labels.</figcaption>
+      </figure>
+    </section>
+
+    <hr class="rule" />
+    <section class="tools__section">
+      <h2>What it isn’t</h2>
+      <p>
+        Tools keeps to the basics on purpose. There are no events, reminders,
+        notifications, accounts or sync, and nothing leaves the device.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="tools__section" id="download">
+      <h2>Getting it</h2>
+      <p>
+        Tools comes with every package from release v1.0.4. Install GOTO, ON POINT or
+        both, and Tools is in the <strong>Apps</strong> menu alongside them. If you
+        already run v1.0.3, update from Settings → System → Check for updates.
+      </p>
+      <ul class="tools__links">
+        <li><a href="/desk/goto/#download">Download GOTO</a> · XTEINK X4 and X4 Pro</li>
+        <li><a href="/desk/on-point/#download">Download ON POINT</a> · XTEINK X4 Pro</li>
+      </ul>
+    </section>
+  </section>
+</BaseLayout>
+
+<style>
+  .tools {
+    max-width: var(--measure);
+    padding-block: var(--space-lg) var(--space-xl);
+  }
+  .tools__back {
+    font-size: var(--step--1);
+    margin: 0 0 var(--space-md);
+  }
+  .tools__head {
+    border-bottom: var(--heavy-rule);
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+  .tools__head h1 {
+    font-size: var(--step-3);
+    letter-spacing: 0.02em;
+    margin-top: var(--space-xs);
+  }
+  .tools__tagline {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    margin: var(--space-sm) 0 0;
+  }
+  .tools__lede {
+    font-size: var(--step-0);
+    line-height: 1.72;
+    color: var(--ink);
+    max-width: 42rem;
+    margin-bottom: var(--space-lg);
+  }
+  .tools__gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-lg);
+  }
+  .tools__gallery figure,
+  .tools__figure {
+    margin: 0;
+  }
+  .tools__figure {
+    margin-top: var(--space-md);
+    max-width: 260px;
+  }
+  .tools__gallery img,
+  .tools__figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+  }
+  .tools__gallery figcaption,
+  .tools__figure figcaption {
+    margin-top: var(--space-xs);
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--ink-faint);
+  }
+  @media (max-width: 40rem) {
+    .tools__gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md) var(--space-sm);
+    }
+  }
+  .tools__section {
+    margin-block: var(--space-lg);
+  }
+  .tools__section h2 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-xs);
+  }
+  .tools__section p {
+    color: var(--ink-soft);
+    max-width: 42rem;
+    margin: 0;
+  }
+  .tools__apps {
+    display: grid;
+    gap: var(--space-md);
+    max-width: 42rem;
+    margin: var(--space-sm) 0 0;
+  }
+  .tools__apps dt {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .tools__apps dd {
+    margin: var(--space-xs) 0 0;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .tools__only {
+    margin-left: 0.5em;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .tools__links {
+    margin: var(--space-sm) 0 0;
+    padding-left: 1.25rem;
+    color: var(--ink-faint);
+    line-height: 1.8;
+  }
+</style>

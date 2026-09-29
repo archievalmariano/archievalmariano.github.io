@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import MediaPlaceholder from '../../components/MediaPlaceholder.astro';
 import imgGoto from '../../assets/photos/goto-edition-01-story.jpg';
 import imgOnPoint from '../../assets/photos/onpoint-01-board.jpg';
+import imgTools from '../../assets/photos/tools-01-calendar-x4pro.jpg';
 
 // Public-ready projects, in the order they appear. `image` is optional: a
 // project without a photo yet renders a marked placeholder.
@@ -26,12 +27,21 @@ const projects = [
     image: imgOnPoint,
     imageAlt: 'ON POINT on an XTEINK X4 Pro showing 15 minutes until the 09:30 bus from Balagtas to TriNoma.',
   },
+  {
+    name: 'Tools',
+    subtitle: 'Tools',
+    href: '/desk/tools/',
+    purpose: 'A calendar, a calculator and a clock that come with every install.',
+    facts: ['XTEINK X4 + X4 Pro', 'Works offline', 'Included with GOTO and ON POINT'],
+    image: imgTools,
+    imageAlt: 'Calendar on an XTEINK X4 Pro showing October 2026, with 1 October marked International Coffee Day.',
+  },
 ];
 ---
 
 <BaseLayout
   title="Desk — Archieval Mariano"
-  description="Things from my digital desk that I’ve decided to share: GOTO, a limited news reader, and ON POINT, an offline departure board, for XTEINK e-ink devices."
+  description="Things from my digital desk that I’ve decided to share: GOTO, a limited news reader, ON POINT, an offline departure board, and Tools, a calendar, calculator and clock, for XTEINK e-ink devices."
 >
   <section class="wrap page-head">
     <p class="page-head__chapter"><span>04</span> Desk</p>
