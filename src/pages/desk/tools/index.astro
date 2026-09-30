@@ -6,6 +6,8 @@ import imgCalendarX4 from '../../../assets/photos/tools-02-calendar-x4.jpg';
 import imgCalculator from '../../../assets/photos/tools-03-calculator.jpg';
 import imgClock from '../../../assets/photos/tools-04-clock.jpg';
 import imgPicker from '../../../assets/photos/tools-05-month-picker.jpg';
+import imgAppsX4Pro from '../../../assets/photos/tools-06-apps-x4pro.jpg';
+import imgAppsX4 from '../../../assets/photos/tools-07-apps-x4.jpg';
 
 const galleryWidths = [240, 360, 520];
 const gallerySizes = '(max-width: 40rem) 45vw, 170px';
@@ -124,13 +126,24 @@ const gallery = [
       <h2>Getting it</h2>
       <p>
         Tools comes with every package from release v1.0.4. Install GOTO, ON POINT or
-        both, and Tools is in the <strong>Apps</strong> menu alongside them. If you
-        already run v1.0.3, update from Settings → System → Check for updates.
+        both, and Tools is in the <strong>Apps</strong> menu, under its own
+        <strong>Tools</strong> heading from v1.0.5. If you run an earlier release,
+        update from Settings → System → Check for updates.
       </p>
       <ul class="tools__links">
         <li><a href="/desk/goto/#download">Download GOTO</a> · XTEINK X4 and X4 Pro</li>
         <li><a href="/desk/on-point/#download">Download ON POINT</a> · XTEINK X4 Pro</li>
       </ul>
+      <div class="tools__pair">
+        <figure class="tools__figure">
+          <Image src={imgAppsX4Pro} alt="The Apps menu on an XTEINK X4 Pro listing TOGO and ON POINT, then a Tools heading above Calculator, Calendar and Clock." widths={galleryWidths} sizes="(max-width: 40rem) 45vw, 220px" format="webp" quality={74} loading="lazy" />
+          <figcaption>Apps on the X4 Pro, with GOTO and ON POINT installed.</figcaption>
+        </figure>
+        <figure class="tools__figure">
+          <Image src={imgAppsX4} alt="The Apps menu on an XTEINK X4 listing TOGO, then a Tools heading above Calculator and Calendar." widths={galleryWidths} sizes="(max-width: 40rem) 45vw, 220px" format="webp" quality={74} loading="lazy" />
+          <figcaption>Apps on the X4, which has no Clock.</figcaption>
+        </figure>
+      </div>
     </section>
   </section>
 </BaseLayout>
@@ -195,7 +208,15 @@ const gallery = [
     line-height: 1.45;
     color: var(--ink-faint);
   }
+  .tools__pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 220px));
+    gap: var(--space-sm);
+  }
   @media (max-width: 40rem) {
+    .tools__pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     .tools__gallery {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-md) var(--space-sm);

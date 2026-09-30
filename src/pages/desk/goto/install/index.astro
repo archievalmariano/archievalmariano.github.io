@@ -7,20 +7,20 @@ import imgConfirm from '../../../../assets/photos/goto-install-03-confirm.jpg';
 import imgUpdating from '../../../../assets/photos/goto-install-04-updating.jpg';
 import imgComplete from '../../../../assets/photos/goto-install-05-complete.jpg';
 import imgHome from '../../../../assets/photos/goto-install-06-home.jpg';
-import imgApps from '../../../../assets/photos/goto-install-07-apps.jpg';
+import imgApps from '../../../../assets/photos/tools-07-apps-x4.jpg';
 
-const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.4';
-const downloadUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.4/firmware-x4-g.bin';
-const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.4';
+const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.0.5';
+const downloadUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.0.5/firmware-x4-g.bin';
+const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.0.5';
 const fileName = 'firmware-x4-g.bin';
-const sha256 = '89616810d77cf3e01e5300fd0ddc7968d0c1a80d182ddd199a157e41a4e00ca6';
+const sha256 = 'a206111be5bd7fed4d9ea10c4d97e9029bfa960fdcbe52bf847da4141f9862b4';
 const stepWidths = [400, 620, 820];
 const stepSizes = '(max-width: 520px) 88vw, 400px';
 ---
 
 <BaseLayout
   title="Install Project GOTO on the XTEINK X4 — Archieval Mariano"
-  description="An illustrated guide to installing Project GOTO (release v1.0.4) on the XTEINK X4 using CrossPoint Reader's SD card firmware updater."
+  description="An illustrated guide to installing Project GOTO (release v1.0.5) on the XTEINK X4 using CrossPoint Reader's SD card firmware updater."
 >
   <section class="wrap install">
     <p class="install__back"><a href="/desk/goto/">&larr; Project GOTO</a></p>
@@ -32,7 +32,7 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
 
     <p class="install__lede">
       Project GOTO is built for the XTEINK X4 running CrossPoint Reader 1.6.0. The
-      current release is v1.0.4 (CrossPoint 1.6.0 + Apps 1.0.4), with GOTO in the
+      current release is v1.0.5 (CrossPoint 1.6.0 + Apps 1.0.5), with GOTO in the
       Apps menu.
     </p>
     <p class="install__lede">
@@ -160,17 +160,17 @@ const stepSizes = '(max-width: 520px) 88vw, 400px';
         <figcaption>Apps appears on the CrossPoint home screen after installation.</figcaption>
       </figure>
       <figure class="install__figure">
-        <Image src={imgApps} alt="The Apps screen on the XTEINK X4 listing TOGO, the evening edition of GOTO." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
-        <figcaption>Inside Apps, GOTO reads TOGO once the evening edition is out.</figcaption>
+        <Image src={imgApps} alt="The Apps screen on the XTEINK X4 listing TOGO, the evening edition of GOTO, above the Tools heading with Calculator and Calendar." widths={stepWidths} sizes={stepSizes} format="webp" quality={74} loading="lazy" />
+        <figcaption>Inside Apps, GOTO reads TOGO once the evening edition is out. <a href="/desk/tools/">Tools</a> is listed below it.</figcaption>
       </figure>
       <p>You can also confirm the installed version in the Settings header:</p>
-      <p class="install__version"><code>1.6.0-A1.0.4-G</code></p>
+      <p class="install__version"><code>1.6.0-A1.0.5-G</code></p>
       <figure class="install__figure install__figure--small">
         <Image src={imgSettings} alt="The XTEINK X4 Settings header showing the version string 1.6.0-A1.0.2-G." widths={[260, 420, 520]} sizes="(max-width: 520px) 60vw, 260px" format="webp" quality={74} loading="lazy" />
         <figcaption>The installed version shown in Settings (pictured on v1.0.2).</figcaption>
       </figure>
       <p class="install__note">
-        <code>1.6.0</code> is the CrossPoint base, <code>A1.0.4</code> the release, and
+        <code>1.6.0</code> is the CrossPoint base, <code>A1.0.5</code> the release, and
         <code>G</code> the package (GOTO).
       </p>
     </section>

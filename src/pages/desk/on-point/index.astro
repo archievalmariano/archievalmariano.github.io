@@ -5,7 +5,7 @@ import imgBoard from '../../../assets/photos/onpoint-01-board.jpg';
 import imgRoutes from '../../../assets/photos/onpoint-02-routes.jpg';
 import imgCubao from '../../../assets/photos/onpoint-03-cubao-clark.jpg';
 import imgRoutes2 from '../../../assets/photos/onpoint-04-routes-page2.jpg';
-import imgApps from '../../../assets/photos/onpoint-05-apps.jpg';
+import imgApps from '../../../assets/photos/tools-06-apps-x4pro.jpg';
 
 const release = 'https://github.com/archievalmariano/crosspoint-reader/releases';
 
@@ -50,14 +50,14 @@ const packages = [
   {
     name: 'ON POINT',
     file: 'firmware-x4pro-p.factory.bin',
-    identity: '1.6.0-A1.0.4-P',
-    sha256: 'd298aa0553562bff4a6dcaa6115ed4f263b8ff858435d08bdcc55dad0d532285',
+    identity: '1.6.0-A1.0.5-P',
+    sha256: 'c3749889feec0182ca26647df7fc1d0eb15946a95a330c814192f545be0fec06',
   },
   {
     name: 'GOTO + ON POINT',
     file: 'firmware-x4pro-gp.factory.bin',
-    identity: '1.6.0-A1.0.4-GP',
-    sha256: '330a62d3186fd5c08ae964503d86c7c57a746ee8fdd9d55e8a245c376252a7ce',
+    identity: '1.6.0-A1.0.5-GP',
+    sha256: '1b3f0a7765e31951a4e3e192b0e0fd26d3d1186a3ea031686f8fcce218cd4e58',
   },
 ];
 ---
@@ -187,18 +187,18 @@ const packages = [
                 {pkg.name} <span class="op__package-method">· XTEINK X4 Pro · USB flashing</span>
               </h3>
               <dl class="op__meta">
-                <div><dt>Release</dt><dd>v1.0.4 · CrossPoint 1.6.0 + Apps 1.0.4</dd></div>
+                <div><dt>Release</dt><dd>v1.0.5 · CrossPoint 1.6.0 + Apps 1.0.5</dd></div>
                 <div><dt>On-device identity</dt><dd>{pkg.identity}</dd></div>
               </dl>
               <p class="op__actions">
-                <a class="op__download" href={`${release}/download/v1.0.4/${pkg.file}`}>
+                <a class="op__download" href={`${release}/download/v1.0.5/${pkg.file}`}>
                   Download {pkg.name}
                 </a>
               </p>
               <p class="op__links">
                 <code>{pkg.file}</code>
                 <span aria-hidden="true">·</span>
-                <a href={`${release}/tag/v1.0.4`} target="_blank" rel="noopener">Release notes</a>
+                <a href={`${release}/tag/v1.0.5`} target="_blank" rel="noopener">Release notes</a>
               </p>
               <p class="op__sha">
                 <span class="op__sha-label">SHA-256</span>
@@ -231,8 +231,8 @@ const packages = [
         <li>Open Apps → ON POINT.</li>
       </ol>
       <figure class="op__figure">
-        <Image src={imgApps} alt="The CrossPoint Apps screen on an XTEINK X4 Pro listing GOTO and ON POINT, with ON POINT selected." widths={galleryWidths} sizes="(max-width: 40rem) 60vw, 260px" format="webp" quality={74} loading="lazy" />
-        <figcaption>ON POINT in the Apps menu, installed here alongside GOTO.</figcaption>
+        <Image src={imgApps} alt="The CrossPoint Apps screen on an XTEINK X4 Pro listing TOGO and ON POINT, then a Tools heading above Calculator, Calendar and Clock." widths={galleryWidths} sizes="(max-width: 40rem) 60vw, 260px" format="webp" quality={74} loading="lazy" />
+        <figcaption>ON POINT in the Apps menu, installed here alongside GOTO, with <a href="/desk/tools/">Tools</a> below.</figcaption>
       </figure>
       <p class="op__install-more">
         The <a href="/desk/goto/install/x4-pro/">X4 Pro USB guide</a> covers installing
