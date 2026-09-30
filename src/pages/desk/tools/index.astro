@@ -96,6 +96,12 @@ const gallery = [
           </dd>
         </div>
       </dl>
+      <p class="tools__aside">
+        From v1.0.6, the X4 Pro can also show the date outside the apps: turn on
+        <strong>Date</strong> in Settings → Customise Status Bar. The date, such as
+        <em>Wed 30 Sep</em>, appears in the corner of menu screens where there’s room, and before the time in
+        the reader’s status bar when the clock is shown. It’s off by default.
+      </p>
     </section>
 
     <hr class="rule" />
@@ -233,6 +239,12 @@ const gallery = [
     color: var(--ink-soft);
     max-width: 42rem;
     margin: 0;
+  }
+  .tools__section .tools__aside {
+    margin-top: var(--space-md);
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--ink-faint);
   }
   .tools__apps {
     display: grid;
