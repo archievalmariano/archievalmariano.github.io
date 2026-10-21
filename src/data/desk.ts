@@ -45,32 +45,43 @@ function env(name: string): string | undefined {
   return typeof process !== 'undefined' && process.env ? process.env[name] : undefined;
 }
 
-// A truthy environment flag: true / 1 / yes / on, case-insensitively. Anything
-// else (unset, empty, false, 0, no) is falsy.
+// A truthy environment flag: true / 1 / yes / on, case-insensitively. Used ONLY
+// for the DELIBERATE local-preview opt-in (DESK_PREVIEW_BUILD), where requiring
+// an explicit affirmative value is appropriate. It is intentionally NOT used for
+// CI detection.
 function isTruthy(value: string | undefined): boolean {
   if (!value) return false;
   return ['true', '1', 'yes', 'on'].includes(value.trim().toLowerCase());
 }
 
+// A CI indicator is PRESENT when the variable is defined and not the empty
+// string — ANY non-empty value counts: "true", "1", "false", "0", "unexpected",
+// or whitespace-only. The value is never parsed, so no spelling can be mistaken
+// for "not CI". This is deliberately conservative (fail closed): only an unset
+// or empty variable is treated as absent.
+function ciFlagPresent(value: string | undefined): boolean {
+  return value !== undefined && value !== '';
+}
+
 // Running under continuous integration. The production GitHub Pages deploy sets
-// both CI and GITHUB_ACTIONS; accepting ANY truthy spelling (true/1/yes/on,
-// any case) means the deploy can never be coaxed into a preview build by a
-// differently-spelled flag.
+// CI (and GITHUB_ACTIONS); the mere PRESENCE of either variable — whatever its
+// value — disables preview, so the deploy can never be coaxed into a preview
+// build by any environment value.
 function inCI(): boolean {
-  return isTruthy(env('CI')) || isTruthy(env('GITHUB_ACTIONS'));
+  return ciFlagPresent(env('CI')) || ciFlagPresent(env('GITHUB_ACTIONS'));
 }
 
 // Preview overrides are honoured ONLY in the dev server, or in a local build
-// that explicitly opts in — and NEVER in CI / the GitHub Pages workflow. The
+// that explicitly opts in — and NEVER when a CI indicator is present. The
 // production deploy is therefore a pure function of committed source: no
 // environment value (DESK_PREVIEW, DESK_PREVIEW_BUILD, or any other), accidental
 // or otherwise, can expose an unpublished collection in production.
 function previewAllowed(): boolean {
-  // Hard block in CI / the production deploy environment: short-circuits every
-  // override below, so GitHub Actions can never enable an unpublished collection.
+  // Hard block whenever a CI indicator is present: short-circuits every override
+  // below, so GitHub Actions can never enable an unpublished collection.
   if (inCI()) return false;
   if (import.meta.env.DEV) return true; // astro dev
-  return isTruthy(env('DESK_PREVIEW_BUILD')); // explicit local build opt-in
+  return isTruthy(env('DESK_PREVIEW_BUILD')); // deliberate local build opt-in
 }
 
 function previewSet(): Set<DeskCollectionKey> {

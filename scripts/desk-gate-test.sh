@@ -10,15 +10,16 @@
 # States:
 #   P   production default (no preview)            → collections absent
 #   FC  fail-closed (DESK_PREVIEW set, no opt-in)  → collections absent
-#   CI  CI hard-block (CI / GITHUB_ACTIONS truthy, → collections absent even with
-#       any spelling, + opt-in + DESK_PREVIEW)       the local opt-in set
-#   A   artifacts preview build                     → artifacts present, drafts excluded
-#   B   both preview build                          → both present, drafts excluded
+#   CI  CI hard-block (CI / GITHUB_ACTIONS PRESENT → collections absent even with
+#       with ANY value, + opt-in + DESK_PREVIEW)      the local opt-in set
+#   A   artifacts preview build (no CI indicator)   → artifacts present, drafts excluded
+#   B   both preview build (no CI indicator)        → both present, drafts excluded
 #   X   JSON-LD script-breakout probe               → malicious title cannot inject markup
 #
-# Proves: non-draft excluded when flag OFF; draft excluded when flag ON; no env
-# override (any CI spelling included) exposes in production; JSON-LD is script-
-# safe; no fixture / HTML / RSS / sitemap leak.
+# Proves: non-draft excluded when flag OFF; draft excluded when flag ON; the mere
+# PRESENCE of a CI indicator (truthy, falsy, unexpected, or whitespace) blocks
+# every override in production; ordinary local preview (no CI indicator) still
+# works; JSON-LD is script-safe; no fixture / HTML / RSS / sitemap leak.
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -70,7 +71,9 @@ build() { # $1 = label, rest = env assignments
   local label="$1"; shift
   echo ""; echo "── building state: $label (env: ${*:-none}) ──"
   rm -rf dist
-  if env "$@" npm run build >/tmp/desk_build.log 2>&1; then
+  # Neutralize any ambient CI / GITHUB_ACTIONS so each state's CI signal is
+  # exactly what this call passes (env applies -u before the assignments).
+  if env -u CI -u GITHUB_ACTIONS "$@" npm run build >/tmp/desk_build.log 2>&1; then
     echo "   build ok"
   else
     bad "BUILD FAILED ($label) — see /tmp/desk_build.log"; tail -20 /tmp/desk_build.log
@@ -95,21 +98,31 @@ assert_nogrep dist "SYNTHETIC FIXTURE"      # no fixture leak anywhere
 build "FC fail-closed" DESK_PREVIEW=artifacts,field-notes
 assert_no_gated_output                        # accidental env override ignored
 
-# ── State CI: CI hard-block — every truthy CI spelling disables preview even ──
-#    with the opt-in + DESK_PREVIEW set. GitHub Actions can never expose a
-#    collection. Covers CI=true/1/yes/mixed-case and GITHUB_ACTIONS=true/1/mixed.
+# ── State CI: CI hard-block — PRESENCE of any CI indicator disables preview, ──
+#    whatever its value, even with the opt-in + DESK_PREVIEW set. GitHub Actions
+#    can never expose a collection. Covers truthy, falsy, unexpected, and
+#    whitespace-only values of CI and GITHUB_ACTIONS.
 for spec in \
   "CI=true" \
   "CI=1" \
   "CI=yes" \
-  "CI=TRUE" \
-  "CI=Yes" \
+  "CI=unexpected" \
+  "CI=false" \
+  "CI=0" \
   "GITHUB_ACTIONS=true" \
   "GITHUB_ACTIONS=1" \
-  "GITHUB_ACTIONS=True"; do
+  "GITHUB_ACTIONS=unexpected" \
+  "GITHUB_ACTIONS=false" \
+  "GITHUB_ACTIONS=0"; do
   build "CI-detect [$spec]" $spec DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
   assert_no_gated_output
 done
+
+# whitespace-only CI indicators (non-empty → conservatively treated as CI)
+build "CI-detect [CI='   ']" "CI=   " DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
+assert_no_gated_output
+build "CI-detect [GITHUB_ACTIONS='  ']" "GITHUB_ACTIONS=  " DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
+assert_no_gated_output
 
 # ── State A: artifacts preview build ──────────────────────────────────────────
 build "A artifacts-only" DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts
