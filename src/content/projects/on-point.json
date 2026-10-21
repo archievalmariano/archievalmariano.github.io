@@ -1,0 +1,13 @@
+{
+  "name": "ON POINT",
+  "subtitle": "ON POINT",
+  "slug": "on-point",
+  "purpose": "An offline departure board for scheduled bus routes.",
+  "facts": ["XTEINK X4 Pro", "Works offline", "7 published routes"],
+  "heroImage": "../../assets/photos/onpoint-01-board.jpg",
+  "heroAlt": "ON POINT on an XTEINK X4 Pro showing 15 minutes until the 09:30 bus from Balagtas to TriNoma.",
+  "status": "active",
+  "order": 2,
+  "featured": true,
+  "draft": false
+}

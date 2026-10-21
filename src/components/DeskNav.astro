@@ -1,0 +1,70 @@
+---
+// Restrained DESK-local navigation. PROJECTS is always shown (it organises
+// already-published material); editorial collections appear only once launched,
+// so an unpublished collection is absent from the markup, not merely hidden.
+import { publishedCollections } from '../data/desk';
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const links = [
+  { href: '/desk', label: 'Desk' },
+  { href: '/desk/projects', label: 'Projects' },
+  ...publishedCollections().map((c) => ({ href: `/desk/${c.slug}`, label: c.label })),
+];
+
+const isActive = (href: string) =>
+  href === '/desk' ? pathname === '/desk' : pathname === href || pathname.startsWith(href + '/');
+---
+
+<nav class="desk-nav" aria-label="Desk sections">
+  <ul>
+    {
+      links.map((link) => (
+        <li>
+          <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+            {link.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .desk-nav {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .desk-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 clamp(1rem, 3vw, 2rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .desk-nav a {
+    display: inline-block;
+    padding-block: 0.7rem;
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-faint);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .desk-nav a:hover {
+    color: var(--accent);
+  }
+
+  .desk-nav a[aria-current='page'] {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+</style>

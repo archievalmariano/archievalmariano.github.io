@@ -1,0 +1,195 @@
+---
+// Article layout for DESK editorial collections (ARTIFACTS, FIELD NOTES).
+// Separate from EntryLayout (case studies) so Writing is untouched. A quiet
+// "DESK / COLLECTION" breadcrumb identifies the collection and links back to
+// its index; the editorial subtitle is NOT repeated here.
+import BaseLayout from './BaseLayout.astro';
+import Figure from '../components/Figure.astro';
+import OwnershipLog from '../components/OwnershipLog.astro';
+import type { ImageMetadata } from 'astro';
+
+interface OwnershipUpdate {
+  date: Date;
+  status?: string;
+  summary: string;
+  note?: string;
+}
+interface Correction {
+  date: Date;
+  note: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  subtitle?: string;
+  collectionLabel: string;
+  collectionHref: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  heroImage?: ImageMetadata;
+  heroAlt?: string;
+  heroOrientation?: 'portrait' | 'landscape' | 'panorama';
+  ogImage?: ImageMetadata;
+  updates?: OwnershipUpdate[];
+  corrections?: Correction[];
+}
+
+const {
+  title,
+  description,
+  subtitle,
+  collectionLabel,
+  collectionHref,
+  pubDate,
+  updatedDate,
+  heroImage,
+  heroAlt,
+  heroOrientation,
+  ogImage,
+  updates,
+  corrections,
+} = Astro.props;
+
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const metaBits = [`Published ${fmt.format(pubDate)}`];
+if (updatedDate) metaBits.push(`Updated ${fmt.format(updatedDate)}`);
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const jsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: pubDate.toISOString(),
+  ...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
+  author: { '@type': 'Person', name: 'Archieval Mariano' },
+  mainEntityOfPage: canonical,
+  ...(ogImage ? { image: new URL(ogImage.src, Astro.site).href } : {}),
+};
+---
+
+<BaseLayout
+  title={`${title} — Archieval Mariano`}
+  description={description}
+  type="article"
+  ogImage={ogImage}
+  ogImageAlt={heroAlt}
+  publishedTime={pubDate.toISOString()}
+  modifiedTime={updatedDate?.toISOString()}
+  jsonLd={jsonLd}
+>
+  <article class="wrap desk-article">
+    <nav class="desk-article__crumb" aria-label="Breadcrumb">
+      <a href="/desk">Desk</a>
+      <span aria-hidden="true">/</span>
+      <a href={collectionHref}>{collectionLabel}</a>
+    </nav>
+
+    <header class="desk-article__head">
+      <h1>{title}</h1>
+      {subtitle && <p class="desk-article__subtitle">{subtitle}</p>}
+      <p class="meta desk-article__meta">{metaBits.join(' · ')}</p>
+    </header>
+
+    {
+      heroImage && (
+        <Figure
+          src={heroImage}
+          alt={heroAlt ?? ''}
+          orientation={heroOrientation}
+          loading="eager"
+          sizes="(max-width: 48rem) 92vw, 60rem"
+        />
+      )
+    }
+
+    <div class="prose flow desk-article__body">
+      <slot />
+    </div>
+
+    <OwnershipLog updates={updates} corrections={corrections} />
+
+    <footer class="desk-article__foot">
+      <a href={collectionHref} class="back-link">← {collectionLabel}</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .desk-article {
+    padding-top: clamp(2.5rem, 6vw, 5rem);
+    padding-bottom: var(--space-xl);
+  }
+
+  .desk-article__crumb {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .desk-article__crumb a {
+    text-decoration: none;
+    color: var(--ink-faint);
+  }
+
+  .desk-article__crumb a:hover {
+    color: var(--accent);
+  }
+
+  .desk-article__crumb span {
+    margin: 0 0.5rem;
+  }
+
+  .desk-article__head {
+    max-width: var(--measure);
+    margin: var(--space-md) 0 var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--heavy-rule);
+  }
+
+  .desk-article__head h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 560;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+  }
+
+  .desk-article__subtitle {
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .desk-article__meta {
+    margin: var(--space-md) 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .desk-article__foot {
+    max-width: var(--measure);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: var(--heavy-rule);
+  }
+
+  .back-link {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+</style>

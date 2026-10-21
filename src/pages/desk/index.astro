@@ -1,42 +1,18 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DeskNav from '../../components/DeskNav.astro';
 import MediaPlaceholder from '../../components/MediaPlaceholder.astro';
-import imgGoto from '../../assets/photos/goto-edition-01-story.jpg';
-import imgOnPoint from '../../assets/photos/onpoint-01-board.jpg';
-import imgTools from '../../assets/photos/tools-01-calendar-x4pro.jpg';
+import { publishedCollections } from '../../data/desk';
 
-// Public-ready projects, in the order they appear. `image` is optional: a
-// project without a photo yet renders a marked placeholder.
-const projects = [
-  {
-    name: 'GOTO',
-    subtitle: 'GOTO / TOGO',
-    href: '/desk/goto/',
-    purpose: 'A limited morning and evening news briefing for e-ink readers.',
-    facts: ['XTEINK X4 + X4 Pro', 'Philippine news', 'Updates twice daily'],
-    image: imgGoto,
-    imageAlt: 'The top story of a GOTO morning edition on an XTEINK X4 Pro, story 1 of 10.',
-  },
-  {
-    name: 'ON POINT',
-    subtitle: 'ON POINT',
-    href: '/desk/on-point/',
-    purpose: 'An offline departure board for scheduled bus routes.',
-    facts: ['XTEINK X4 Pro', 'Works offline', '7 published routes'],
-    image: imgOnPoint,
-    imageAlt: 'ON POINT on an XTEINK X4 Pro showing 15 minutes until the 09:30 bus from Balagtas to TriNoma.',
-  },
-  {
-    name: 'Tools',
-    subtitle: 'Tools',
-    href: '/desk/tools/',
-    purpose: 'A calendar, a calculator and a clock that come with every install.',
-    facts: ['XTEINK X4 + X4 Pro', 'Works offline', 'Included with GOTO and ON POINT'],
-    image: imgTools,
-    imageAlt: 'Calendar on an XTEINK X4 Pro showing October 2026, with 1 October marked International Coffee Day.',
-  },
-];
+// Project listings come from the shared registry (same source as /desk/projects/).
+const projects = (
+  await getCollection('projects', ({ data }) => !data.draft && data.featured)
+).sort((a, b) => a.data.order - b.data.order);
+
+// Editorial collections appear only once launched; empty in Phase 1.
+const collections = publishedCollections();
 ---
 
 <BaseLayout
@@ -52,17 +28,21 @@ const projects = [
     </p>
   </section>
 
+  <div class="wrap">
+    <DeskNav />
+  </div>
+
   <div class="wrap desk">
     <ul class="desk__list">
       {
         projects.map((project) => (
           <li class="desk-panel">
-            <a class="desk-panel__link" href={project.href}>
+            <a class="desk-panel__link" href={`/desk/${project.data.slug}/`}>
               <div class="desk-panel__media">
-                {project.image ? (
+                {project.data.heroImage ? (
                   <Image
-                    src={project.image}
-                    alt={project.imageAlt}
+                    src={project.data.heroImage}
+                    alt={project.data.heroAlt ?? ''}
                     widths={[360, 560, 760]}
                     sizes="(max-width: 48rem) 88vw, 380px"
                     format="webp"
@@ -70,14 +50,14 @@ const projects = [
                     loading="lazy"
                   />
                 ) : (
-                  <MediaPlaceholder label={`${project.name} on the XTEINK device`} />
+                  <MediaPlaceholder label={project.data.name} />
                 )}
               </div>
               <div class="desk-panel__body">
-                <h2 class="desk-panel__name">{project.name}</h2>
-                <p class="desk-panel__purpose">{project.purpose}</p>
+                <h2 class="desk-panel__name">{project.data.name}</h2>
+                <p class="desk-panel__purpose">{project.data.purpose}</p>
                 <ul class="desk-panel__facts">
-                  {project.facts.map((fact) => (
+                  {project.data.facts.map((fact) => (
                     <li>{fact}</li>
                   ))}
                 </ul>
@@ -89,6 +69,25 @@ const projects = [
       }
     </ul>
 
+    <p class="desk__more"><a href="/desk/projects/">All projects →</a></p>
+
+    {
+      collections.length > 0 && (
+        <section class="desk-collections" aria-label="Editorial collections">
+          <ul class="desk-collections__list">
+            {collections.map((c) => (
+              <li class="desk-collections__item">
+                <a href={`/desk/${c.slug}/`}>
+                  <span class="desk-collections__name">{c.label}</span>
+                  <span class="desk-collections__subtitle">{c.subtitle}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
     <p class="desk__context">
       The current projects run on CrossPoint Reader, an open firmware for XTEINK e-ink
       readers. Each project page covers its own downloads and installation.
@@ -99,10 +98,10 @@ const projects = [
 <style>
   .page-head {
     display: grid;
-    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
+    grid-template-columns: minmax(9rem, 0.3fr) minmax(0, 1fr);
     gap: 1.5rem clamp(2rem, 7vw, 8rem);
     padding-top: clamp(4rem, 9vw, 9rem);
-    padding-bottom: clamp(3rem, 7vw, 7rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
     max-width: var(--wrap);
   }
 
@@ -112,8 +111,8 @@ const projects = [
     font-family: var(--font-sans);
     font-size: clamp(3.3rem, 7vw, 7.8rem);
     font-weight: 760;
-    letter-spacing: -.065em;
-    line-height: .9;
+    letter-spacing: -0.065em;
+    line-height: 0.9;
   }
 
   .page-head__intro {
@@ -129,9 +128,9 @@ const projects = [
   .page-head__chapter {
     grid-row: 1 / span 2;
     margin: 0;
-    font-size: .72rem;
+    font-size: 0.72rem;
     font-weight: 800;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ink-faint);
   }
@@ -139,14 +138,15 @@ const projects = [
   .page-head__chapter span {
     display: block;
     width: fit-content;
-    margin-bottom: .65rem;
-    padding: .35rem .5rem;
+    margin-bottom: 0.65rem;
+    padding: 0.35rem 0.5rem;
     background: var(--yellow);
     border: 1px solid var(--ink);
     color: var(--ink);
   }
 
   .desk {
+    padding-top: var(--space-lg);
     padding-bottom: var(--space-xxl);
   }
 
@@ -190,7 +190,7 @@ const projects = [
     font-family: var(--font-sans);
     font-size: clamp(2rem, 3vw, 3rem);
     font-weight: 760;
-    letter-spacing: -.045em;
+    letter-spacing: -0.045em;
     line-height: 1;
   }
 
@@ -212,7 +212,7 @@ const projects = [
   }
 
   .desk-panel__facts li {
-    padding: .3rem 0;
+    padding: 0.3rem 0;
     border-top: 1px solid var(--rule);
   }
 
@@ -224,17 +224,76 @@ const projects = [
     display: inline-block;
     margin-top: var(--space-lg);
     font-family: var(--font-sans);
-    font-size: .72rem;
+    font-size: 0.72rem;
     font-weight: 750;
-    letter-spacing: .075em;
+    letter-spacing: 0.075em;
     text-transform: uppercase;
     color: var(--ink);
     border-bottom: 2px solid var(--accent);
-    padding-bottom: .2rem;
+    padding-bottom: 0.2rem;
   }
 
   .desk-panel__link:hover .desk-panel__name,
   .desk-panel__link:hover .desk-panel__cta {
+    color: var(--accent);
+  }
+
+  .desk__more {
+    margin: var(--space-lg) 0 0;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+  }
+
+  .desk__more a {
+    text-decoration: none;
+    color: var(--ink);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.2rem;
+  }
+
+  .desk-collections {
+    margin-top: var(--space-xl);
+    border-top: var(--heavy-rule);
+  }
+
+  .desk-collections__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .desk-collections__item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .desk-collections__item a {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem clamp(1rem, 3vw, 2rem);
+    padding-block: var(--space-md);
+    text-decoration: none;
+  }
+
+  .desk-collections__name {
+    font-family: var(--font-sans);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 760;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+
+  .desk-collections__subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--ink-faint);
+  }
+
+  .desk-collections__item a:hover .desk-collections__name {
     color: var(--accent);
   }
 

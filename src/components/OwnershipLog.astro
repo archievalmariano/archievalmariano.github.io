@@ -1,0 +1,156 @@
+---
+// Renders an ARTIFACTS ownership record. Two clearly distinct registers:
+//   • Updates — substantive, dated additions to the ownership narrative
+//     (repairs, failures, selling, giving away, changes of opinion). These show
+//     the reader WHEN the author's experience evolved.
+//   • Corrections — routine factual/copy fixes, shown as a quiet footnote, never
+//     presented as a change in experience.
+// Renders nothing when both are absent, so the record only ever supplements the
+// essay.
+interface Update {
+  date: Date;
+  status?: string;
+  summary: string;
+  note?: string;
+}
+interface Correction {
+  date: Date;
+  note: string;
+}
+interface Props {
+  updates?: Update[];
+  corrections?: Correction[];
+}
+
+const { updates = [], corrections = [] } = Astro.props;
+
+const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const byDateDesc = <T extends { date: Date }>(a: T, b: T) => b.date.valueOf() - a.date.valueOf();
+const sortedUpdates = [...updates].sort(byDateDesc);
+const sortedCorrections = [...corrections].sort(byDateDesc);
+
+const hasAny = sortedUpdates.length > 0 || sortedCorrections.length > 0;
+---
+
+{
+  hasAny && (
+    <section class="ownership" aria-label="Ownership record">
+      {sortedUpdates.length > 0 && (
+        <div class="ownership__updates">
+          <h2 class="ownership__heading">Updates</h2>
+          <ol class="ownership__list">
+            {sortedUpdates.map((u) => (
+              <li class="ownership__item">
+                <p class="ownership__meta">
+                  <time datetime={u.date.toISOString()}>{fmt.format(u.date)}</time>
+                  {u.status && <span class="ownership__status">{u.status}</span>}
+                </p>
+                <p class="ownership__summary">{u.summary}</p>
+                {u.note && <p class="ownership__note">{u.note}</p>}
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
+      {sortedCorrections.length > 0 && (
+        <div class="ownership__corrections">
+          <h2 class="ownership__heading ownership__heading--quiet">Corrections</h2>
+          <ul class="ownership__corr-list">
+            {sortedCorrections.map((c) => (
+              <li>
+                <time datetime={c.date.toISOString()}>{fmt.format(c.date)}</time> — {c.note}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .ownership {
+    max-width: var(--measure);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: var(--heavy-rule);
+  }
+
+  .ownership__heading {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .ownership__list {
+    list-style: none;
+    margin: var(--space-md) 0 0;
+    padding: 0;
+  }
+
+  .ownership__item {
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .ownership__item:first-child {
+    border-top: none;
+  }
+
+  .ownership__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0 0 0.35rem;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .ownership__status {
+    font-weight: 750;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .ownership__summary {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .ownership__note {
+    margin: 0.4rem 0 0;
+    color: var(--ink-soft);
+  }
+
+  /* Corrections sit quietly beneath the updates — deliberately understated. */
+  .ownership__corrections {
+    margin-top: var(--space-lg);
+  }
+
+  .ownership__heading--quiet {
+    font-size: 0.63rem;
+    color: var(--ink-faint);
+  }
+
+  .ownership__corr-list {
+    margin: var(--space-sm) 0 0;
+    padding-left: 1.1em;
+    font-size: var(--step--1);
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+
+  .ownership__corr-list li + li {
+    margin-top: 0.3rem;
+  }
+</style>

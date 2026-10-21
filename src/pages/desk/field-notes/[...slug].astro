@@ -1,0 +1,84 @@
+---
+// FIELD NOTES — gated collection route. Same mechanism as ARTIFACTS: a single
+// optional-rest route renders the landing (slug undefined → /desk/field-notes/)
+// and each entry, and getStaticPaths returns [] when unpublished so nothing is
+// built.
+import { getCollection } from 'astro:content';
+import { isPublished, collectionMeta } from '../../../data/desk';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DeskNav from '../../../components/DeskNav.astro';
+import CollectionIndex from '../../../components/CollectionIndex.astro';
+import DeskArticleLayout from '../../../layouts/DeskArticleLayout.astro';
+
+const meta = collectionMeta('fieldNotes');
+
+export async function getStaticPaths() {
+  if (!isPublished('fieldNotes')) return [];
+  const entries = (await getCollection('fieldNotes', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  const paths: any[] = [{ params: { slug: undefined }, props: { kind: 'index', entries } }];
+  for (const entry of entries) {
+    paths.push({ params: { slug: entry.slug }, props: { kind: 'article', entry } });
+  }
+  return paths;
+}
+
+const props = Astro.props as
+  | { kind: 'index'; entries: any[] }
+  | { kind: 'article'; entry: any };
+
+let Content: any = null;
+if (props.kind === 'article') {
+  const rendered = await props.entry.render();
+  Content = rendered.Content;
+}
+
+const items =
+  props.kind === 'index'
+    ? props.entries.map((e) => ({
+        href: `/desk/${meta.slug}/${e.slug}/`,
+        title: e.data.title,
+        description: e.data.description,
+        kicker: e.data.format,
+      }))
+    : [];
+---
+
+{
+  props.kind === 'index' ? (
+    <BaseLayout
+      title="Field Notes — Archieval Mariano"
+      description="From the Margins — observations, travelogues, reflections, and photography-led writing."
+    >
+      <div class="wrap">
+        <DeskNav />
+      </div>
+      <CollectionIndex
+        label={meta.label}
+        subtitle={meta.subtitle}
+        chapterNo="Desk"
+        accent="var(--blue-soft)"
+        intro="Observations, travels, and writing from the margins."
+        items={items}
+        emptyText="No entries published yet."
+      />
+    </BaseLayout>
+  ) : (
+    <DeskArticleLayout
+      title={props.entry.data.title}
+      description={props.entry.data.description}
+      subtitle={props.entry.data.subtitle}
+      collectionLabel={meta.label}
+      collectionHref={`/desk/${meta.slug}/`}
+      pubDate={props.entry.data.pubDate}
+      updatedDate={props.entry.data.updatedDate}
+      heroImage={props.entry.data.heroImage}
+      heroAlt={props.entry.data.heroAlt}
+      heroOrientation={props.entry.data.heroOrientation}
+      ogImage={props.entry.data.ogImage}
+    >
+      <Content />
+    </DeskArticleLayout>
+  )
+}

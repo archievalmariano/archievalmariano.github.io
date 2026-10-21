@@ -1,0 +1,95 @@
+---
+// ARTIFACTS — gated collection route. A single optional-rest route renders both
+// the collection landing (slug undefined → /desk/artifacts/) and each article.
+// When the collection is unpublished, getStaticPaths returns [] and NOTHING is
+// built — no index, no articles, no directory in dist/. The URL simply 404s;
+// there is no hidden/noindex page and no bundled MDX to leak.
+import { getCollection } from 'astro:content';
+import { isPublished, collectionMeta } from '../../../data/desk';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DeskNav from '../../../components/DeskNav.astro';
+import CollectionIndex from '../../../components/CollectionIndex.astro';
+import DeskArticleLayout from '../../../layouts/DeskArticleLayout.astro';
+
+const meta = collectionMeta('artifacts');
+
+export async function getStaticPaths() {
+  if (!isPublished('artifacts')) return [];
+  const entries = (await getCollection('artifacts', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  const paths: any[] = [{ params: { slug: undefined }, props: { kind: 'index', entries } }];
+  for (const entry of entries) {
+    paths.push({ params: { slug: entry.slug }, props: { kind: 'article', entry } });
+  }
+  return paths;
+}
+
+const props = Astro.props as
+  | { kind: 'index'; entries: any[] }
+  | { kind: 'article'; entry: any };
+
+const monthFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' });
+
+let Content: any = null;
+if (props.kind === 'article') {
+  const rendered = await props.entry.render();
+  Content = rendered.Content;
+}
+
+const items =
+  props.kind === 'index'
+    ? props.entries.map((e) => {
+        const latest = e.data.ownershipUpdates
+          ?.slice()
+          .sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf())[0];
+        return {
+          href: `/desk/${meta.slug}/${e.slug}/`,
+          title: e.data.title,
+          description: e.data.description,
+          kicker: e.data.object?.name,
+          note: latest ? `Updated ${monthFmt.format(latest.date)}` : undefined,
+        };
+      })
+    : [];
+---
+
+{
+  props.kind === 'index' ? (
+    <BaseLayout
+      title="Artifacts — Archieval Mariano"
+      description="As Things Stand — long-term ownership essays about the objects I live with."
+    >
+      <div class="wrap">
+        <DeskNav />
+      </div>
+      <CollectionIndex
+        label={meta.label}
+        subtitle={meta.subtitle}
+        chapterNo="Desk"
+        accent="var(--coral)"
+        intro="Essays about living with objects over time — what changes, what breaks, and what stays."
+        items={items}
+        emptyText="No essays published yet."
+      />
+    </BaseLayout>
+  ) : (
+    <DeskArticleLayout
+      title={props.entry.data.title}
+      description={props.entry.data.description}
+      subtitle={props.entry.data.subtitle}
+      collectionLabel={meta.label}
+      collectionHref={`/desk/${meta.slug}/`}
+      pubDate={props.entry.data.pubDate}
+      updatedDate={props.entry.data.updatedDate}
+      heroImage={props.entry.data.heroImage}
+      heroAlt={props.entry.data.heroAlt}
+      heroOrientation={props.entry.data.heroOrientation}
+      ogImage={props.entry.data.ogImage}
+      updates={props.entry.data.ownershipUpdates}
+      corrections={props.entry.data.corrections}
+    >
+      <Content />
+    </DeskArticleLayout>
+  )
+}

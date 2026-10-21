@@ -1,0 +1,13 @@
+{
+  "name": "GOTO",
+  "subtitle": "GOTO / TOGO",
+  "slug": "goto",
+  "purpose": "A limited morning and evening news briefing for e-ink readers.",
+  "facts": ["XTEINK X4 + X4 Pro", "Philippine news", "Updates twice daily"],
+  "heroImage": "../../assets/photos/goto-edition-01-story.jpg",
+  "heroAlt": "The top story of a GOTO morning edition on an XTEINK X4 Pro, story 1 of 10.",
+  "status": "active",
+  "order": 1,
+  "featured": true,
+  "draft": false
+}

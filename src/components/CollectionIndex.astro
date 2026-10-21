@@ -1,0 +1,200 @@
+---
+// Shared landing template for the editorial collections (ARTIFACTS, FIELD
+// NOTES). The editorial subtitle lives here, on the collection landing — not
+// above every article. Listing stays understated: title and excerpt lead; any
+// status is a quiet text label, never a coloured badge.
+interface ListItem {
+  href: string;
+  title: string;
+  description: string;
+  kicker?: string; // small label above the title (format, or object name)
+  note?: string; // understated trailing label, e.g. "Updated March 2026"
+}
+interface Props {
+  label: string;
+  subtitle: string;
+  chapterNo: string;
+  intro?: string;
+  accent?: string; // CSS var name for the chapter chip background
+  items: ListItem[];
+  emptyText?: string;
+}
+
+const {
+  label,
+  subtitle,
+  chapterNo,
+  intro,
+  accent = 'var(--yellow)',
+  items,
+  emptyText = 'Nothing here yet.',
+} = Astro.props;
+---
+
+<section class="wrap page-head">
+  <p class="page-head__chapter"><span style={`background:${accent}`}>{chapterNo}</span>{label}</p>
+  <h1>{label}</h1>
+  <p class="page-head__subtitle">{subtitle}</p>
+  {intro && <p class="page-head__intro">{intro}</p>}
+</section>
+
+<section class="wrap">
+  {
+    items.length === 0 ? (
+      <p class="collection-empty">{emptyText}</p>
+    ) : (
+      <ul class="entry-list">
+        {items.map((item, index) => (
+          <li class="entry-list__item">
+            <a href={item.href} class="entry-list__link">
+              <span class="entry-list__number">{String(index + 1).padStart(2, '0')}</span>
+              <div class="entry-list__body">
+                {item.kicker && <p class="meta entry-list__type">{item.kicker}</p>}
+                <div class="entry-list__title">{item.title}</div>
+                <p class="entry-list__summary">{item.description}</p>
+                {item.note && <p class="meta entry-list__note">{item.note}</p>}
+              </div>
+              <span class="entry-list__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</section>
+
+<style>
+  .page-head {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.3fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(2rem, 7vw, 8rem);
+    padding-top: clamp(4rem, 9vw, 9rem);
+    padding-bottom: clamp(3rem, 7vw, 7rem);
+    max-width: var(--wrap);
+  }
+
+  .page-head h1 {
+    grid-column: 2;
+    max-width: 14ch;
+    font-family: var(--font-sans);
+    font-size: clamp(3.3rem, 7vw, 7.8rem);
+    font-weight: 760;
+    letter-spacing: -0.065em;
+    line-height: 0.9;
+  }
+
+  .page-head__subtitle {
+    grid-column: 2;
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--ink-faint);
+  }
+
+  .page-head__intro {
+    grid-column: 2;
+    max-width: var(--measure);
+    margin: var(--space-md) 0 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.85rem);
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+
+  .page-head__chapter {
+    grid-row: 1 / span 2;
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .page-head__chapter span {
+    display: block;
+    width: fit-content;
+    margin-bottom: 0.65rem;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+
+  .collection-empty {
+    padding: var(--space-lg) 0 var(--space-xxl);
+    border-top: var(--heavy-rule);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .entry-list {
+    list-style: none;
+    margin: 0 0 var(--space-xxl);
+    padding: 0;
+    border-top: var(--heavy-rule);
+  }
+
+  .entry-list__item {
+    border-bottom: var(--heavy-rule);
+  }
+
+  .entry-list__link {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) 2rem;
+    gap: clamp(1rem, 4vw, 4rem);
+    padding-block: clamp(2rem, 5vw, 4.5rem);
+    text-decoration: none;
+  }
+
+  .entry-list__number,
+  .entry-list__arrow {
+    font-size: 0.74rem;
+    font-weight: 800;
+  }
+
+  .entry-list__type {
+    margin-bottom: var(--space-xs);
+  }
+
+  .entry-list__title {
+    max-width: 28ch;
+    font-family: var(--font-serif);
+    font-size: clamp(1.7rem, 3vw, 3.3rem);
+    font-weight: 550;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  .entry-list__link:hover .entry-list__title {
+    color: var(--accent);
+  }
+
+  .entry-list__summary {
+    margin: var(--space-sm) 0 0;
+    max-width: 58rem;
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .entry-list__note {
+    margin-top: var(--space-sm);
+  }
+
+  @media (max-width: 44rem) {
+    .page-head {
+      grid-template-columns: 1fr;
+    }
+    .page-head h1,
+    .page-head__subtitle,
+    .page-head__intro,
+    .page-head__chapter {
+      grid-column: 1;
+      grid-row: auto;
+    }
+    .entry-list__link {
+      grid-template-columns: 2rem minmax(0, 1fr) 1rem;
+    }
+  }
+</style>

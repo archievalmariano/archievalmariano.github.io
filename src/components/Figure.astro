@@ -1,0 +1,89 @@
+---
+// Responsive article figure. Wraps astro:assets <Image> with an optional
+// caption and credit, and an orientation hint that sets the display aspect
+// ratio so portrait, landscape and panoramic photographs sit consistently.
+// `alt` is required. Usable inside MDX article bodies.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+  credit?: string;
+  orientation?: 'portrait' | 'landscape' | 'panorama';
+  widths?: number[];
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  src,
+  alt,
+  caption,
+  credit,
+  orientation = 'landscape',
+  widths = [480, 760, 1120, 1600],
+  sizes = '(max-width: 48rem) 92vw, 44rem',
+  loading = 'lazy',
+} = Astro.props;
+---
+
+<figure class={`figure figure--${orientation}`}>
+  <Image src={src} alt={alt} widths={widths} sizes={sizes} format="webp" quality={76} loading={loading} />
+  {
+    (caption || credit) && (
+      <figcaption>
+        {caption && <span class="figure__caption">{caption}</span>}
+        {credit && <span class="figure__credit">{credit}</span>}
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .figure {
+    margin: var(--space-lg) 0;
+  }
+
+  .figure :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+  }
+
+  /* Orientation only constrains how tall a figure gets on wide screens; the
+     image keeps its intrinsic ratio within these bounds. */
+  .figure--portrait :global(img) {
+    max-height: 90vh;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .figure--panorama {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .figure--panorama :global(img) {
+    border-inline: none;
+  }
+
+  figcaption {
+    margin-top: var(--space-xs);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    line-height: 1.45;
+    color: var(--ink-faint);
+  }
+
+  .figure__caption {
+    color: var(--ink-soft);
+  }
+
+  .figure__credit {
+    display: block;
+    margin-top: 0.15rem;
+    font-style: italic;
+  }
+</style>

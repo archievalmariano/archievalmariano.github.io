@@ -1,16 +1,29 @@
 ---
-// Marked stand-in for a photo that has not been taken yet. Renders at the
-// same 3:4 ratio as the device photos, so swapping in the real image later
-// does not change the layout.
+// Marked stand-in for a photo that has not been taken yet. Defaults to the 3:4
+// ratio of the device photos; `orientation` lets editorial placeholders match
+// the intended composition (landscape / panorama) so swapping in the real
+// image later does not change the layout.
 interface Props {
   label: string;
   note?: string;
+  orientation?: 'portrait' | 'landscape' | 'panorama';
 }
 
-const { label, note = 'Photo to come' } = Astro.props;
+const { label, note = 'Photo to come', orientation = 'portrait' } = Astro.props;
+
+const ratio = {
+  portrait: '3 / 4',
+  landscape: '3 / 2',
+  panorama: '21 / 9',
+}[orientation];
 ---
 
-<div class="media-placeholder" role="img" aria-label={`${note}: ${label}`}>
+<div
+  class="media-placeholder"
+  role="img"
+  aria-label={`${note}: ${label}`}
+  style={`--placeholder-ratio: ${ratio};`}
+>
   <span class="media-placeholder__note">{note}</span>
   <span class="media-placeholder__label">{label}</span>
 </div>
@@ -21,7 +34,7 @@ const { label, note = 'Photo to come' } = Astro.props;
     flex-direction: column;
     justify-content: flex-end;
     gap: .35rem;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: var(--placeholder-ratio, 3 / 4);
     width: 100%;
     padding: var(--space-md);
     background: var(--paper-raised);

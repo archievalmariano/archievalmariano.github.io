@@ -3,19 +3,36 @@ import BaseHead from '../components/BaseHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 
+import type { ImageMetadata } from 'astro';
+
 interface Props {
   title: string;
   description: string;
   type?: 'website' | 'article';
+  ogImage?: ImageMetadata;
+  ogImageAlt?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title, description, type } = Astro.props;
+const { title, description, type, ogImage, ogImageAlt, publishedTime, modifiedTime, jsonLd } =
+  Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} type={type} />
+    <BaseHead
+      title={title}
+      description={description}
+      type={type}
+      ogImage={ogImage}
+      ogImageAlt={ogImageAlt}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      jsonLd={jsonLd}
+    />
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
