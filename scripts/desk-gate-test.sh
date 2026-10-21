@@ -3,18 +3,22 @@
 # DESK publication-gate test matrix.
 #
 # Stages SYNTHETIC fixtures into the editorial collections, builds the site in
-# four flag states, and asserts exactly what is (and is not) emitted to dist/.
+# several flag states, and asserts exactly what is (and is not) emitted to dist/.
 # Fixtures are always removed afterwards (trap), so none can leak into a
 # committed/deployed build. Uses only astro + shell — no new dependency.
 #
 # States:
-#   P  production default (no preview)          → collections absent
-#   FC fail-closed (DESK_PREVIEW set, no opt-in) → collections absent
-#   A  artifacts preview build                   → artifacts present, drafts excluded
-#   B  both preview build                        → both present, drafts excluded
+#   P   production default (no preview)            → collections absent
+#   FC  fail-closed (DESK_PREVIEW set, no opt-in)  → collections absent
+#   CI  CI hard-block (CI / GITHUB_ACTIONS truthy, → collections absent even with
+#       any spelling, + opt-in + DESK_PREVIEW)       the local opt-in set
+#   A   artifacts preview build                     → artifacts present, drafts excluded
+#   B   both preview build                          → both present, drafts excluded
+#   X   JSON-LD script-breakout probe               → malicious title cannot inject markup
 #
-# Proves: non-draft excluded when flag OFF; draft excluded when flag ON;
-# accidental env override never exposes in a production build; no fixture leak.
+# Proves: non-draft excluded when flag OFF; draft excluded when flag ON; no env
+# override (any CI spelling included) exposes in production; JSON-LD is script-
+# safe; no fixture / HTML / RSS / sitemap leak.
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -27,7 +31,7 @@ PASS=0
 FAIL=0
 
 cleanup() {
-  rm -f "$AF/gate-published.mdx" "$AF/gate-draft.mdx" \
+  rm -f "$AF/gate-published.mdx" "$AF/gate-draft.mdx" "$AF/gate-xss.mdx" \
         "$FN/gate-published.mdx" "$FN/gate-draft.mdx"
 }
 trap cleanup EXIT
@@ -46,6 +50,21 @@ assert_exist()  { if [ -e "$1" ]; then ok "exists: $1"; else bad "MISSING: $1"; 
 assert_absent() { if [ -e "$1" ]; then bad "SHOULD BE ABSENT: $1"; else ok "absent: $1"; fi; }
 assert_grep()   { if grep -rqF "$2" "$1" 2>/dev/null; then ok "contains '$2': $1"; else bad "MISSING '$2' in $1"; fi; }
 assert_nogrep() { if grep -rqF "$2" "$1" 2>/dev/null; then bad "SHOULD NOT contain '$2': $1"; else ok "absent '$2' in $1"; fi; }
+
+# No unpublished editorial output anywhere: no collection HTML, no feed, no
+# sitemap entry, no fixture leak.
+assert_no_gated_output() {
+  assert_absent dist/desk/artifacts
+  assert_absent dist/desk/field-notes
+  assert_absent dist/desk/rss.xml
+  assert_nogrep dist "SYNTHETIC FIXTURE"
+  for sm in dist/sitemap-0.xml dist/sitemap-index.xml; do
+    [ -f "$sm" ] || continue
+    assert_nogrep "$sm" "/desk/artifacts"
+    assert_nogrep "$sm" "/desk/field-notes"
+    assert_nogrep "$sm" "desk/rss"
+  done
+}
 
 build() { # $1 = label, rest = env assignments
   local label="$1"; shift
@@ -71,19 +90,26 @@ assert_absent dist/desk/field-notes
 assert_absent dist/desk/rss.xml
 assert_nogrep dist "SYNTHETIC FIXTURE"      # no fixture leak anywhere
 
-# ── State FC: fail-closed (override set, but NOT a preview build) ──────────────
+# ── State FC: fail-closed (production build; DESK_PREVIEW set, no opt-in) ──────
+#    Normal `astro build` with the preview list set but no local authorization.
 build "FC fail-closed" DESK_PREVIEW=artifacts,field-notes
-assert_absent dist/desk/artifacts            # accidental env override ignored in prod build
-assert_absent dist/desk/field-notes
-assert_absent dist/desk/rss.xml
-assert_nogrep dist "SYNTHETIC FIXTURE"
+assert_no_gated_output                        # accidental env override ignored
 
-# ── State CI: CI hard-block (even the opt-in vars must not expose in CI) ───────
-build "CI hard-block" CI=true GITHUB_ACTIONS=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
-assert_absent dist/desk/artifacts            # GitHub Pages workflow is immune to every override
-assert_absent dist/desk/field-notes
-assert_absent dist/desk/rss.xml
-assert_nogrep dist "SYNTHETIC FIXTURE"
+# ── State CI: CI hard-block — every truthy CI spelling disables preview even ──
+#    with the opt-in + DESK_PREVIEW set. GitHub Actions can never expose a
+#    collection. Covers CI=true/1/yes/mixed-case and GITHUB_ACTIONS=true/1/mixed.
+for spec in \
+  "CI=true" \
+  "CI=1" \
+  "CI=yes" \
+  "CI=TRUE" \
+  "CI=Yes" \
+  "GITHUB_ACTIONS=true" \
+  "GITHUB_ACTIONS=1" \
+  "GITHUB_ACTIONS=True"; do
+  build "CI-detect [$spec]" $spec DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
+  assert_no_gated_output
+done
 
 # ── State A: artifacts preview build ──────────────────────────────────────────
 build "A artifacts-only" DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts
@@ -106,6 +132,44 @@ assert_absent dist/desk/field-notes/gate-draft
 assert_exist  dist/desk/rss.xml
 assert_grep   dist/desk/rss.xml "Published Field Note Fixture"
 assert_nogrep dist/desk/rss.xml "Draft Field Note Fixture"
+
+# ── State X: JSON-LD script-breakout probe ────────────────────────────────────
+#    A synthetic article whose title/description contain `</script><script>…`
+#    must not terminate the JSON-LD block or inject an executable script. The
+#    malicious fixture is generated inline (no committed fixture file) and
+#    removed immediately after.
+cat > "$AF/gate-xss.mdx" <<'EOF'
+---
+title: "SYNTHETIC XSS </script><script>alert(1)</script> Fixture"
+description: "JSON-LD escape probe. </script><script>alert(2)</script>"
+pubDate: 2026-01-06
+draft: false
+---
+
+SYNTHETIC FIXTURE — JSON-LD breakout probe. Not for publication.
+EOF
+build "X json-ld-breakout" DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts
+XF=dist/desk/artifacts/gate-xss/index.html
+assert_exist  "$XF"
+assert_grep   "$XF" "u003c"                   # JSON-LD angle brackets are \uXXXX-escaped
+# Decisive probe: isolate the ld+json <script> block and confirm it parses as
+# JSON AND preserves the full angle-bracket-laden title. A real breakout would
+# terminate the script at the raw </script>, truncating the block so JSON.parse
+# fails. (Inert occurrences inside quoted og:title attributes are ignored.)
+if node -e '
+  const fs = require("fs");
+  const html = fs.readFileSync(process.argv[1], "utf8");
+  const m = html.match(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/);
+  if (!m) process.exit(2);
+  const obj = JSON.parse(m[1]);
+  if (!String(obj.headline).includes("</script><script>alert(1)</script>")) process.exit(3);
+  process.exit(0);
+' "$XF" 2>/dev/null; then
+  ok "JSON-LD parses safely; malicious title cannot inject a script element"
+else
+  bad "JSON-LD breakout: ld+json block is not safe/parseable"
+fi
+rm -f "$AF/gate-xss.mdx"
 
 # ── Final: production build, fixtures removed ─────────────────────────────────
 cleanup

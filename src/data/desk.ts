@@ -45,17 +45,32 @@ function env(name: string): string | undefined {
   return typeof process !== 'undefined' && process.env ? process.env[name] : undefined;
 }
 
+// A truthy environment flag: true / 1 / yes / on, case-insensitively. Anything
+// else (unset, empty, false, 0, no) is falsy.
+function isTruthy(value: string | undefined): boolean {
+  if (!value) return false;
+  return ['true', '1', 'yes', 'on'].includes(value.trim().toLowerCase());
+}
+
+// Running under continuous integration. The production GitHub Pages deploy sets
+// both CI and GITHUB_ACTIONS; accepting ANY truthy spelling (true/1/yes/on,
+// any case) means the deploy can never be coaxed into a preview build by a
+// differently-spelled flag.
+function inCI(): boolean {
+  return isTruthy(env('CI')) || isTruthy(env('GITHUB_ACTIONS'));
+}
+
 // Preview overrides are honoured ONLY in the dev server, or in a local build
 // that explicitly opts in — and NEVER in CI / the GitHub Pages workflow. The
 // production deploy is therefore a pure function of committed source: no
 // environment value (DESK_PREVIEW, DESK_PREVIEW_BUILD, or any other), accidental
 // or otherwise, can expose an unpublished collection in production.
 function previewAllowed(): boolean {
-  // Hard block in the production deploy environment. GitHub Actions sets both
-  // GITHUB_ACTIONS and CI; this short-circuits every override below.
-  if (env('GITHUB_ACTIONS') === 'true' || env('CI') === 'true') return false;
+  // Hard block in CI / the production deploy environment: short-circuits every
+  // override below, so GitHub Actions can never enable an unpublished collection.
+  if (inCI()) return false;
   if (import.meta.env.DEV) return true; // astro dev
-  return env('DESK_PREVIEW_BUILD') === 'true'; // explicit local build opt-in
+  return isTruthy(env('DESK_PREVIEW_BUILD')); // explicit local build opt-in
 }
 
 function previewSet(): Set<DeskCollectionKey> {

@@ -11,8 +11,8 @@ the collection publish gate exclude unpublished work from the *generated site*,
 but they do **not** make committed *source files* private — anyone reading the
 repository can see them. Therefore:
 
-- Keep real, in-progress essays (e.g. the X100VI and Fold7 pieces) **outside
-  the public repository** until their publication is approved.
+- Keep real, in-progress essays **outside the public repository** until their
+  publication is approved.
 - Add a finished essay here only when it is ready to publish, together with its
   photography, and then launch the collection via `src/data/desk.ts`.
 - Synthetic fixtures used to exercise the publication gate live in
