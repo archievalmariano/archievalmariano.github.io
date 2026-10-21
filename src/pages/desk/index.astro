@@ -1,18 +1,105 @@
 ---
+import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DeskNav from '../../components/DeskNav.astro';
 import MediaPlaceholder from '../../components/MediaPlaceholder.astro';
-import { publishedCollections } from '../../data/desk';
+import { isPublished, deskCollections } from '../../data/desk';
 
-// Project listings come from the shared registry (same source as /desk/projects/).
-const projects = (
-  await getCollection('projects', ({ data }) => !data.draft && data.featured)
-).sort((a, b) => a.data.order - b.data.order);
+// DESK is the front page / table of contents: a restrained, sectioned list that
+// points into each collection, not a grid of large cards. The full set of a
+// collection lives at its index; the homepage shows a short selection.
+type Entry = {
+  href: string;
+  title: string;
+  description: string;
+  image?: ImageMetadata;
+  imageAlt: string;
+};
 
-// Editorial collections appear only once launched; empty in Phase 1.
-const collections = publishedCollections();
+// Shared homepage-selection rule for every collection:
+//   • at most HOMEPAGE_MAX entries;
+//   • one designated `featured` entry first, if any;
+//   • then the latest remaining entries by the collection's recency order,
+//     excluding the featured one (so no duplicates);
+//   • if none is featured, just the latest eligible entries;
+//   • fewer than the max → show only what's available.
+// `featured` affects selection and position ONLY — every row uses identical
+// styling (no oversized treatment, no badge).
+const HOMEPAGE_MAX = 3;
+
+function selectHomepage<T extends { featured: boolean }>(
+  eligible: T[],
+  byRecency: (a: T, b: T) => number
+): T[] {
+  const sorted = [...eligible].sort(byRecency);
+  const featured = sorted.find((e) => e.featured);
+  const picks: T[] = [];
+  if (featured) picks.push(featured);
+  for (const e of sorted) {
+    if (picks.length >= HOMEPAGE_MAX) break;
+    if (e === featured) continue; // the pinned featured entry is already included
+    picks.push(e);
+  }
+  return picks;
+}
+
+// PROJECTS — homepage-eligible = registry entries where `homepage` is not false,
+// ordered by the registry's editorial `order` (no invented publication dates).
+// `featured` is independent: it pins at most one entry first; non-featured
+// eligible projects still fill the remaining slots. Tools sets `homepage: false`,
+// so it stays in the full directory at /desk/projects/ only. To change the
+// homepage selection, toggle `homepage` / `featured` / `order` — no copy here.
+const projectCandidates = (
+  await getCollection('projects', ({ data }) => !data.draft && data.homepage)
+).map((p) => ({
+  featured: p.data.featured,
+  order: p.data.order,
+  item: {
+    href: `/desk/${p.data.slug}/`,
+    title: p.data.name,
+    description: p.data.purpose,
+    image: p.data.heroImage,
+    imageAlt: p.data.heroAlt ?? '',
+  } as Entry,
+}));
+const projectItems: Entry[] = selectHomepage(
+  projectCandidates,
+  (a, b) => a.order - b.order
+).map((c) => c.item);
+
+// Ordered homepage sections. PROJECTS always shows. Editorial collections appear
+// ONLY once launched (publish flag on) AND they contain published, non-draft
+// entries — so ARTIFACTS / FIELD NOTES are entirely absent until then.
+type Section = { label: string; subtitle: string; allHref: string; items: Entry[] };
+
+const sections: Section[] = [
+  { label: 'Projects', subtitle: 'Works in Progress', allHref: '/desk/projects/', items: projectItems },
+];
+
+for (const c of deskCollections) {
+  if (!isPublished(c.key)) continue;
+  // Editorial collections: eligible = all published, non-draft entries. "Latest"
+  // means most recently PUBLISHED (pubDate), never updatedDate — a dated
+  // ownership update must not promote an older essay into the latest slots.
+  const candidates = (await getCollection(c.key as any, ({ data }: any) => !data.draft)).map(
+    (e: any) => ({
+      featured: Boolean(e.data.featured),
+      pub: e.data.pubDate.valueOf(),
+      item: {
+        href: `/desk/${c.slug}/${e.slug}/`,
+        title: e.data.title,
+        description: e.data.description,
+        image: e.data.heroImage,
+        imageAlt: e.data.heroAlt ?? '',
+      } as Entry,
+    })
+  );
+  const items: Entry[] = selectHomepage(candidates, (a, b) => b.pub - a.pub).map((x) => x.item);
+  if (items.length === 0) continue; // launched but nothing published yet → omit
+  sections.push({ label: c.label, subtitle: c.subtitle, allHref: `/desk/${c.slug}/`, items });
+}
 ---
 
 <BaseLayout
@@ -33,59 +120,49 @@ const collections = publishedCollections();
   </div>
 
   <div class="wrap desk">
-    <ul class="desk__list">
-      {
-        projects.map((project) => (
-          <li class="desk-panel">
-            <a class="desk-panel__link" href={`/desk/${project.data.slug}/`}>
-              <div class="desk-panel__media">
-                {project.data.heroImage ? (
-                  <Image
-                    src={project.data.heroImage}
-                    alt={project.data.heroAlt ?? ''}
-                    widths={[360, 560, 760]}
-                    sizes="(max-width: 48rem) 88vw, 380px"
-                    format="webp"
-                    quality={74}
-                    loading="lazy"
-                  />
-                ) : (
-                  <MediaPlaceholder label={project.data.name} />
-                )}
-              </div>
-              <div class="desk-panel__body">
-                <h2 class="desk-panel__name">{project.data.name}</h2>
-                <p class="desk-panel__purpose">{project.data.purpose}</p>
-                <ul class="desk-panel__facts">
-                  {project.data.facts.map((fact) => (
-                    <li>{fact}</li>
-                  ))}
-                </ul>
-                <span class="desk-panel__cta">View project →</span>
-              </div>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-
-    <p class="desk__more"><a href="/desk/projects/">All projects →</a></p>
-
     {
-      collections.length > 0 && (
-        <section class="desk-collections" aria-label="Editorial collections">
-          <ul class="desk-collections__list">
-            {collections.map((c) => (
-              <li class="desk-collections__item">
-                <a href={`/desk/${c.slug}/`}>
-                  <span class="desk-collections__name">{c.label}</span>
-                  <span class="desk-collections__subtitle">{c.subtitle}</span>
+      sections.map((section) => (
+        <section class="desk-section">
+          <header class="desk-section__head">
+            <h2 class="desk-section__title">{section.label}</h2>
+            <p class="desk-section__subtitle">{section.subtitle}</p>
+          </header>
+
+          <ul class="desk-entries">
+            {section.items.map((item) => (
+              <li class="desk-entry">
+                <a class="desk-entry__link" href={item.href}>
+                  <div class="desk-entry__thumb">
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.imageAlt}
+                        widths={[120, 200, 280]}
+                        sizes="(max-width: 40rem) 24vw, 120px"
+                        format="webp"
+                        quality={72}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <MediaPlaceholder label={item.title} orientation="landscape" />
+                    )}
+                  </div>
+                  <div class="desk-entry__body">
+                    <h3 class="desk-entry__title">{item.title}</h3>
+                    <p class="desk-entry__desc">{item.description}</p>
+                  </div>
                 </a>
               </li>
             ))}
           </ul>
+
+          <p class="desk-section__all">
+            <a href={section.allHref}>
+              See all {section.label} <span aria-hidden="true">→</span>
+            </a>
+          </p>
         </section>
-      )
+      ))
     }
 
     <p class="desk__context">
@@ -146,160 +223,120 @@ const collections = publishedCollections();
   }
 
   .desk {
-    padding-top: var(--space-lg);
     padding-bottom: var(--space-xxl);
   }
 
-  .desk__list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: var(--heavy-rule);
-    border-left: var(--heavy-rule);
-  }
-
-  .desk-panel {
-    display: flex;
-    border-right: var(--heavy-rule);
-    border-bottom: var(--heavy-rule);
-  }
-
-  .desk-panel__link {
-    display: grid;
-    grid-template-columns: minmax(8rem, 13rem) minmax(0, 1fr);
-    gap: clamp(1.25rem, 3vw, 2.5rem);
-    align-items: start;
-    width: 100%;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .desk-panel__media :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-  }
-
-  .desk-panel__name {
-    margin: 0;
-    font-family: var(--font-sans);
-    font-size: clamp(2rem, 3vw, 3rem);
-    font-weight: 760;
-    letter-spacing: -0.045em;
-    line-height: 1;
-  }
-
-  .desk-panel__purpose {
-    margin: var(--space-sm) 0 0;
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    line-height: 1.35;
-    color: var(--ink-soft);
-  }
-
-  .desk-panel__facts {
-    list-style: none;
-    margin: var(--space-md) 0 0;
-    padding: 0;
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    color: var(--ink-faint);
-  }
-
-  .desk-panel__facts li {
-    padding: 0.3rem 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .desk-panel__facts li:last-child {
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .desk-panel__cta {
-    display: inline-block;
-    margin-top: var(--space-lg);
-    font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 750;
-    letter-spacing: 0.075em;
-    text-transform: uppercase;
-    color: var(--ink);
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 0.2rem;
-  }
-
-  .desk-panel__link:hover .desk-panel__name,
-  .desk-panel__link:hover .desk-panel__cta {
-    color: var(--accent);
-  }
-
-  .desk__more {
-    margin: var(--space-lg) 0 0;
-    font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 750;
-    letter-spacing: 0.075em;
-    text-transform: uppercase;
-  }
-
-  .desk__more a {
-    text-decoration: none;
-    color: var(--ink);
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 0.2rem;
-  }
-
-  .desk-collections {
-    margin-top: var(--space-xl);
+  /* Each collection is a clearly separated vertical section with generous
+     spacing — a table of contents, not a card grid. */
+  .desk-section {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
     border-top: var(--heavy-rule);
   }
 
-  .desk-collections__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .desk-collections__item {
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .desk-collections__item a {
+  .desk-section__head {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.75rem clamp(1rem, 3vw, 2rem);
-    padding-block: var(--space-md);
-    text-decoration: none;
+    gap: 0.5rem clamp(0.85rem, 2vw, 1.5rem);
+    margin-bottom: var(--space-md);
   }
 
-  .desk-collections__name {
-    font-family: var(--font-sans);
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 760;
-    letter-spacing: -0.03em;
-    color: var(--ink);
+  .desk-section__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    line-height: 1;
   }
 
-  .desk-collections__subtitle {
+  .desk-section__subtitle {
+    margin: 0;
     font-family: var(--font-serif);
     font-style: italic;
     font-size: var(--step-1);
     color: var(--ink-faint);
   }
 
-  .desk-collections__item a:hover .desk-collections__name {
+  /* Compact horizontal entry rows: a modest thumbnail, a serif title and a
+     restrained description. */
+  .desk-entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .desk-entry {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .desk-entry__link {
+    display: grid;
+    grid-template-columns: clamp(84px, 20vw, 116px) minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: center;
+    padding-block: clamp(1.1rem, 2.5vw, 1.6rem);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .desk-entry__thumb :global(img),
+  .desk-entry__thumb :global(.media-placeholder) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+  }
+
+  .desk-entry__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2.6vw, 1.95rem);
+    font-weight: 550;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .desk-entry__desc {
+    margin: 0.35rem 0 0;
+    max-width: var(--measure);
+    font-size: var(--step-0);
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+
+  .desk-entry__link:hover .desk-entry__title {
     color: var(--accent);
+  }
+
+  /* Understated "see all" link into the collection index. */
+  .desk-section__all {
+    margin: var(--space-md) 0 0;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 750;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .desk-section__all a {
+    color: var(--ink-faint);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 0.15rem;
+    transition: color 0.18s ease, border-color 0.18s ease;
+  }
+
+  .desk-section__all a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
   }
 
   .desk__context {
     max-width: 44rem;
-    margin: var(--space-lg) 0 0;
+    margin: var(--space-xl) 0 0;
     font-size: var(--step--1);
     line-height: 1.55;
     color: var(--ink-faint);
@@ -317,14 +354,6 @@ const collections = publishedCollections();
 
     .page-head__chapter {
       grid-row: auto;
-    }
-
-    .desk-panel__link {
-      grid-template-columns: 1fr;
-    }
-
-    .desk-panel__media {
-      max-width: 11rem;
     }
   }
 </style>

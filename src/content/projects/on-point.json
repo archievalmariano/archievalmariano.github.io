@@ -8,6 +8,6 @@
   "heroAlt": "ON POINT on an XTEINK X4 Pro showing 15 minutes until the 09:30 bus from Balagtas to TriNoma.",
   "status": "active",
   "order": 2,
-  "featured": true,
+  "featured": false,
   "draft": false
 }

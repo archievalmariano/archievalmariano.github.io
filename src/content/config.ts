@@ -79,7 +79,8 @@ const projects = defineCollection({
       heroAlt: z.string().optional(),
       status: z.enum(['active', 'experiment', 'utility']).default('active'),
       order: z.number().default(100), // lower sorts earlier
-      featured: z.boolean().default(false),
+      homepage: z.boolean().default(true), // eligible for the DESK homepage selection
+      featured: z.boolean().default(false), // the single pinned homepage entry (optional)
       draft: z.boolean().default(false),
     }),
 });

@@ -8,6 +8,7 @@
   "heroAlt": "Calendar on an XTEINK X4 Pro showing October 2026, with 1 October marked International Coffee Day.",
   "status": "utility",
   "order": 3,
-  "featured": true,
+  "homepage": false,
+  "featured": false,
   "draft": false
 }
