@@ -1,0 +1,13 @@
+{
+  "name": "DOGEAR",
+  "subtitle": "A Weekly Literary Digest",
+  "slug": "dogear",
+  "purpose": "A limited weekly reading digest.",
+  "facts": ["XTEINK X4 + X4 Pro", "Literary digest", "New issue every Monday"],
+  "heroImage": "../../assets/photos/dogear-01-issue-x4-x4pro.jpg",
+  "heroAlt": "The DOGEAR issue for 26 October to 1 November 2026 on an XTEINK X4, showing the cover, and an XTEINK X4 Pro, showing the QR code for the full edition.",
+  "status": "active",
+  "order": 1,
+  "featured": true,
+  "draft": false
+}
