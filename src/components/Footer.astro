@@ -1,44 +1,76 @@
 ---
+// Site footer with a directory of every destination (approved homepage
+// design, exploration D). Desk lists only PUBLISHED sections: editorial
+// collections appear here only once launched through the DESK gate
+// (publishedCollections in src/data/desk.ts), so unpublished ones are absent
+// from the markup.
+import { publishedCollections } from '../data/desk';
+import { siteLinks } from '../data/site';
+
 const year = new Date().getFullYear();
+
+const directory = [
+  {
+    head: { href: '/desk/', label: 'Desk' },
+    links: [
+      { href: '/desk/projects/', label: 'Projects' },
+      ...publishedCollections().map((c) => ({ href: `/desk/${c.slug}/`, label: c.label })),
+    ],
+  },
+  {
+    head: { href: '/work/', label: 'Work' },
+    links: [
+      { href: '/work/', label: 'Case studies' },
+      { href: '/writing/', label: 'Commissioned writing' },
+      { href: '/services/', label: 'Services' },
+    ],
+  },
+  { head: { href: '/about/', label: 'About' }, links: [] },
+  { head: { href: '/contact/', label: 'Contact' }, links: [] },
+];
 ---
 
 <footer class="site-foot">
-  <div class="wrap site-foot__inner">
-    <p class="site-foot__mark">Archieval Mariano <span>© {year}</span></p>
-    <p>
-      <a href="mailto:hello@archievalmariano.com" data-ga-event="email_click">hello@archievalmariano.com</a>
-    </p>
-    <a class="site-foot__top" href="#main">Back to top ↑</a>
+  <div class="wrap">
+    <nav class="site-foot__dir" aria-label="Site directory">
+      {
+        directory.map((d) => (
+          <div>
+            <p class="site-foot__head"><a href={d.head.href}>{d.head.label}</a></p>
+            {d.links.length > 0 && (
+              <ul>
+                {d.links.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))
+      }
+    </nav>
+    <div class="site-foot__base">
+      <p>Archieval Mariano <span>© {year}</span></p>
+      <p><a href={`mailto:${siteLinks.email}`} data-ga-event="email_click">{siteLinks.email}</a></p>
+      <p><a href="#main">Back to top ↑</a></p>
+    </div>
   </div>
 </footer>
 
 <style>
-  .site-foot {
-    margin-top: 0;
-    border-top: var(--heavy-rule);
-    background: var(--ink);
-    color: var(--paper);
-  }
+  .site-foot { background: var(--ink); color: var(--paper); border-top: var(--heavy-rule); }
+  .site-foot a { text-decoration: none; }
+  .site-foot a:hover { color: var(--yellow); }
+  .site-foot__dir { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; padding-block: clamp(2.5rem, 5vw, 3.5rem) 2rem; }
+  .site-foot__head { margin: 0; font-size: .95rem; font-weight: 780; letter-spacing: -.01em; }
+  .site-foot__dir ul { margin: .6rem 0 0; padding: 0; list-style: none; }
+  .site-foot__dir li { padding: .2rem 0; font-size: .88rem; color: color-mix(in srgb, var(--paper) 78%, transparent); }
+  .site-foot__base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem 2rem; padding-block: 1.25rem 2rem; border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent); font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .site-foot__base p { margin: 0; }
+  .site-foot__base span { margin-left: .4rem; color: color-mix(in srgb, var(--paper) 60%, transparent); }
 
-  .site-foot__inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-    padding-block: clamp(2rem, 5vw, 4rem);
-  }
-
-  .site-foot__inner p { margin: 0; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-  .site-foot__mark { font-family: var(--font-sans); font-size: 1rem !important; font-weight: 800 !important; letter-spacing: -.02em !important; text-transform: none !important; }
-  .site-foot__mark span { margin-left: .5rem; font-size: .65rem; font-weight: 600; color: color-mix(in srgb, var(--paper) 60%, transparent); }
-  .site-foot__top { font-size: .7rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
-
-  .site-foot__inner a {
-    text-decoration: none;
-  }
-
-  .site-foot__inner a:hover {
-    color: var(--accent);
+  @media (max-width: 52rem) {
+    .site-foot__dir { grid-template-columns: 1fr 1fr; }
   }
 </style>

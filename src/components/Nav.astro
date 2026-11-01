@@ -1,29 +1,25 @@
 ---
-import { siteLinks } from '../data/site';
-
+// Primary navigation: Desk · Work · About · Contact (approved homepage design,
+// exploration D). Writing and Services keep their URLs and are reached from
+// the Work section of the homepage and from the footer directory.
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const links = [
-  { href: '/work', label: 'Work' },
-  { href: '/services', label: 'Services' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/desk', label: 'Desk' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/desk/', label: 'Desk' },
+  { href: '/work/', label: 'Work' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
 ];
 
-const isActive = (href: string) =>
-  href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
+const isActive = (href: string) => {
+  const base = href.replace(/\/$/, '');
+  return pathname === base || pathname.startsWith(base + '/');
+};
 ---
 
 <header class="site-head">
   <div class="wrap site-head__inner">
-    <div class="identity">
-      <a href="/" class="wordmark" aria-label="Archieval Mariano — home">
-        Archieval&nbsp;Mariano
-      </a>
-      <span class="identity__descriptor">Digital strategy · Audience systems</span>
-    </div>
+    <a href="/" class="wordmark" aria-label="Archieval Mariano — home">Archieval&nbsp;Mariano</a>
     <nav aria-label="Primary">
       <ul>
         {
@@ -35,168 +31,24 @@ const isActive = (href: string) =>
             </li>
           ))
         }
-        <li class="nav-utility">
-          <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">LinkedIn <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>
-        </li>
       </ul>
     </nav>
   </div>
 </header>
 
-<script>
-  // On narrow screens the nav scrolls sideways. Mark which edges have more
-  // links past them, and bring the current page's link into view.
-  const nav = document.querySelector<HTMLElement>('.site-head nav');
-  if (nav) {
-    const update = () => {
-      const max = nav.scrollWidth - nav.clientWidth;
-      nav.toggleAttribute('data-more-start', nav.scrollLeft > 4);
-      nav.toggleAttribute('data-more-end', max - nav.scrollLeft > 4);
-    };
-    const current = nav.querySelector('[aria-current="page"]');
-    if (current) {
-      const link = current.getBoundingClientRect();
-      const edge = nav.getBoundingClientRect().right - 48;
-      if (link.right > edge) nav.scrollLeft += link.right - edge;
-    }
-    update();
-    nav.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-  }
-</script>
-
 <style>
-  .site-head {
-    position: relative;
-    z-index: 10;
-    border-bottom: var(--heavy-rule);
-    background: color-mix(in srgb, var(--paper) 94%, transparent);
-  }
+  .site-head { border-bottom: 1px solid var(--rule); }
+  .site-head__inner { display: flex; align-items: center; justify-content: space-between; gap: .75rem 2rem; flex-wrap: wrap; padding-block: 1.1rem; }
+  .wordmark { font-size: 1.02rem; font-weight: 780; letter-spacing: -.03em; text-decoration: none; }
+  .wordmark::before { content: ''; display: inline-block; width: .55rem; aspect-ratio: 1; margin-right: .5rem; border-radius: 50%; background: var(--coral); }
+  .wordmark:hover { color: var(--accent); }
+  nav ul { display: flex; flex-wrap: wrap; gap: .3rem 1.75rem; margin: 0; padding: 0; list-style: none; }
+  nav a { display: inline-block; padding-block: .25rem; font-size: .9rem; font-weight: 580; color: var(--ink-soft); text-decoration: none; }
+  nav a:hover { color: var(--accent); }
+  /* Current section (not shown on the homepage, which is not in the nav). */
+  nav a[aria-current='page'] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: .4em; }
 
-  .site-head__inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-lg);
-    padding-block: 1rem;
-  }
-
-  .identity {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .wordmark {
-    font-family: var(--font-sans);
-    font-size: 1.05rem;
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    text-decoration: none;
-  }
-
-  .wordmark::before {
-    content: '';
-    display: inline-block;
-    width: .65rem;
-    aspect-ratio: 1;
-    margin-right: .55rem;
-    background: var(--coral);
-    border-radius: 50%;
-  }
-
-  .identity__descriptor {
-    padding-left: 1rem;
-    border-left: 1px solid var(--rule);
-    font-size: .63rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-
-  .wordmark:hover {
-    color: var(--accent);
-  }
-
-  nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5rem clamp(.85rem, 2.1vw, 1.75rem);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  nav a {
-    font-family: var(--font-sans);
-    font-size: .69rem;
-    font-weight: 750;
-    letter-spacing: 0.075em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--ink-soft);
-    padding-block: .35rem;
-    border-bottom: 2px solid transparent;
-  }
-
-  nav a:hover {
-    color: var(--accent);
-  }
-
-  nav a[aria-current='page'] {
-    color: var(--ink);
-    border-bottom-color: var(--accent);
-  }
-
-  /* Quiet utility link, set apart from the primary items. */
-  .nav-utility {
-    margin-left: clamp(0.1rem, 1vw, .75rem);
-  }
-
-  .nav-utility a {
-    color: var(--ink-faint);
-  }
-
-  @media (max-width: 58rem) {
-    .site-head__inner {
-      display: grid;
-    }
-
-    nav {
-      width: calc(100% + 2 * var(--gutter));
-      margin-inline: calc(-1 * var(--gutter));
-      padding-inline: var(--gutter);
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Fade the edge that has more links past it, so the row reads as scrollable. */
-    nav[data-more-end] {
-      mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
-    }
-
-    nav[data-more-start] {
-      mask-image: linear-gradient(to left, #000 calc(100% - 3rem), transparent);
-    }
-
-    nav[data-more-start][data-more-end] {
-      mask-image: linear-gradient(to right, transparent, #000 3rem, #000 calc(100% - 3rem), transparent);
-    }
-
-    nav ul {
-      flex-wrap: nowrap;
-      width: max-content;
-    }
-  }
-
-  @media (max-width: 34rem) {
-    .identity__descriptor {
-      display: none;
-    }
+  @media (max-width: 36rem) {
+    nav ul { gap: .3rem 1.4rem; }
   }
 </style>
