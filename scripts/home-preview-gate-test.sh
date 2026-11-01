@@ -184,6 +184,16 @@ if node -e '
   const work = h.indexOf("id=\"qs-work\""), shop = h.indexOf("href=\"/pinned-shop/\"");
   process.exit(work > 0 && shop > work ? 0 : 1);
 ' "$Q"; then ok "Pinned prototypes appear inside the Work section"; else bad "Pinned prototypes are not inside Work"; fi
+# Prototype links open in the current tab (same domain).
+assert_nogrep "$Q" 'href="/pinned-shop/" target='
+assert_nogrep "$Q" 'href="/pinned-travel/" target='
+# "All case studies" follows both featured case studies.
+if node -e '
+  const h = require("fs").readFileSync(process.argv[1], "utf8");
+  const a = h.indexOf("/work/digital-intelligence-dashboard"), b = h.indexOf("/work/audience-intelligence-system");
+  const more = h.indexOf("All case studies");
+  process.exit(a > 0 && b > 0 && more > Math.max(a, b) ? 0 : 1);
+' "$Q"; then ok "All case studies link follows both case studies"; else bad "All case studies link precedes a case study"; fi
 # Work: two case studies; Commissioned writing and Services as description +
 # link only (no individual article featured).
 assert_grep   "$Q" 'href="/work/digital-intelligence-dashboard"'

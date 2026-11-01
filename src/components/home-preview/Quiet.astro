@@ -367,9 +367,13 @@ const year = new Date().getFullYear();
     <div class="qs-wrap">
       <!-- Introduction: one continuous reading column, in source order -->
       <header class="qs-work__intro">
-        <h2 id="qs-work-title"><a href="/work/">{copy.work.heading}</a></h2>
-        <p class="qs-work__through">{copy.work.subheading}</p>
-        {copy.work.body.map((p) => <p class="qs-work__para">{p}</p>)}
+        <div class="qs-work__title">
+          <h2 id="qs-work-title"><a href="/work/">{copy.work.heading}</a></h2>
+          <p class="qs-work__through">{copy.work.subheading}</p>
+        </div>
+        <div class="qs-work__body">
+          {copy.work.body.map((p) => <p class="qs-work__para">{p}</p>)}
+        </div>
       </header>
 
       <!-- A · Case studies: full-width row, two entries side by side -->
@@ -377,7 +381,6 @@ const year = new Date().getFullYear();
         <div class="qs-group__head">
           <h3 id="qs-cases-title"><a href="/work/">Case studies</a></h3>
           <p>{workIntro.title}</p>
-          <p class="qs-go"><a href="/work/">All case studies <span aria-hidden="true">→</span></a></p>
         </div>
         <ul class="qs-pair qs-cases">
           {
@@ -391,6 +394,7 @@ const year = new Date().getFullYear();
             ))
           }
         </ul>
+        <p class="qs-go qs-group__more"><a href="/work/">All case studies <span aria-hidden="true">→</span></a></p>
       </section>
 
       <!-- B · Prototypes: two proofs of concept, with real screenshots -->
@@ -413,8 +417,8 @@ const year = new Date().getFullYear();
                   <h4>{x.title}</h4>
                   <p>{x.description}</p>
                   <p class="qs-go">
-                    <a href={x.path} target="_blank" rel="noopener">
-                      Open prototype<span class="visually-hidden">: {x.title} (opens in a new tab)</span> <span aria-hidden="true">↗</span>
+                    <a href={x.path}>
+                      Open prototype<span class="visually-hidden">: {x.title}</span> <span aria-hidden="true">→</span>
                     </a>
                   </p>
                 </div>
@@ -582,18 +586,19 @@ const year = new Date().getFullYear();
   /* 4 · Work */
   /* Introduction: heading, subheading, then the three paragraphs as ONE
      continuous column at a reading measure (same order as on mobile). */
-  .qs-work__intro { max-width: 40rem; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
-  .qs-work__through { margin: .9rem 0 1.4rem; font-family: var(--font-serif); font-size: clamp(1.45rem, 2.2vw, 1.95rem); line-height: 1.22; }
-  .qs-work__para { margin: 0 0 1rem; font-family: var(--font-serif); font-size: clamp(1.05rem, 1.35vw, 1.15rem); line-height: 1.6; color: var(--ink-soft); }
+  .qs-work__intro { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 7fr); gap: 1rem clamp(2rem, 5vw, 4.5rem); align-items: start; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+  .qs-work__through { max-width: 14ch; margin: .9rem 0 0; font-family: var(--font-serif); font-size: clamp(1.45rem, 2.2vw, 1.95rem); line-height: 1.22; }
+  .qs-work__body { max-width: 44rem; padding-top: .35rem; } /* ≈ 70–75 characters per line */
+  .qs-work__para { margin: 0 0 1rem; font-family: var(--font-serif); font-size: clamp(1.05rem, 1.35vw, 1.18rem); line-height: 1.62; color: var(--ink-soft); }
   .qs-work__para:last-child { margin-bottom: 0; }
 
   /* Groups: a heading line (name, short description, link), then two items */
   .qs-group { padding-block: 1.6rem 2.25rem; border-top: 2px solid var(--ink); }
   .qs-group + .qs-group { border-top-width: 1px; border-top-color: var(--rule); }
-  .qs-group__head { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto; gap: .4rem clamp(1.5rem, 3.5vw, 3rem); align-items: baseline; margin-bottom: 1.4rem; }
+  .qs-group__head { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: .4rem clamp(1.5rem, 3.5vw, 3rem); align-items: baseline; margin-bottom: 1.4rem; }
   .qs-group__head h3, .qs-final h3 { font-size: 1.15rem; }
   .qs-group__head > p:not(.qs-go) { max-width: 40rem; margin: 0; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.5; color: var(--ink-soft); }
-  .qs-group__head .qs-go { margin: 0; white-space: nowrap; }
+  .qs-group__more { margin: 1.4rem 0 0; text-align: right; } /* collection link follows the content */
   .qs-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem clamp(2rem, 5vw, 4rem); margin: 0; padding: 0; list-style: none; }
   .qs-cases h4 { margin: .35rem 0 .5rem; font-size: clamp(1.1rem, 1.5vw, 1.3rem); }
   .qs-cases li > p:not(.qs-meta) { max-width: 34rem; margin: 0 0 .55rem; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.5; color: var(--ink-soft); }
@@ -631,13 +636,14 @@ const year = new Date().getFullYear();
     .qs-row--featured .qs-feature { grid-column: 2; margin-top: 1.25rem; }
     .qs-away__grid { grid-template-columns: 1fr; }
     .qs-photos-wrap { max-width: 42rem; }
-    .qs-group__head { grid-template-columns: minmax(0, 1fr) auto; }
-    .qs-group__head > p:not(.qs-go) { grid-column: 1 / -1; grid-row: 2; }
+    .qs-group__head { grid-template-columns: 1fr; }
   }
   @media (max-width: 52rem) {
     .qs-intro { grid-template-columns: 1fr; align-items: start; }
     .qs-intro__portrait { width: min(100%, 30rem); }
-    .qs-section__head, .qs-closing__inner { grid-template-columns: 1fr; }
+    .qs-section__head, .qs-closing__inner, .qs-work__intro { grid-template-columns: 1fr; }
+    .qs-work__through { max-width: none; margin-bottom: .5rem; }
+    .qs-work__body { padding-top: 0; }
     .qs-protos { grid-template-columns: 1fr; }
     .qs-foot__dir { grid-template-columns: 1fr 1fr; }
   }
@@ -660,6 +666,7 @@ const year = new Date().getFullYear();
     .qs-photo--upper figcaption { margin-bottom: 1.1rem; }
     .qs-photo--lower { display: block; }
     /* Work: everything stacks in reading order */
+    .qs-group__more { text-align: left; }
     .qs-pair { grid-template-columns: 1fr; gap: 0; }
     .qs-pair > * + * { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
     .qs-proto { grid-template-columns: minmax(0, 8rem) minmax(0, 1fr); }

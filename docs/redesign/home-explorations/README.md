@@ -1,6 +1,6 @@
 # Homepage explorations — four directions
 
-Status: **D · Quiet Personal Site is the selected foundation** and is now in its sixth iteration (a sequential Work section with Prototypes restored under Work, and a mobile photography fix). A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
+Status: **D · Quiet Personal Site is the selected foundation** and is now in its seventh iteration (final composition refinements to Work). Design, hierarchy, photography, navigation, and prototype presentation are approved. A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
 
 Exploration 01 for repositioning archievalmariano.com from a professional portfolio
 into a personal archive: professional work, independent software, experiments,
@@ -144,14 +144,36 @@ photography into one visual language. **Risks:** the most art-directed, so the
 hardest to keep maintainable. The regional plate only stays meaningful if more
 located material is added over time.
 
-## D · Quiet Personal Site — iteration 6 (selected foundation)
+## D · Quiet Personal Site — iteration 7 (selected foundation)
 
-*Approved direction.* Iteration 6 restructures the desktop Work section, returns
-the Pinned prototypes to the homepage under Work, and fixes the mobile photo
-gallery. Screenshots: [desktop, 1440px](quiet-desktop-full.jpg) ·
+*Approved direction.* Iteration 7 makes three focused refinements to Work; nothing
+else changed. Screenshots: [desktop, 1440px](quiet-desktop-full.jpg) ·
 [mobile, 390px](quiet-mobile-full.jpg).
 
-### Iteration 6: Work structure
+### Iteration 7 changes
+
+- **“All case studies →” follows the content.** The link has moved out of the Case
+  studies heading line to after both featured entries: bottom-right on desktop,
+  and directly after the second entry on mobile (left-aligned, like other mobile
+  links). The destination (`/work/`) and the case-study content are unchanged.
+  The gate test asserts that the link comes after both entries in the markup.
+- **Work introduction, about 30/70.** On desktop the heading “Work” and the
+  subheading sit in a column of roughly 30%, and the three approved paragraphs
+  sit together in one continuous column of roughly 70%, capped at 44rem (about
+  70–75 characters per line) so it fills the space without stranding. Below
+  52rem it stacks exactly as before: heading, subheading, then paragraphs.
+- **Prototype links open in the current tab.** Pinned Shop and Pinned Travel are
+  on the same domain, so `target="_blank"` and the “opens in a new tab” notice
+  were removed. The ↗ glyph, which signals a new window, became the site's
+  standard →. Destinations, screenshots, descriptions, and the disclosure are
+  unchanged, and each link's accessible name still identifies its prototype
+  (“Open prototype: Pinned Shop”).
+
+Checked at 1440, 1280, 1024, 900, 820, 768, 600, 480, 390, 360, and 320px: no
+horizontal overflow, the case-studies link is below both entries at every width,
+and the introduction's body column never exceeds 44rem.
+
+### Iteration 6: Work structure (retained; refined above)
 
 The desktop Work section now follows the same sequence as mobile:
 
@@ -167,7 +189,8 @@ The desktop Work section now follows the same sequence as mobile:
    interactions. These are not launched products or claims of measured
    outcomes.”). Pinned Shop and Pinned Travel follow side by side, each with a
    10rem screenshot, its existing label (“Commerce prototype” / “Travel check-in
-   prototype”), its existing description, and “Open prototype ↗”, linking to
+   prototype”), its existing description, and “Open prototype →” (same tab since
+   iteration 7), linking to
    `/pinned-shop/` and `/pinned-travel/`. No functionality, metrics, adoption, or
    outcomes are claimed.
 4. **Commissioned writing / Services:** a compact final row of two columns, each
