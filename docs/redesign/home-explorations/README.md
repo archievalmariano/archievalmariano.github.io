@@ -1,6 +1,6 @@
 # Homepage explorations — four directions
 
-Status: **D · Quiet Personal Site is the selected foundation** and is now in its fifth iteration (approved copy, the full uncropped portrait, and a single-column Work introduction). A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
+Status: **D · Quiet Personal Site is the selected foundation** and is now in its sixth iteration (a sequential Work section with Prototypes restored under Work, and a mobile photography fix). A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
 
 Exploration 01 for repositioning archievalmariano.com from a professional portfolio
 into a personal archive: professional work, independent software, experiments,
@@ -144,13 +144,75 @@ photography into one visual language. **Risks:** the most art-directed, so the
 hardest to keep maintainable. The regional plate only stays meaningful if more
 located material is added over time.
 
-## D · Quiet Personal Site — iteration 5 (selected foundation)
+## D · Quiet Personal Site — iteration 6 (selected foundation)
 
-*Approved direction.* Iteration 5 applies the author-approved copy, restores the full
-portrait, and adjusts the layout around the new text. Screenshots:
-[desktop, 1440px](quiet-desktop-full.jpg) · [mobile, 390px](quiet-mobile-full.jpg).
+*Approved direction.* Iteration 6 restructures the desktop Work section, returns
+the Pinned prototypes to the homepage under Work, and fixes the mobile photo
+gallery. Screenshots: [desktop, 1440px](quiet-desktop-full.jpg) ·
+[mobile, 390px](quiet-mobile-full.jpg).
 
-### Iteration 5 changes
+### Iteration 6: Work structure
+
+The desktop Work section now follows the same sequence as mobile:
+
+1. **Introduction:** “Work”, then the approved subheading, then the three approved
+   paragraphs, all in one reading column (40rem maximum). Nothing is split
+   across columns.
+2. **Case studies:** a full-width group. Its heading line holds the name, the
+   existing description, and “All case studies →”, followed by the two selected
+   case studies side by side (about 580px each at 1440px), with metadata, title,
+   description, and organisation from the existing entries.
+3. **Prototypes:** a full-width group. Its heading line holds the name and the
+   existing Work-page caveat (“Independent prototypes exploring product ideas and
+   interactions. These are not launched products or claims of measured
+   outcomes.”). Pinned Shop and Pinned Travel follow side by side, each with a
+   10rem screenshot, its existing label (“Commerce prototype” / “Travel check-in
+   prototype”), its existing description, and “Open prototype ↗”, linking to
+   `/pinned-shop/` and `/pinned-travel/`. No functionality, metrics, adoption, or
+   outcomes are claimed.
+4. **Commissioned writing / Services:** a compact final row of two columns, each
+   with its existing description and link (`/writing/`, `/services/`).
+
+Groups are separated by hairline rules. On mobile everything stacks in the same
+order, and each prototype keeps its screenshot beside its text. The earlier
+three-column arrangement is gone.
+
+### Iteration 6: Pinned prototype screenshots (provenance)
+
+The portfolio repository had no Pinned imagery. Pinned Shop's own `public/og.png`
+was considered, but it is a social card showing the fictional brand's domain, not
+the prototype. The two screenshots used were made as follows:
+
+- **Sources:** the public repositories `archievalmariano/pinned-shop` at
+  `cb9a8a3` and `archievalmariano/pinned-travel` at `1a6059a` (both 2026-08-18),
+  cloned **read-only** into a scratch directory. Nothing was committed or pushed
+  to either repository.
+- **Build:** each built locally with its own unmodified build (`astro build` /
+  `vite build`), served under its real base path (`/pinned-shop/`,
+  `/pinned-travel/`).
+- **Capture:** each homepage at 390×844 CSS px, 2× scale, with Chromium
+  (Playwright). Both are cropped to the top 740 CSS px, saved as
+  `src/assets/preview/pinned-{shop,travel}-prototype-mobile.jpg` (780×1480).
+- **Fidelity:**
+  - Pinned Shop loaded with **zero** failed requests.
+  - Pinned Travel's only failed requests were OpenStreetMap map tiles, which this
+    environment cannot reach. Its map starts 759 CSS px down the mobile page, so
+    the 740px crop is entirely above it and contains no map. Nothing in either
+    image was drawn, edited, or composited.
+- **Preview only:** the images are imported only by D, so production builds do
+  not contain them. The gate test asserts this, along with byte-identity.
+
+For parity with the live site, replace these files with captures from
+archievalmariano.com at the same size.
+
+### Iteration 6: mobile photography
+
+On mobile, the Taipei panorama now sits in its own centred row: the whole image at
+its native 0.37 ratio, 13rem wide, with its caption centred directly beneath.
+The Pasay Baywalk and Esplanade Bridge photographs follow at full width, at their
+own proportions, with their captions. The desktop arrangement is unchanged.
+
+### Iteration 5 changes (retained)
 
 - **Approved copy:** all section copy is the author-approved text, kept in a single
   `copy` object at the top of `Quiet.astro` (not in the shared `archive.ts`, so A–C
@@ -226,8 +288,8 @@ Expansion uses the existing gate (`isPublished()` in `src/data/desk.ts`, read
 only); the gate is unchanged. An editorial entry shows its own hero image if it
 has one, otherwise it is text only, with a serif title. The featured project is
 still data-driven: the registry's `featured` flag, with `order` as fallback.
-ON POINT, GOTO, Tools, and the Pinned prototypes are reached through
-`/desk/projects/` and their own pages.
+ON POINT, GOTO, and Tools are reached through `/desk/projects/` and their own
+pages. The Pinned prototypes are featured under Work (iteration 6).
 
 All three states are checked by `scripts/home-preview-gate-test.sh`, using the
 existing synthetic fixtures inside the test only. No fixture content is committed
@@ -250,14 +312,8 @@ width. The section's top and bottom spacing is unchanged.
 
 ### Work categories
 
-- **Categories:** one row of three columns under Work, separated by hairlines:
-  - **Case studies** (wider column): two selected entries plus “All case
-    studies →”.
-  - **Commissioned writing:** the existing `/writing/` description plus “All
-    commissioned writing →”. No article is featured.
-  - **Services:** the existing one-sentence Services description plus “How I can
-    help →”.
-- No destination page or URL changed.
+- Superseded by the iteration 6 Work structure above. No destination page or URL
+  changed.
 
 ### Editorial style
 

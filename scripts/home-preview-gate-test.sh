@@ -52,6 +52,7 @@ assert_no_preview() {
   assert_nogrep dist "lg-holdings"  # Ledger-only class
   assert_nogrep dist "at-plate"     # Atlas-only class
   assert_nogrep dist "qs-intro"     # Quiet-only class
+  assert_nogrep dist "prototype-mobile"   # preview-only Pinned screenshots
 }
 
 build() { # $1 = label, rest = env assignments
@@ -172,8 +173,17 @@ assert_grep   "$Q" 'href="/desk/dogear/"'
 assert_nogrep "$Q" 'href="/desk/on-point/"'
 assert_nogrep "$Q" 'href="/desk/goto/"'
 assert_nogrep "$Q" 'href="/desk/tools/"'
-assert_nogrep "$Q" "pinned-shop"
-assert_nogrep "$Q" "pinned-travel"
+# Prototypes live under Work (not Desk), link to the existing paths, and are
+# framed as proofs of concept.
+assert_grep   "$Q" 'id="qs-protos-title"'
+assert_grep   "$Q" 'href="/pinned-shop/"'
+assert_grep   "$Q" 'href="/pinned-travel/"'
+assert_grep   "$Q" "These are not launched products or claims of measured outcomes."
+if node -e '
+  const h = require("fs").readFileSync(process.argv[1], "utf8");
+  const work = h.indexOf("id=\"qs-work\""), shop = h.indexOf("href=\"/pinned-shop/\"");
+  process.exit(work > 0 && shop > work ? 0 : 1);
+' "$Q"; then ok "Pinned prototypes appear inside the Work section"; else bad "Pinned prototypes are not inside Work"; fi
 # Work: two case studies; Commissioned writing and Services as description +
 # link only (no individual article featured).
 assert_grep   "$Q" 'href="/work/digital-intelligence-dashboard"'

@@ -38,17 +38,43 @@ import { getCollection } from 'astro:content';
 import { deskCollections, isPublished, type DeskCollectionKey } from '../../data/desk';
 import onPointBoard from '../../assets/photos/onpoint-01-board.jpg';
 import gotoStory from '../../assets/photos/goto-edition-01-story.jpg';
+// Preview-only screenshots of the Pinned prototypes (see docs for provenance).
+import pinnedShopShot from '../../assets/preview/pinned-shop-prototype-mobile.jpg';
+import pinnedTravelShot from '../../assets/preview/pinned-travel-prototype-mobile.jpg';
 import {
   closing,
+  experiments,
   loadArchive,
   photos,
   portraitPhoto,
   siteLinks,
   workHref,
+  workIntro,
   writingIntro,
 } from './archive';
 
 const HOME_CASE_STUDIES = 2;
+
+// ── Prototypes (Work) ───────────────────────────────────────────────────────
+// Titles, labels, and descriptions come from the existing Work page list
+// (archive.ts `experiments`); links use the existing site paths.
+const prototypeShots: Record<string, { src: ImageMetadata; alt: string }> = {
+  '/pinned-shop/': {
+    src: pinnedShopShot,
+    alt: 'The Pinned Shop prototype’s home page on a phone, showing a limited enamel pin drop called “Last Trip Home.”',
+  },
+  '/pinned-travel/': {
+    src: pinnedTravelShot,
+    alt: 'The Pinned Travel prototype’s home page on a phone, headed “Let someone know the plan,” with three steps: map the trip, place check-in pins, and choose who knows.',
+  },
+};
+// Existing caveat from the Work page's "Product experiments" introduction.
+const prototypeNote =
+  'Independent prototypes exploring product ideas and interactions. These are not launched products or claims of measured outcomes.';
+const prototypes = experiments.map((x) => {
+  const path = new URL(x.href).pathname;
+  return { ...x, path, shot: prototypeShots[path] };
+});
 
 const { featuredWork, projects } = await loadArchive();
 const caseStudies = featuredWork.slice(0, HOME_CASE_STUDIES); // ordered by `order`
@@ -339,41 +365,73 @@ const year = new Date().getFullYear();
   <!-- 4 · Work -->
   <section class="qs-section qs-work" id="qs-work" aria-labelledby="qs-work-title">
     <div class="qs-wrap">
-      <header class="qs-work__head">
-        <div class="qs-work__title">
-          <h2 id="qs-work-title"><a href="/work/">{copy.work.heading}</a></h2>
-          <p class="qs-work__through">{copy.work.subheading}</p>
-        </div>
-        <div class="qs-work__body">
-          {copy.work.body.map((p) => <p>{p}</p>)}
-        </div>
+      <!-- Introduction: one continuous reading column, in source order -->
+      <header class="qs-work__intro">
+        <h2 id="qs-work-title"><a href="/work/">{copy.work.heading}</a></h2>
+        <p class="qs-work__through">{copy.work.subheading}</p>
+        {copy.work.body.map((p) => <p class="qs-work__para">{p}</p>)}
       </header>
 
-      <div class="qs-work__grid">
-        <section class="qs-work__cat qs-work__cat--cases" aria-labelledby="qs-cases-title">
+      <!-- A · Case studies: full-width row, two entries side by side -->
+      <section class="qs-group" aria-labelledby="qs-cases-title">
+        <div class="qs-group__head">
           <h3 id="qs-cases-title"><a href="/work/">Case studies</a></h3>
-          <ul class="qs-cases">
-            {
-              caseStudies.map((e) => (
-                <li>
-                  <p class="qs-meta">{[e.data.year, e.data.category].filter(Boolean).join(' · ')}</p>
-                  <h4><a href={workHref(e.slug)}>{e.data.title}</a></h4>
-                  <p>{e.data.shortDescription}</p>
-                  <p class="qs-meta">{e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</p>
-                </li>
-              ))
-            }
-          </ul>
+          <p>{workIntro.title}</p>
           <p class="qs-go"><a href="/work/">All case studies <span aria-hidden="true">→</span></a></p>
-        </section>
+        </div>
+        <ul class="qs-pair qs-cases">
+          {
+            caseStudies.map((e) => (
+              <li>
+                <p class="qs-meta">{[e.data.year, e.data.category].filter(Boolean).join(' · ')}</p>
+                <h4><a href={workHref(e.slug)}>{e.data.title}</a></h4>
+                <p>{e.data.shortDescription}</p>
+                <p class="qs-meta">{e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
 
-        <section class="qs-work__cat" aria-labelledby="qs-writing-title">
+      <!-- B · Prototypes: two proofs of concept, with real screenshots -->
+      <section class="qs-group" aria-labelledby="qs-protos-title">
+        <div class="qs-group__head">
+          <h3 id="qs-protos-title">Prototypes</h3>
+          <p>{prototypeNote}</p>
+        </div>
+        <ul class="qs-pair qs-protos">
+          {
+            prototypes.map((x) => (
+              <li class="qs-proto">
+                {x.shot && (
+                  <figure class="qs-proto__shot">
+                    <Image src={x.shot.src} alt={x.shot.alt} widths={[240, 360, 480]} sizes="(max-width: 36rem) 38vw, 10rem" format="webp" quality={80} />
+                  </figure>
+                )}
+                <div class="qs-proto__text">
+                  <p class="qs-meta">{x.label}</p>
+                  <h4>{x.title}</h4>
+                  <p>{x.description}</p>
+                  <p class="qs-go">
+                    <a href={x.path} target="_blank" rel="noopener">
+                      Open prototype<span class="visually-hidden">: {x.title} (opens in a new tab)</span> <span aria-hidden="true">↗</span>
+                    </a>
+                  </p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- C · Commissioned writing / D · Services: a compact shared row -->
+      <div class="qs-pair qs-pair--final">
+        <section class="qs-final" aria-labelledby="qs-writing-title">
           <h3 id="qs-writing-title"><a href="/writing/">Commissioned writing</a></h3>
           <p>{writingIntro.aside}</p>
           <p class="qs-go"><a href="/writing/">All commissioned writing <span aria-hidden="true">→</span></a></p>
         </section>
-
-        <section class="qs-work__cat" aria-labelledby="qs-services-title">
+        <section class="qs-final" aria-labelledby="qs-services-title">
           <h3 id="qs-services-title"><a href="/services/">Services</a></h3>
           <p>
             Audience intelligence, digital strategy and growth, and content and digital
@@ -522,20 +580,30 @@ const year = new Date().getFullYear();
   .qs-photo--lower figcaption { grid-row: 2; padding-top: var(--cap-gap); }
 
   /* 4 · Work */
-  /* Heading + subheading, then the three paragraphs as ONE continuous column
-     at a reading measure, aligned with the Desk introduction's column. */
-  .qs-work__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 1rem clamp(2rem, 6vw, 6rem); align-items: start; margin-bottom: clamp(2rem, 4vw, 3rem); }
-  .qs-work__through { max-width: 16ch; margin: .9rem 0 0; font-family: var(--font-serif); font-size: clamp(1.45rem, 2.2vw, 1.95rem); line-height: 1.22; }
-  .qs-work__body { max-width: 36rem; }
-  .qs-work__body p { margin: 0 0 1rem; font-family: var(--font-serif); font-size: clamp(1.05rem, 1.35vw, 1.15rem); line-height: 1.6; color: var(--ink-soft); }
-  .qs-work__body p:last-child { margin-bottom: 0; }
-  .qs-work__grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem clamp(1.5rem, 3.5vw, 3rem); padding-top: 1.5rem; border-top: 2px solid var(--ink); }
-  .qs-work__cat + .qs-work__cat { padding-left: clamp(1.5rem, 3.5vw, 3rem); margin-left: calc(-1 * clamp(.75rem, 1.75vw, 1.5rem)); border-left: 1px solid var(--rule); }
-  .qs-work__cat h3 { font-size: 1.15rem; }
-  .qs-work__cat > p:not(.qs-go) { max-width: 30rem; margin: .6rem 0 0; font-family: var(--font-serif); font-size: 1.04rem; line-height: 1.5; color: var(--ink-soft); }
-  .qs-cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem; margin: .9rem 0 0; padding: 0; list-style: none; }
-  .qs-cases h4 { margin: .35rem 0 .5rem; font-size: 1.08rem; }
-  .qs-cases li > p:not(.qs-meta) { margin: 0 0 .55rem; font-family: var(--font-serif); font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
+  /* Introduction: heading, subheading, then the three paragraphs as ONE
+     continuous column at a reading measure (same order as on mobile). */
+  .qs-work__intro { max-width: 40rem; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+  .qs-work__through { margin: .9rem 0 1.4rem; font-family: var(--font-serif); font-size: clamp(1.45rem, 2.2vw, 1.95rem); line-height: 1.22; }
+  .qs-work__para { margin: 0 0 1rem; font-family: var(--font-serif); font-size: clamp(1.05rem, 1.35vw, 1.15rem); line-height: 1.6; color: var(--ink-soft); }
+  .qs-work__para:last-child { margin-bottom: 0; }
+
+  /* Groups: a heading line (name, short description, link), then two items */
+  .qs-group { padding-block: 1.6rem 2.25rem; border-top: 2px solid var(--ink); }
+  .qs-group + .qs-group { border-top-width: 1px; border-top-color: var(--rule); }
+  .qs-group__head { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto; gap: .4rem clamp(1.5rem, 3.5vw, 3rem); align-items: baseline; margin-bottom: 1.4rem; }
+  .qs-group__head h3, .qs-final h3 { font-size: 1.15rem; }
+  .qs-group__head > p:not(.qs-go) { max-width: 40rem; margin: 0; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.5; color: var(--ink-soft); }
+  .qs-group__head .qs-go { margin: 0; white-space: nowrap; }
+  .qs-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem clamp(2rem, 5vw, 4rem); margin: 0; padding: 0; list-style: none; }
+  .qs-cases h4 { margin: .35rem 0 .5rem; font-size: clamp(1.1rem, 1.5vw, 1.3rem); }
+  .qs-cases li > p:not(.qs-meta) { max-width: 34rem; margin: 0 0 .55rem; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.5; color: var(--ink-soft); }
+  .qs-proto { display: grid; grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); gap: clamp(1rem, 2.5vw, 1.75rem); align-items: start; }
+  .qs-proto__shot { margin: 0; }
+  .qs-proto__shot :global(img) { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 6px; }
+  .qs-proto h4 { margin: .35rem 0 .5rem; font-size: 1.2rem; }
+  .qs-proto__text > p:not(.qs-meta):not(.qs-go) { max-width: 30rem; margin: 0; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.5; color: var(--ink-soft); }
+  .qs-pair--final { padding-top: 1.6rem; border-top: 1px solid var(--rule); }
+  .qs-final > p:not(.qs-go) { max-width: 32rem; margin: .5rem 0 0; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.5; color: var(--ink-soft); }
 
   /* 5 · Closing */
   .qs-closing { border-top: 0; background: var(--blue-dark); color: var(--paper); }
@@ -563,15 +631,14 @@ const year = new Date().getFullYear();
     .qs-row--featured .qs-feature { grid-column: 2; margin-top: 1.25rem; }
     .qs-away__grid { grid-template-columns: 1fr; }
     .qs-photos-wrap { max-width: 42rem; }
-    .qs-work__grid { grid-template-columns: 1fr 1fr; }
-    .qs-work__cat--cases { grid-column: 1 / -1; }
-    .qs-work__cat + .qs-work__cat { padding-left: 0; margin-left: 0; border-left: 0; }
-    .qs-work__cat:nth-child(3) { padding-left: clamp(1.5rem, 3.5vw, 3rem); border-left: 1px solid var(--rule); }
+    .qs-group__head { grid-template-columns: minmax(0, 1fr) auto; }
+    .qs-group__head > p:not(.qs-go) { grid-column: 1 / -1; grid-row: 2; }
   }
   @media (max-width: 52rem) {
     .qs-intro { grid-template-columns: 1fr; align-items: start; }
     .qs-intro__portrait { width: min(100%, 30rem); }
-    .qs-section__head, .qs-closing__inner, .qs-work__head { grid-template-columns: 1fr; }
+    .qs-section__head, .qs-closing__inner { grid-template-columns: 1fr; }
+    .qs-protos { grid-template-columns: 1fr; }
     .qs-foot__dir { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 36rem) {
@@ -584,19 +651,17 @@ const year = new Date().getFullYear();
     .qs-feature { grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr); gap: 1rem; }
     .qs-feature h4 { font-size: 1.3rem; }
     .qs-feature__desc { font-size: 1.04rem; }
-    /* Photos: the tall panorama with its caption beside it, then the two
-       landscapes at full width. */
+    /* Photos: the tall panorama in its own centred row (whole image, native
+       proportions) with its caption directly beneath, then the landscapes. */
     .qs-photos { display: block; }
-    .qs-photo--tall { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); grid-template-rows: none; gap: 1rem; align-items: end; }
-    .qs-photo--tall :global(img), .qs-photo--tall figcaption { grid-row: auto; }
-    .qs-photo--tall figcaption { padding: 0 0 .1rem; }
+    .qs-photo--tall { display: block; width: min(100%, 13rem); margin-inline: auto; }
+    .qs-photo--tall figcaption { padding-top: var(--cap-gap); text-align: center; }
     .qs-photo--upper { margin-top: 1.25rem; }
     .qs-photo--upper figcaption { margin-bottom: 1.1rem; }
     .qs-photo--lower { display: block; }
-    .qs-work__grid { grid-template-columns: 1fr; }
-    .qs-work__cat:nth-child(3) { padding-left: 0; border-left: 0; }
-    .qs-work__cat + .qs-work__cat { padding-top: 1.25rem; border-top: 1px solid var(--rule); }
-    .qs-cases { grid-template-columns: 1fr; gap: 0; }
-    .qs-cases li + li { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+    /* Work: everything stacks in reading order */
+    .qs-pair { grid-template-columns: 1fr; gap: 0; }
+    .qs-pair > * + * { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
+    .qs-proto { grid-template-columns: minmax(0, 8rem) minmax(0, 1fr); }
   }
 </style>
