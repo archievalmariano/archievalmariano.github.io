@@ -61,6 +61,20 @@ build() { # $1 = label, rest = env assignments
   fi
 }
 
+# Synthetic DESK fixtures (the same files desk-gate-test.sh uses), staged only
+# for the states that need them and always removed on exit.
+AF="src/content/artifacts"; FN="src/content/fieldNotes"; FIX="test/fixtures/desk"
+unstage() {
+  rm -f "$AF/gate-published.mdx" "$AF/gate-draft.mdx" "$FN/gate-published.mdx" "$FN/gate-draft.mdx"
+}
+stage() {
+  cp "$FIX/artifacts-published.mdx" "$AF/gate-published.mdx"
+  cp "$FIX/artifacts-draft.mdx" "$AF/gate-draft.mdx"
+  cp "$FIX/field-note-published.mdx" "$FN/gate-published.mdx"
+  cp "$FIX/field-note-draft.mdx" "$FN/gate-draft.mdx"
+}
+trap unstage EXIT
+
 # ── P: production default ───────────────────────────────────────────────────
 rm -rf "$REF"
 build "P production-default"
@@ -87,6 +101,15 @@ assert_no_preview
 build "CI [CI=true GITHUB_ACTIONS=true]" CI=true GITHUB_ACTIONS=true HOME_PREVIEW=true
 assert_no_preview
 
+# Everything requested at once under CI, with fixtures present: still nothing.
+stage
+build "CI [all flags + DESK fixtures]" CI=true GITHUB_ACTIONS=true HOME_PREVIEW=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
+assert_no_preview
+assert_absent dist/desk/artifacts
+assert_absent dist/desk/field-notes
+assert_nogrep dist "SYNTHETIC FIXTURE"
+unstage
+
 # ── ON: deliberate local preview renders ────────────────────────────────────
 build "ON local preview" HOME_PREVIEW=true
 for p in "" broadsheet/ ledger/ atlas/ quiet/; do
@@ -105,6 +128,16 @@ assert_grep dist/preview/home/atlas/index.html "Balagtas ↔ TriNoma"
 assert_grep dist/preview/home/quiet/index.html "qs-intro"
 assert_grep dist/preview/home/quiet/index.html "Away from the dashboards"
 assert_grep dist/preview/home/quiet/index.html "Pretends to be a photographer and a good writer."
+# D's Desk directory reserves Artifacts / Field Notes as text only.
+Q=dist/preview/home/quiet/index.html
+assert_grep   "$Q" "Personal writing about gadgets, objects and products."
+assert_grep   "$Q" "Essays, reflections and observations."
+assert_grep   "$Q" "Nothing published yet."
+assert_nogrep "$Q" 'qs-editorial"'
+# D's primary navigation is Desk · Work · About · Contact; Writing and
+# Services stay reachable at their existing URLs.
+assert_grep "$Q" 'href="/writing/"'
+assert_grep "$Q" 'href="/services/"'
 for sm in dist/sitemap-0.xml dist/sitemap-index.xml; do
   [ -f "$sm" ] && assert_nogrep "$sm" "/preview/"
 done
@@ -125,13 +158,27 @@ else
   bad "homepage markup differs when HOME_PREVIEW=true"
 fi
 
+# ── ON + DESK preview: D follows the DESK gate once collections launch ──────
+stage
+build "ON + DESK fixtures" HOME_PREVIEW=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
+Q=dist/preview/home/quiet/index.html
+assert_grep   "$Q" 'href="/desk/artifacts/"'
+assert_grep   "$Q" 'href="/desk/field-notes/"'
+assert_grep   "$Q" 'href="/desk/artifacts/gate-published/"'
+assert_grep   "$Q" 'href="/desk/field-notes/gate-published/"'
+assert_nogrep "$Q" "gate-draft"                 # drafts never surface
+assert_nogrep "$Q" "Nothing published yet."
+unstage
+
 # ── FINAL: production build ─────────────────────────────────────────────────
 build "FINAL production"
 assert_no_preview
+assert_nogrep dist "SYNTHETIC FIXTURE"
 
 echo ""
 echo "════════════════════════════════════════════"
 echo "  home-preview gate:  PASS=$PASS  FAIL=$FAIL"
 echo "════════════════════════════════════════════"
 rm -rf "$REF"
+unstage
 [ "$FAIL" -eq 0 ]

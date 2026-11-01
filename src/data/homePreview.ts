@@ -1,4 +1,4 @@
-// Homepage redesign explorations — the three directions shown under
+// Homepage redesign explorations — the directions shown under
 // /preview/home/. The gate itself lives in src/preview/gate.mjs.
 export { homePreviewEnabled } from '../preview/gate.mjs';
 
@@ -36,6 +36,6 @@ export const homeVariants: HomeVariant[] = [
     number: 'D',
     name: 'Quiet Personal Site',
     summary:
-      'A restrained evolution of the current homepage. A modest name, the same type and warmth, and more room for projects, writing and photographs alongside the work.',
+      'Selected foundation. A restrained evolution of the current homepage, with Desk · Work · About · Contact navigation, a Desk directory ready for Artifacts and Field Notes, and personal photography alongside the work.',
   },
 ];
