@@ -1,0 +1,485 @@
+---
+// DIRECTION B — INDEX / LEDGER
+// The homepage as a register of holdings. Everything in the archive receives an
+// accession number and a line in the ledger; time is shown as accumulation
+// (year lanes + an honest "n.d." column for undated material); annotations in
+// the margin carry the caveats the site already publishes.
+import { Image } from 'astro:assets';
+import {
+  about,
+  closing,
+  cover,
+  experiments,
+  hero,
+  isExternal,
+  loadArchive,
+  photos,
+  siteLinks,
+  throughline,
+  workHref,
+  workIsLinked,
+  writingHref,
+  writingTitle,
+  yearSpan,
+} from './archive';
+
+const { work, writing, projects } = await loadArchive();
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const holdings = [
+  { code: 'WK', label: 'Case studies', count: work.length, href: '#lg-i' },
+  { code: 'DK', label: 'Desk projects', count: projects.length, href: '#lg-ii' },
+  { code: 'PR', label: 'Prototypes', count: experiments.length, href: '#lg-ii' },
+  { code: 'WR', label: 'Commissioned writing', count: writing.length, href: '#lg-iii' },
+  { code: 'PH', label: 'Photographs', count: photos.length, href: '#lg-iv' },
+];
+const total = holdings.reduce((s, h) => s + h.count, 0);
+
+// ── Accumulation chart ──
+const spans = work
+  .map((e, i) => ({ e, i, span: yearSpan(e.data.year) }))
+  .filter((x): x is typeof x & { span: [number, number] } => Boolean(x.span))
+  .sort((a, b) => a.span[0] - b.span[0] || a.span[1] - b.span[1]);
+const firstYear = Math.min(...spans.map((s) => s.span[0]));
+const lastYear = Math.max(...spans.map((s) => s.span[1]));
+const years = Array.from({ length: lastYear - firstYear + 1 }, (_, k) => firstYear + k);
+// running total of case studies begun by each year
+const begun = years.map((y) => spans.filter((s) => s.span[0] <= y).length);
+const undated = [
+  { code: 'DK', count: projects.length, label: 'desk projects' },
+  { code: 'PR', count: experiments.length, label: 'prototypes' },
+  { code: 'WR', count: writing.length, label: 'commissioned pieces' },
+];
+
+const tabs = [
+  { href: '#lg-i', n: 'I', label: 'Work' },
+  { href: '#lg-ii', n: 'II', label: 'Desk' },
+  { href: '#lg-iii', n: 'III', label: 'Writing' },
+  { href: '#lg-iv', n: 'IV', label: 'Photographs' },
+  { href: '#lg-v', n: 'V', label: 'Correspondence' },
+];
+
+const compiled = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+---
+
+<div class="lg">
+  <nav class="lg-tabs" aria-label="Register sections">
+    <ul>
+      {tabs.map((t) => <li><a href={t.href}><b>{t.n}</b><span>{t.label}</span></a></li>)}
+    </ul>
+  </nav>
+
+  <header class="lg-head">
+    <div class="lg-margin lg-margin--head">
+      <p class="lg-acc">REG.</p>
+    </div>
+    <div class="lg-head__main">
+      <p class="lg-label">Personal archive · {hero.eyebrow}</p>
+      <h1>Archieval Mariano</h1>
+      <p class="lg-head__sub">Index of holdings — work, desk projects, prototypes, writing and photographs.</p>
+      <nav class="lg-head__nav" aria-label="Primary">
+        <a href="/work">Work</a><a href="/services">Services</a><a href="/writing">Writing</a><a href="/desk">Desk</a><a href="/about">About</a><a href="/contact">Contact</a>
+      </nav>
+    </div>
+    <dl class="lg-holdings">
+      {
+        holdings.map((h) => (
+          <div>
+            <dt><a href={h.href}><span class="lg-code">{h.code}</span> {h.label}</a></dt>
+            <dd>{pad(h.count)}</dd>
+          </div>
+        ))
+      }
+      <div class="lg-holdings__total">
+        <dt>Entries in this register</dt>
+        <dd>{pad(total)}</dd>
+      </div>
+    </dl>
+  </header>
+
+  <!-- ── Preface ── -->
+  <section class="lg-row lg-preface" aria-labelledby="lg-preface-title">
+    <div class="lg-margin">
+      <p class="lg-acc">A·000</p>
+      <p class="lg-note">Preface</p>
+    </div>
+    <div class="lg-preface__main">
+      <h2 id="lg-preface-title">{cover.headline}</h2>
+      <p class="lg-preface__statement">{cover.statement}</p>
+      <p>{cover.intro}</p>
+      <p class="lg-preface__through"><b>{throughline.title}</b> {throughline.paragraphs[0]}</p>
+    </div>
+    <aside class="lg-annot" aria-label="Annotation">
+      <p class="lg-annot__label">Cf. experience</p>
+      <ul>{about.experience.map((x) => <li>{x}</li>)}</ul>
+      <p class="lg-annot__hand">{about.experienceNote}</p>
+    </aside>
+  </section>
+
+  <!-- ── Accumulation ── -->
+  <section class="lg-row lg-accum" aria-labelledby="lg-accum-title">
+    <div class="lg-margin">
+      <p class="lg-acc">A·001</p>
+      <p class="lg-note">Accumulation</p>
+    </div>
+    <div class="lg-accum__main">
+      <h2 id="lg-accum-title">Case studies by year, {firstYear}–{String(lastYear).slice(2)} <span>and what carries no date</span></h2>
+      <div class="lg-chart" style={`--years:${years.length}`} role="img" aria-label={`Timeline of ${spans.length} dated case studies from ${firstYear} to ${lastYear}, plus ${undated.reduce((s, u) => s + u.count, 0)} undated items.`}>
+        <div class="lg-chart__axis">
+          {years.map((y) => <span>{y}</span>)}
+          <span class="lg-chart__nd">n.d.</span>
+        </div>
+        <div class="lg-chart__body">
+          {
+            spans.map((s) => (
+              <div class="lg-chart__lane">
+                <span
+                  class="lg-chart__bar"
+                  style={`grid-column:${s.span[0] - firstYear + 1} / ${s.span[1] - firstYear + 2}`}
+                  title={s.e.data.title}
+                >
+                  <i>WK·{pad(s.i + 1)}</i>
+                </span>
+              </div>
+            ))
+          }
+          <div class="lg-chart__undated">
+            {
+              undated.map((u) => (
+                <p>
+                  <span class="lg-tally" aria-hidden="true">{Array.from({ length: u.count }, () => '|').join('')}</span>
+                  <span>{u.count} {u.label}</span>
+                </p>
+              ))
+            }
+          </div>
+        </div>
+        <div class="lg-chart__totals">
+          {begun.map((n) => <span><b>{pad(n)}</b></span>)}
+          <span class="lg-chart__nd" />
+        </div>
+      </div>
+      <p class="lg-chart__caption">
+        Bars: the span of each case study, numbered as in Section I. Running totals beneath. Desk projects,
+        prototypes and commissioned writing are listed without dates rather than with estimated ones.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── I. Work ── -->
+  <section class="lg-section" id="lg-i" aria-labelledby="lg-i-title">
+    <header class="lg-section__head">
+      <p class="lg-section__n">I.</p>
+      <h2 id="lg-i-title">Work</h2>
+      <p class="lg-section__desc">Stories about audiences, systems and digital work.</p>
+      <a href="/work">Open section →</a>
+    </header>
+    <table class="lg-table">
+      <thead><tr><th scope="col">Acc.</th><th scope="col">Year</th><th scope="col">Entry</th><th scope="col">Source</th><th scope="col">Annotation</th></tr></thead>
+      <tbody>
+        {
+          work.map((e, i) => {
+            const linked = workIsLinked(e);
+            return (
+              <tr class:list={[{ 'is-featured': e.data.featured }]}>
+                <td class="lg-t-acc">WK·{pad(i + 1)}</td>
+                <td class="lg-t-year">{e.data.year}</td>
+                <td class="lg-t-entry">
+                  {linked ? <a href={workHref(e.slug)}>{e.data.title}</a> : <span>{e.data.title}</span>}
+                  <small>{e.data.category}</small>
+                </td>
+                <td class="lg-t-src">{e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</td>
+                <td class="lg-t-note">
+                  {e.data.privateCaseStudy ? 'Private case study — details intentionally withheld.' : e.data.featured ? 'Selected.' : ''}
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── II. Desk & prototypes ── -->
+  <section class="lg-section" id="lg-ii" aria-labelledby="lg-ii-title">
+    <header class="lg-section__head">
+      <p class="lg-section__n">II.</p>
+      <h2 id="lg-ii-title">Desk</h2>
+      <p class="lg-section__desc">Independent applications, utilities and experiments. Some are useful, definitely specific, and occasionally unnecessary.</p>
+      <a href="/desk">Open section →</a>
+    </header>
+    <div class="lg-cards">
+      {
+        projects.map((p, i) => (
+          <a class="lg-card" href={`/desk/${p.data.slug}/`}>
+            <span class="lg-card__acc">DK·{pad(i + 1)}</span>
+            <span class="lg-card__img">
+              {p.data.heroImage && <Image src={p.data.heroImage} alt={p.data.heroAlt ?? ''} widths={[200, 320, 440]} sizes="(max-width: 40rem) 40vw, 14vw" format="webp" quality={70} />}
+            </span>
+            <strong>{p.data.name}</strong>
+            <span class="lg-card__purpose">{p.data.purpose}</span>
+            <span class="lg-card__facts">{p.data.facts.map((f) => <span>{f}</span>)}</span>
+            <span class="lg-card__status">{p.data.status}</span>
+          </a>
+        ))
+      }
+      {
+        experiments.map((x, i) => (
+          <a class="lg-card lg-card--proto" href={x.href} target="_blank" rel="noopener">
+            <span class="lg-card__acc">PR·{pad(i + 1)}</span>
+            <strong>{x.title} ↗</strong>
+            <span class="lg-card__purpose">{x.description}</span>
+            <span class="lg-card__facts"><span>{x.label}</span></span>
+            <span class="lg-card__status">prototype · not a launched product</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ── III. Writing ── -->
+  <section class="lg-section" id="lg-iii" aria-labelledby="lg-iii-title">
+    <header class="lg-section__head">
+      <p class="lg-section__n">III.</p>
+      <h2 id="lg-iii-title">Writing</h2>
+      <p class="lg-section__desc">Selected commissioned work. Some pieces were published without a byline.</p>
+      <a href="/writing">Open section →</a>
+    </header>
+    <table class="lg-table lg-table--writing">
+      <thead><tr><th scope="col">Acc.</th><th scope="col">Date</th><th scope="col">Entry</th><th scope="col">Source</th><th scope="col">Format</th></tr></thead>
+      <tbody>
+        {
+          writing.map((e, i) => (
+            <tr>
+              <td class="lg-t-acc">WR·{pad(i + 1)}</td>
+              <td class="lg-t-year">{e.data.pubDate ? e.data.pubDate.getFullYear() : 'n.d.'}</td>
+              <td class="lg-t-entry">
+                <a href={writingHref(e)} {...(isExternal(e) ? { target: '_blank', rel: 'noopener' } : {})}>
+                  {writingTitle(e)}{isExternal(e) && <span aria-hidden="true"> ↗</span>}
+                </a>
+              </td>
+              <td class="lg-t-src">{[e.data.publisher, e.data.clientOrCampaign].filter(Boolean).join(' · ')}</td>
+              <td class="lg-t-note lg-t-fmt">{e.data.format}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── IV. Photographs ── -->
+  <section class="lg-section" id="lg-iv" aria-labelledby="lg-iv-title">
+    <header class="lg-section__head">
+      <p class="lg-section__n">IV.</p>
+      <h2 id="lg-iv-title">Photographs</h2>
+      <p class="lg-section__desc">{about.photographer}</p>
+      <a href="/about">Open section →</a>
+    </header>
+    <ol class="lg-sheet">
+      {
+        photos.map((p, i) => (
+          <li>
+            <figure>
+              <Image src={p.src} alt={p.alt} widths={[280, 420, 560]} sizes="(max-width: 40rem) 50vw, 20vw" format="webp" quality={70} />
+              <figcaption>
+                <span class="lg-card__acc">PH·{pad(i + 1)}</span>
+                <span>{p.caption}</span>
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- ── V. Correspondence ── -->
+  <footer class="lg-section lg-foot" id="lg-v" aria-labelledby="lg-v-title">
+    <header class="lg-section__head">
+      <p class="lg-section__n">V.</p>
+      <h2 id="lg-v-title">Correspondence</h2>
+    </header>
+    <div class="lg-foot__body">
+      <p class="lg-foot__head">{closing.title}</p>
+      <p>{closing.body}</p>
+      <p class="lg-foot__links">
+        <a href={`mailto:${siteLinks.email}`}>{siteLinks.email}</a>
+        <a href="/contact">Start a conversation →</a>
+        <a href={siteLinks.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+      </p>
+    </div>
+    <p class="lg-foot__compiled">Register compiled {compiled} from the site’s published collections · {pad(total)} entries · end of index.</p>
+  </footer>
+</div>
+
+<style>
+  .lg {
+    --lg-paper: #f7f4ea;
+    --lg-line: color-mix(in srgb, var(--blue) 26%, transparent);
+    --lg-red: #c8402c;
+    --lg-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+    --lg-margin: 7.5rem;
+    position: relative;
+    padding: 0 var(--gutter) 0 calc(var(--gutter) + var(--lg-margin));
+    background:
+      linear-gradient(90deg, transparent calc(var(--gutter) + var(--lg-margin) - 1.1rem), var(--lg-red) 0 calc(var(--gutter) + var(--lg-margin) - 1rem), transparent 0 calc(var(--gutter) + var(--lg-margin) - .75rem), var(--lg-red) 0 calc(var(--gutter) + var(--lg-margin) - .65rem), transparent 0),
+      repeating-linear-gradient(180deg, transparent 0 calc(1.75rem - 1px), var(--lg-line) 0 1.75rem),
+      var(--lg-paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+  .lg a { text-decoration: none; }
+  .lg a:hover { color: var(--lg-red); }
+  .lg-acc, .lg-code, .lg-card__acc, .lg-t-acc { font-family: var(--lg-mono); font-size: .72rem; letter-spacing: .02em; }
+
+  /* margin column (sits left of the red rule) */
+  .lg-row, .lg-head { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 2.5rem; }
+  .lg-margin { position: absolute; left: calc(-1 * var(--lg-margin)); top: 0; width: calc(var(--lg-margin) - 1.75rem); text-align: right; }
+  .lg-margin .lg-acc { margin: 0; color: var(--lg-red); font-weight: 700; }
+  .lg-note { margin: .2rem 0 0; font-family: var(--font-serif); font-size: .95rem; font-style: italic; color: var(--ink-soft); }
+
+  /* thumb-index tabs */
+  .lg-tabs { position: fixed; right: 0; top: 50%; z-index: 20; transform: translateY(-50%); }
+  .lg-tabs ul { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+  .lg-tabs a { display: flex; align-items: center; gap: .5rem; width: 2.6rem; padding: .55rem .6rem; overflow: hidden; background: var(--ink); color: var(--paper); font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; border-radius: .35rem 0 0 .35rem; transition: width .2s ease; }
+  .lg-tabs li:nth-child(2) a { background: var(--blue-dark); }
+  .lg-tabs li:nth-child(3) a { background: var(--lg-red); }
+  .lg-tabs li:nth-child(4) a { background: #8a6a1f; }
+  .lg-tabs li:nth-child(5) a { background: var(--ink-soft); }
+  .lg-tabs a:hover, .lg-tabs a:focus-visible { width: 10rem; color: var(--paper); }
+  .lg-tabs b { flex: 0 0 1.4rem; font-family: var(--font-serif); font-size: .85rem; text-align: center; }
+
+  /* head */
+  .lg-head { padding-block: 3rem 2.5rem; border-bottom: 3px solid var(--ink); align-items: end; }
+  .lg-label { margin: 0 0 1rem; font-size: .68rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .lg-head h1 { font-family: var(--font-serif); font-size: clamp(3rem, 7vw, 6.6rem); font-variation-settings: 'opsz' 72; font-weight: 400; letter-spacing: -.04em; line-height: .92; }
+  .lg-head__sub { max-width: 34ch; margin: 1rem 0 0; font-family: var(--font-serif); font-size: clamp(1.2rem, 1.8vw, 1.55rem); font-style: italic; line-height: 1.3; color: var(--ink-soft); }
+  .lg-head__nav { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin-top: 2rem; font-size: .7rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  .lg-holdings { margin: 0; border-top: 2px solid var(--ink); }
+  .lg-holdings div { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: .32rem 0; border-bottom: 1px solid var(--ink); }
+  .lg-holdings dt { font-size: .78rem; font-weight: 600; }
+  .lg-holdings .lg-code { display: inline-block; width: 2rem; color: var(--lg-red); }
+  .lg-holdings dd { margin: 0; font-family: var(--lg-mono); font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .lg-holdings__total { border-bottom: 3px double var(--ink) !important; }
+  .lg-holdings__total dt { font-weight: 800; text-transform: uppercase; font-size: .66rem !important; letter-spacing: .08em; }
+  .lg-holdings__total dd { font-size: 1.6rem !important; }
+
+  /* preface */
+  .lg-preface { padding-block: 2.75rem; border-bottom: 1px solid var(--ink); }
+  .lg-preface h2 { font-family: var(--font-sans); font-size: clamp(1.05rem, 1.4vw, 1.3rem); font-weight: 800; letter-spacing: -.01em; }
+  .lg-preface__statement { max-width: 26ch; margin: .6rem 0 1.2rem; font-family: var(--font-serif); font-size: clamp(1.9rem, 3.6vw, 3.4rem); font-variation-settings: 'opsz' 60; line-height: 1.04; letter-spacing: -.025em; }
+  .lg-preface__main > p:not(.lg-preface__statement) { max-width: 62ch; color: var(--ink-soft); line-height: 1.75; }
+  .lg-preface__through b { color: var(--ink); }
+  .lg-annot { align-self: start; padding: 1rem 1.1rem; background: #fff9d9; border: 1px solid #e5d58a; box-shadow: 3px 3px 0 color-mix(in srgb, var(--ink) 12%, transparent); transform: rotate(.6deg); }
+  .lg-annot__label { margin: 0 0 .4rem; font-size: .62rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--lg-red); }
+  .lg-annot ul { margin: 0; padding-left: 1rem; font-size: .85rem; line-height: 1.75; }
+  .lg-annot__hand { margin: .6rem 0 0; font-family: var(--font-serif); font-style: italic; font-size: 1.05rem; line-height: 1.3; }
+
+  /* accumulation chart */
+  .lg-accum { grid-template-columns: 1fr; padding-block: 2.75rem; border-bottom: 1px solid var(--ink); }
+  .lg-accum h2 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw, 2.2rem); font-weight: 500; letter-spacing: -.02em; }
+  .lg-accum h2 span { font-style: italic; color: var(--ink-faint); }
+  .lg-chart { --nd: 11rem; margin-top: 1.75rem; display: grid; gap: 3px; }
+  .lg-chart__axis, .lg-chart__lane, .lg-chart__totals { display: grid; grid-template-columns: repeat(var(--years), minmax(0, 1fr)) var(--nd); }
+  .lg-chart__axis span { padding: .3rem .4rem; border-left: 1px solid var(--ink); font-family: var(--lg-mono); font-size: .7rem; font-weight: 700; }
+  .lg-chart__nd { border-left: 2px dashed var(--lg-red) !important; color: var(--lg-red); }
+  .lg-chart__lane { min-height: 1.6rem; background: repeating-linear-gradient(90deg, transparent 0 calc(100% / var(--years) - 1px), color-mix(in srgb, var(--ink) 16%, transparent) 0 calc(100% / var(--years))) 0 0 / calc(100% - var(--nd)) 100% no-repeat; }
+  .lg-chart__bar { display: flex; align-items: center; min-height: 1.6rem; padding: 0 .45rem; background: var(--ink); color: var(--paper); border-radius: 1px; }
+  .lg-chart__bar i { font-family: var(--lg-mono); font-size: .64rem; font-style: normal; font-weight: 700; }
+  .lg-chart__lane:nth-child(3n) .lg-chart__bar { background: var(--blue-dark); }
+  .lg-chart__lane:nth-child(3n+1) .lg-chart__bar { background: var(--lg-red); }
+  .lg-chart__totals span { padding: .35rem .4rem; border-top: 2px solid var(--ink); font-family: var(--lg-mono); font-size: .7rem; color: var(--ink-faint); }
+  .lg-chart__totals b { color: var(--ink); }
+  .lg-chart__body { position: relative; display: grid; gap: 3px; }
+  .lg-chart__undated { position: absolute; top: 0; right: 0; width: var(--nd); padding: .2rem 0 0 .8rem; }
+  .lg-chart__undated p { margin: 0 0 .55rem; font-size: .72rem; line-height: 1.25; }
+  .lg-tally { display: block; font-family: var(--lg-mono); font-size: 1rem; font-weight: 700; letter-spacing: .08em; color: var(--lg-red); word-break: break-all; line-height: 1; }
+  .lg-chart__caption { max-width: 70ch; margin-top: 1rem; font-family: var(--font-serif); font-size: .95rem; font-style: italic; color: var(--ink-soft); }
+
+  /* sections */
+  .lg-section { position: relative; padding-block: 3rem 1rem; }
+  .lg-section__head { display: grid; grid-template-columns: auto auto 1fr auto; align-items: baseline; gap: 1.25rem; padding-bottom: .75rem; border-bottom: 3px solid var(--ink); }
+  .lg-section__n { position: absolute; left: calc(-1 * var(--lg-margin)); width: calc(var(--lg-margin) - 1.75rem); margin: 0; text-align: right; font-family: var(--font-serif); font-size: 2.6rem; font-variation-settings: 'opsz' 72; font-weight: 500; line-height: 1; color: var(--lg-red); }
+  .lg-section__head h2 { font-family: var(--font-serif); font-size: clamp(2rem, 3.4vw, 3.2rem); font-variation-settings: 'opsz' 72; font-weight: 500; letter-spacing: -.03em; line-height: 1; }
+  .lg-section__desc { grid-column: 3; margin: 0; max-width: 56ch; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
+  .lg-section__head a { font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+
+  /* ledger table */
+  .lg-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .lg-table th { padding: .5rem .6rem; border-bottom: 1px solid var(--ink); font-size: .6rem; font-weight: 800; letter-spacing: .12em; text-align: left; text-transform: uppercase; color: var(--ink-faint); }
+  .lg-table td { padding: .7rem .6rem; border-bottom: 1px solid color-mix(in srgb, var(--ink) 35%, transparent); vertical-align: top; }
+  .lg-table tr:hover td { background: color-mix(in srgb, var(--yellow) 22%, transparent); }
+  .lg-t-acc { width: 5.5rem; color: var(--lg-red); font-weight: 700; white-space: nowrap; }
+  .lg-t-year { width: 5.5rem; font-family: var(--lg-mono); font-size: .78rem; white-space: nowrap; }
+  .lg-t-entry a, .lg-t-entry > span { font-family: var(--font-serif); font-size: 1.12rem; font-weight: 500; line-height: 1.25; }
+  .lg-t-entry small { display: block; margin-top: .2rem; font-size: .72rem; font-weight: 650; letter-spacing: .04em; color: var(--ink-faint); }
+  .lg-t-src { width: 14rem; font-size: .8rem; font-weight: 600; }
+  .lg-t-note { width: 15rem; font-family: var(--font-serif); font-style: italic; font-size: .92rem; color: var(--lg-red); }
+  .lg-t-fmt { color: var(--ink-soft); }
+  .is-featured .lg-t-acc::after { content: ' ★'; }
+  .lg-table--writing .lg-t-year { color: var(--lg-red); }
+
+  /* desk cards */
+  .lg-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); gap: 1rem; padding-top: 1.25rem; }
+  .lg-card { position: relative; display: flex; flex-direction: column; gap: .45rem; padding: .9rem; background: #fffdf6; border: 1px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+  .lg-card::before { content: ''; position: absolute; top: .9rem; right: .9rem; width: .6rem; height: .6rem; border: 1px solid var(--ink); border-radius: 50%; }
+  .lg-card__acc { color: var(--lg-red); font-weight: 700; }
+  .lg-card__img :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 30%; filter: grayscale(.2); border: 1px solid var(--ink); }
+  .lg-card strong { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 560; letter-spacing: -.01em; line-height: 1.05; }
+  .lg-card__purpose { font-size: .85rem; line-height: 1.45; color: var(--ink-soft); }
+  .lg-card__facts { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: auto; }
+  .lg-card__facts span { padding: .1rem .35rem; border: 1px solid color-mix(in srgb, var(--ink) 40%, transparent); font-size: .62rem; font-weight: 650; }
+  .lg-card__status { font-family: var(--lg-mono); font-size: .64rem; text-transform: uppercase; color: var(--ink-faint); }
+  .lg-card--proto { background: repeating-linear-gradient(-45deg, #fffdf6 0 10px, #f3efe2 10px 11px); }
+
+  /* contact sheet */
+  .lg-sheet { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; margin: 1.25rem 0 0; padding: .6rem; list-style: none; background: #1d2326; }
+  .lg-sheet figure { margin: 0; }
+  .lg-sheet :global(img) { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .lg-sheet figcaption { display: grid; gap: .1rem; padding: .45rem .1rem .2rem; font-size: .7rem; line-height: 1.3; color: #e8e2d2; }
+  .lg-sheet .lg-card__acc { color: var(--yellow); }
+
+  /* correspondence */
+  .lg-foot { padding-bottom: 3rem; }
+  .lg-foot__body { max-width: 52rem; padding-top: 1.5rem; }
+  .lg-foot__head { margin: 0 0 1rem; font-family: var(--font-serif); font-size: clamp(1.9rem, 3.6vw, 3.3rem); font-variation-settings: 'opsz' 72; line-height: 1.02; letter-spacing: -.03em; }
+  .lg-foot__body > p:nth-child(2) { max-width: 60ch; color: var(--ink-soft); line-height: 1.7; }
+  .lg-foot__links { display: flex; flex-wrap: wrap; gap: .5rem 2rem; margin-top: 1.5rem; font-size: .76rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .lg-foot__links a { border-bottom: 2px solid var(--lg-red); }
+  .lg-foot__compiled { margin-top: 3rem; padding-top: .7rem; border-top: 3px double var(--ink); font-family: var(--lg-mono); font-size: .68rem; color: var(--ink-faint); }
+
+  @media (max-width: 64rem) {
+    .lg-head, .lg-row { grid-template-columns: 1fr; }
+    .lg-annot { max-width: 24rem; }
+    .lg-t-note { width: 10rem; }
+    .lg-t-src { width: 10rem; }
+  }
+  @media (max-width: 48rem) {
+    .lg { --lg-margin: 0rem; padding: 0 var(--gutter); background: repeating-linear-gradient(180deg, transparent 0 calc(1.75rem - 1px), var(--lg-line) 0 1.75rem), var(--lg-paper); border-left: 6px double var(--lg-red); }
+    .lg-margin { position: static; width: auto; text-align: left; display: flex; gap: .6rem; align-items: baseline; margin-bottom: .6rem; }
+    .lg-margin--head { display: none; }
+    .lg-section__n { position: static; width: auto; font-size: 1.8rem; }
+    .lg-section__head { grid-template-columns: auto 1fr auto; }
+    .lg-section__desc { grid-column: 1 / -1; }
+    .lg-tabs { top: auto; bottom: 0; left: 0; right: 0; transform: none; }
+    .lg-tabs ul { grid-template-columns: repeat(5, 1fr); gap: 0; }
+    .lg-tabs a, .lg-tabs a:hover { width: auto; justify-content: center; border-radius: 0; padding: .7rem .2rem; }
+    .lg-tabs a span { display: none; }
+    .lg-foot { padding-bottom: 5rem; }
+    .lg-chart { --nd: 7.5rem; }
+    .lg-chart__axis span { font-size: .56rem; padding: .3rem .15rem; writing-mode: vertical-rl; transform: rotate(180deg); }
+    .lg-chart__nd { writing-mode: horizontal-tb !important; transform: none !important; }
+    .lg-chart__bar { padding: 0 .2rem; }
+    .lg-chart__bar i { font-size: .52rem; }
+    .lg-chart__totals span { font-size: .56rem; padding: .3rem .1rem; }
+    /* ledger rows become index cards */
+    .lg-table thead { display: none; }
+    .lg-table, .lg-table tbody, .lg-table tr, .lg-table td { display: block; width: auto; }
+    .lg-table tr { display: grid; grid-template-columns: auto 1fr; gap: .1rem .75rem; padding: .85rem 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 35%, transparent); }
+    .lg-table td { padding: 0; border: 0; }
+    .lg-t-acc { grid-row: span 1; }
+    .lg-t-year { justify-self: end; }
+    .lg-t-entry, .lg-t-src, .lg-t-note { grid-column: 1 / -1; }
+    .lg-t-note:empty { display: none !important; }
+    .lg-sheet { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>

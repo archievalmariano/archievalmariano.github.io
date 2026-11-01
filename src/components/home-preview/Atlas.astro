@@ -1,0 +1,611 @@
+---
+// DIRECTION C — FIELD NOTEBOOK / ATLAS
+// An exploratory plate. Places that already appear in the archive are plotted
+// on a graticule (true positions, no coastlines drawn); ON POINT's seven
+// published routes become a schematic transit plate; the work becomes lines
+// with stations; photographs are pinned into a notebook as specimens.
+import { Image } from 'astro:assets';
+import {
+  about,
+  closing,
+  cover,
+  experiments,
+  hero,
+  isExternal,
+  loadArchive,
+  photos,
+  siteLinks,
+  throughline,
+  workEvidence,
+  workHref,
+  workIsLinked,
+  writingHref,
+  writingTitle,
+  yearSpan,
+} from './archive';
+
+const { work, featuredWork, writing, projects } = await loadArchive();
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// ── Plate I: regional graticule ────────────────────────────────────────────
+// Equirectangular, lon 100–126 E, lat −1–27 N.
+const LON0 = 100, LON1 = 126, LAT0 = -1, LAT1 = 27, K = 36, M = 28;
+const W = (LON1 - LON0) * K + M * 2;
+const H = (LAT1 - LAT0) * K + M * 2;
+const px = (lon: number) => M + (lon - LON0) * K;
+const py = (lat: number) => M + (LAT1 - lat) * K;
+const meridians = Array.from({ length: (LON1 - LON0) / 2 + 1 }, (_, i) => LON0 + i * 2);
+const parallels = Array.from({ length: 14 }, (_, i) => i * 2); // 0°–26° N
+
+const hk = writing.find((w) => w.slug.includes('hong-kong'));
+const onPoint = projects.find((p) => p.data.slug === 'on-point');
+const photo = (k: string) => photos.find((p) => p.key === k)!;
+
+type Place = {
+  n: string;
+  name: string;
+  lat: number;
+  lon: number;
+  kind: string;
+  note: string;
+  href: string;
+  external?: boolean;
+  dx?: number; // label offset
+  dy?: number;
+  anchor?: 'start' | 'end';
+};
+const places: Place[] = [
+  { n: '01', name: 'Taipei', lat: photo('taipei').lat, lon: photo('taipei').lon, kind: 'Photograph', note: photo('taipei').caption, href: '/about', anchor: 'end', dx: -16 },
+  ...(hk
+    ? [{ n: '02', name: 'Hong Kong', lat: 22.3, lon: 114.17, kind: 'Writing', note: `${hk.data.publisher} · ${hk.data.clientOrCampaign ?? ''}`.replace(/ · $/, ''), href: writingHref(hk), external: isExternal(hk), anchor: 'end' as const, dx: -16 }]
+    : []),
+  { n: '03', name: 'Central Luzon', lat: 15.0, lon: 120.85, kind: 'Desk project', note: `${onPoint?.data.name ?? 'ON POINT'} · 7 published routes · see Plate II`, href: '#plate-ii', anchor: 'end', dx: -18, dy: -14 },
+  { n: '04', name: 'Pasay Baywalk', lat: photo('baywalk').lat, lon: photo('baywalk').lon, kind: 'Photograph', note: photo('baywalk').caption, href: '/about', anchor: 'end', dx: -18, dy: 34 },
+  { n: '05', name: 'Singapore', lat: photo('esplanade').lat, lon: photo('esplanade').lon, kind: 'Photographs ×2', note: `${photo('esplanade').caption}; the skyline`, href: '/about', anchor: 'start', dx: 16 },
+];
+const dms = (v: number, pos: string, neg: string) => `${Math.abs(v).toFixed(2)}° ${v >= 0 ? pos : neg}`;
+
+// ── Plate II: ON POINT routes (schematic) ──────────────────────────────────
+// Routes and operators exactly as published on /desk/on-point/.
+const stations: Record<string, { x: number; y: number; label: string; side: 'l' | 'r'; hub?: boolean }> = {
+  BAG: { x: 180, y: 40, label: 'Baguio', side: 'r' },
+  CRK: { x: 180, y: 140, label: 'Clark Airport', side: 'l', hub: true },
+  BLG: { x: 320, y: 210, label: 'Balagtas', side: 'r' },
+  CAY: { x: 480, y: 200, label: 'Caypombo', side: 'r' },
+  TRN: { x: 350, y: 300, label: 'TriNoma', side: 'l', hub: true },
+  SMN: { x: 480, y: 300, label: 'SM North EDSA', side: 'r' },
+  CUB: { x: 480, y: 360, label: 'Cubao', side: 'r' },
+  NAI: { x: 350, y: 430, label: 'NAIA T3', side: 'r', hub: true },
+  PIT: { x: 180, y: 430, label: 'PITX', side: 'l' },
+};
+const operators = [
+  { name: 'Bulacan P2P', color: 'var(--coral)' },
+  { name: 'Precious Grace', color: '#c9a21c' },
+  { name: 'Genesis', color: 'var(--blue)' },
+  { name: 'UBE Express', color: '#31835a' },
+];
+const opColor = (name: string) => operators.find((o) => o.name === name)!.color;
+const routes = [
+  { route: 'Balagtas ↔ TriNoma', op: 'Bulacan P2P', d: 'M320,210 L350,240 L350,300' },
+  { route: 'Caypombo ↔ SM North EDSA', op: 'Precious Grace', d: 'M480,200 L480,300' },
+  { route: 'Clark Airport ↔ Baguio', op: 'Genesis', d: 'M180,140 L180,40' },
+  { route: 'Clark Airport ↔ NAIA T3', op: 'Genesis', d: 'M172,140 L172,260 L342,430 L350,430' },
+  { route: 'Cubao ↔ Clark Airport', op: 'Genesis', d: 'M180,140 L180,226 L314,360 L480,360' },
+  { route: 'NAIA T3 ↔ PITX', op: 'UBE Express', d: 'M350,430 L180,430' },
+  { route: 'TriNoma ↔ Clark Airport', op: 'Genesis', d: 'M188,140 L188,190 L298,300 L350,300' },
+];
+
+// ── Lines through the archive ──────────────────────────────────────────────
+const workStations = work
+  .map((e) => ({ e, span: yearSpan(e.data.year) }))
+  .sort((a, b) => (a.span?.[0] ?? 0) - (b.span?.[0] ?? 0) || (a.span?.[1] ?? 0) - (b.span?.[1] ?? 0));
+
+const publishers = new Map<string, number>();
+for (const w of writing) publishers.set(w.data.publisher ?? 'Other', (publishers.get(w.data.publisher ?? 'Other') ?? 0) + 1);
+const pubStations = [...publishers.entries()].sort((a, b) => b[1] - a[1]);
+
+const lines = [
+  {
+    code: 'W',
+    name: 'Work',
+    color: 'var(--coral)',
+    span: `${workStations[0].span?.[0]} → ${workStations[workStations.length - 1].span?.[1]}`,
+    href: '/work',
+    stations: workStations.map(({ e }) => ({
+      top: e.data.year ?? '',
+      label: e.data.category ?? e.data.title,
+      href: workIsLinked(e) ? workHref(e.slug) : undefined,
+      title: e.data.title,
+      major: e.data.featured,
+    })),
+  },
+  {
+    code: 'D',
+    name: 'Desk',
+    color: 'var(--blue)',
+    span: `${projects.length} projects`,
+    href: '/desk',
+    stations: projects.map((p) => ({ top: p.data.status, label: p.data.name, href: `/desk/${p.data.slug}/`, title: p.data.purpose, major: p.data.featured })),
+  },
+  {
+    code: 'P',
+    name: 'Prototypes',
+    color: '#c9a21c',
+    span: `${experiments.length} prototypes`,
+    href: '/work',
+    stations: experiments.map((x) => ({ top: x.label, label: x.title, href: x.href, title: x.description, major: false })),
+  },
+  {
+    code: 'R',
+    name: 'Writing',
+    color: '#31835a',
+    span: `${writing.length} pieces · by publisher`,
+    href: '/writing',
+    stations: pubStations.map(([pub, n]) => ({ top: `×${n}`, label: pub, href: '/writing', title: `${n} commissioned piece${n > 1 ? 's' : ''}`, major: n > 1 })),
+  },
+];
+
+const specimens = photos.map((p, i) => ({ ...p, n: pad(i + 1) }));
+---
+
+<div class="at">
+  <header class="at-top">
+    <a class="at-brand" href="/preview/home/atlas/">
+      <i class="at-pin" aria-hidden="true"></i>
+      <span><strong>Archieval Mariano</strong><small>Field notebook · personal archive</small></span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="/work">Work</a><a href="/services">Services</a><a href="/writing">Writing</a><a href="/desk">Desk</a><a href="/about">About</a><a href="/contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- ── Plate I ─────────────────────────────────────────────────────── -->
+  <section class="at-hero" aria-labelledby="at-title">
+    <div class="at-hero__rail">
+      <p class="at-sys">Plate I · Places in the archive</p>
+      <h1 id="at-title">Archieval Mariano, <em>the bored storyteller.</em></h1>
+      <p class="at-hero__lede">{about.lede.replace(/^I used to call myself the bored storyteller\. /, '')}</p>
+      <p class="at-hero__eyebrow">{hero.eyebrow}</p>
+
+      <ol class="at-legend">
+        {
+          places.map((p) => (
+            <li>
+              <a href={p.href} {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}>
+                <i>{p.n}</i>
+                <span>
+                  <strong>{p.name}</strong>
+                  <small>{p.kind} — {p.note}</small>
+                </span>
+                <span class="at-legend__coord">{dms(p.lat, 'N', 'S')}<br />{dms(p.lon, 'E', 'W')}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <figure class="at-plate">
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="at-plate-cap">
+        <defs>
+          <pattern id="at-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width="1" opacity=".22" />
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width={W} height={H} class="at-plate__sea" />
+        {/* contour rings: decorative, centred on each place */}
+        {places.map((p) => [1, 2, 3, 4].map((r) => <circle cx={px(p.lon)} cy={py(p.lat)} r={r * 26} class="at-plate__ring" />))}
+        {meridians.map((lon) => (
+          <g>
+            <line x1={px(lon)} y1={M} x2={px(lon)} y2={H - M} class:list={['at-plate__grid', { major: lon % 10 === 0 }]} />
+            <text x={px(lon)} y={M - 8} class="at-plate__deg" text-anchor="middle">{lon}°</text>
+          </g>
+        ))}
+        {parallels.map((lat) => (
+          <g>
+            <line x1={M} y1={py(lat)} x2={W - M} y2={py(lat)} class:list={['at-plate__grid', { major: lat % 10 === 0 }]} />
+            <text x={M - 6} y={py(lat) + 4} class="at-plate__deg" text-anchor="end">{lat}°</text>
+          </g>
+        ))}
+        <line x1={M} y1={py(0)} x2={W - M} y2={py(0)} class="at-plate__equator" />
+        <text x={W - M - 6} y={py(0) - 6} class="at-plate__deg" text-anchor="end">EQUATOR</text>
+        <line x1={M} y1={py(23.44)} x2={W - M} y2={py(23.44)} class="at-plate__tropic" />
+        <text x={M + 8} y={py(23.44) - 6} class="at-plate__deg">TROPIC OF CANCER</text>
+
+        {/* Plate II locator */}
+        <rect x={px(120.3)} y={py(16.7)} width={px(121.4) - px(120.3)} height={py(14.3) - py(16.7)} class="at-plate__locator" />
+        <text x={px(121.6)} y={py(16.6)} class="at-plate__deg">PLATE II</text>
+
+        {/* dashed legs between places, in the order listed */}
+        <polyline points={places.map((p) => `${px(p.lon)},${py(p.lat)}`).join(' ')} class="at-plate__leg" />
+
+        {places.map((p) => (
+          <g class="at-plate__place">
+            <circle cx={px(p.lon)} cy={py(p.lat)} r="13" class="at-plate__pin" />
+            <text x={px(p.lon)} y={py(p.lat) + 4} class="at-plate__pin-n" text-anchor="middle">{p.n}</text>
+            <text x={px(p.lon) + (p.dx ?? 16)} y={py(p.lat) + (p.dy ?? 0) - 4} class="at-plate__label" text-anchor={p.anchor}>{p.name.toUpperCase()}</text>
+            <text x={px(p.lon) + (p.dx ?? 16)} y={py(p.lat) + (p.dy ?? 0) + 14} class="at-plate__sub" text-anchor={p.anchor}>{p.kind}</text>
+          </g>
+        ))}
+
+        {/* compass */}
+        <g transform={`translate(${W - M - 54} ${H - M - 70})`} class="at-plate__compass">
+          <circle r="34" />
+          <path d="M0,-44 L7,0 L0,8 L-7,0 Z" />
+          <text y="-50" text-anchor="middle">N</text>
+        </g>
+      </svg>
+      <figcaption id="at-plate-cap">
+        <span>Places named in the archive’s captions and entries, plotted at their true latitude and longitude.</span>
+        <span>Equirectangular · 2° graticule · no coastlines drawn · legs are schematic</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ── Lines ───────────────────────────────────────────────────────── -->
+  <section class="at-lines" aria-labelledby="at-lines-title">
+    <header class="at-head">
+      <p class="at-sys">Plate III · Lines through the archive</p>
+      <h2 id="at-lines-title">{throughline.title}</h2>
+      <p>{throughline.paragraphs[1]}</p>
+    </header>
+
+    <div class="at-lines__map">
+      {
+        lines.map((l) => (
+          <div class="at-line" style={`--line:${l.color}`}>
+            <a class="at-line__badge" href={l.href}>
+              <b>{l.code}</b>
+              <span>
+                <strong>{l.name}</strong>
+                <small>{l.span}</small>
+              </span>
+            </a>
+            <ol class="at-line__track">
+              {l.stations.map((s) => (
+                <li class:list={[{ major: s.major }]}>
+                  {s.href ? (
+                    <a href={s.href} title={s.title} {...(s.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>
+                      <small>{s.top}</small>
+                      <span>{s.label}</span>
+                    </a>
+                  ) : (
+                    <span class="at-line__static" title={s.title}>
+                      <small>{s.top}</small>
+                      <span>{s.label}</span>
+                      <em>private</em>
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))
+      }
+    </div>
+    <p class="at-note">Stations on the Work line are case studies in order of their start year; bold stations are selected work. Writing stations are publishers, with the number of commissioned pieces for each.</p>
+  </section>
+
+  <!-- ── Plate II ────────────────────────────────────────────────────── -->
+  <section class="at-routes" id="plate-ii" aria-labelledby="at-routes-title">
+    <div class="at-routes__copy">
+      <p class="at-sys">Plate II · Central Luzon, schematic</p>
+      <h2 id="at-routes-title">{onPoint?.data.name ?? 'ON POINT'}</h2>
+      <p class="at-routes__lede">{onPoint?.data.purpose}</p>
+      <ul class="at-routes__ops">
+        {operators.map((o) => <li style={`--c:${o.color}`}>{o.name}</li>)}
+      </ul>
+      <ol class="at-routes__list">
+        {routes.map((r, i) => <li style={`--c:${opColor(r.op)}`}><i>{pad(i + 1)}</i>{r.route}</li>)}
+      </ol>
+      <a class="at-cta" href="/desk/on-point/">Open ON POINT →</a>
+    </div>
+    <figure class="at-routes__plate">
+      <svg viewBox="0 0 640 470" role="img" aria-label="Schematic diagram of the seven bus routes carried by ON POINT, coloured by operator.">
+        <defs>
+          <pattern id="at-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1" fill="currentColor" opacity=".18" />
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width="640" height="470" fill="url(#at-dots)" />
+        {routes.map((r) => <path d={r.d} stroke={opColor(r.op)} class="at-routes__path" />)}
+        {Object.values(stations).map((s) => (
+          <g>
+            {s.hub ? <rect x={s.x - 14} y={s.y - 9} width="28" height="18" rx="9" class="at-routes__hub" /> : <circle cx={s.x} cy={s.y} r="7" class="at-routes__stop" />}
+            <text x={s.side === 'r' ? s.x + 20 : s.x - 20} y={s.y + 4} text-anchor={s.side === 'r' ? 'start' : 'end'} class="at-routes__label">{s.label}</text>
+          </g>
+        ))}
+      </svg>
+      <figcaption>Routes and operators as published on the ON POINT page. Positions are schematic, not geographic.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ── Notebook ────────────────────────────────────────────────────── -->
+  <section class="at-notebook" aria-labelledby="at-nb-title">
+    <div class="at-page">
+      <p class="at-sys">Field entries · selected work</p>
+      <h2 id="at-nb-title">{cover.statement}</h2>
+      <p class="at-page__intro">{cover.intro}</p>
+
+      <ol class="at-entries">
+        {
+          featuredWork.map((e, i) => {
+            const ev = workEvidence[e.slug];
+            return (
+              <li>
+                <span class="at-stamp" aria-hidden="true">
+                  <b>{ev?.stat ?? pad(i + 1)}</b>
+                </span>
+                <div>
+                  <p class="at-entries__meta">Entry {pad(i + 1)} · {e.data.year} · {e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</p>
+                  <h3><a href={workHref(e.slug)}>{e.data.title}</a></h3>
+                  {ev && <p class="at-entries__ev">{ev.stat} {ev.label} — {ev.marks.join(', ')}</p>}
+                  <p>{e.data.shortDescription}</p>
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+      <p class="at-margin-quote" aria-hidden="true">“{about.ending}”</p>
+    </div>
+
+    <div class="at-specimens" aria-label="Photographs from the personal archive">
+      <p class="at-sys">Specimens · photographs</p>
+      <p class="at-specimens__note">{about.photographer}</p>
+      {
+        specimens.map((p) => (
+          <figure class={`at-specimen at-specimen--${p.key}`}>
+            <Image src={p.src} alt={p.alt} widths={[320, 480, 640]} sizes="(max-width: 52rem) 80vw, 22vw" format="webp" quality={72} />
+            <figcaption>
+              <b>No. {p.n}</b> {p.caption}
+              <small>{dms(p.lat, 'N', 'S')} · {dms(p.lon, 'E', 'W')}</small>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ── Writing waypoints ───────────────────────────────────────────── -->
+  <section class="at-writing" aria-labelledby="at-writing-title">
+    <header class="at-head at-head--row">
+      <div>
+        <p class="at-sys">Waypoints · writing</p>
+        <h2 id="at-writing-title">{about.heart}</h2>
+      </div>
+      <a class="at-cta" href="/writing">All {writing.length} pieces →</a>
+    </header>
+    <ol class="at-waypoints">
+      {
+        writing.filter((w) => w.data.featured).concat(writing.filter((w) => !w.data.featured)).slice(0, 6).map((w, i) => (
+          <li>
+            <a href={writingHref(w)} {...(isExternal(w) ? { target: '_blank', rel: 'noopener' } : {})}>
+              <i><span>{String.fromCharCode(65 + i)}</span></i>
+              <small>{w.data.publisher} · {w.data.format}</small>
+              <strong>{writingTitle(w)}</strong>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <footer class="at-foot">
+    <div>
+      <p class="at-sys">There’s always more</p>
+      <p class="at-foot__head">{closing.title}</p>
+      <p>{about.travel}</p>
+      <p class="at-foot__links">
+        <a href="/contact">Start a conversation →</a>
+        <a href={`mailto:${siteLinks.email}`}>{siteLinks.email}</a>
+        <a href={siteLinks.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+      </p>
+    </div>
+    <p class="at-foot__scale" aria-hidden="true"><span></span><span></span><span></span><span></span> Not to scale</p>
+  </footer>
+</div>
+
+<style>
+  .at {
+    --sky: #d7edf6;
+    --sky-deep: #a9d5e8;
+    --land: #a9cc90;
+    --grid: #ffffff;
+    --pt-line: #cfd7d8;
+    --pt-coral: #ee5638;
+    --at-muted: #617178;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+  .at a { text-decoration: none; }
+  .at-sys { margin: 0 0 .9rem; font-size: .66rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--pt-coral); }
+
+  /* top bar */
+  .at-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; padding: 1rem var(--gutter); border-bottom: 1px solid var(--pt-line); background: #fffaf0; }
+  .at-brand { display: flex; align-items: center; gap: .75rem; }
+  .at-pin { width: 1.2rem; height: 1.2rem; border: .38rem solid var(--pt-coral); border-radius: 50% 50% 50% 0; background: #fff; transform: rotate(-45deg); }
+  .at-brand strong { display: block; font-size: 1.15rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+  .at-brand small { display: block; margin-top: .2rem; font-size: .6rem; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--at-muted); }
+  .at-top nav { display: flex; flex-wrap: wrap; gap: .3rem 1.6rem; font-size: .72rem; font-weight: 700; color: var(--at-muted); }
+  .at-top nav a:hover { color: var(--ink); }
+
+  /* hero */
+  .at-hero { display: grid; grid-template-columns: minmax(20rem, 27rem) minmax(0, 1fr); min-height: calc(100svh - 6rem); border-bottom: 1px solid var(--pt-line); }
+  .at-hero__rail { padding: clamp(2rem, 4vw, 3.25rem) clamp(1.25rem, 2.5vw, 2rem) 2rem var(--gutter); background: #fff; border-right: 1px solid var(--pt-line); }
+  .at-hero h1 { font-family: var(--font-sans); font-size: clamp(2.3rem, 3.6vw, 3.4rem); font-weight: 800; letter-spacing: -.05em; line-height: .98; }
+  .at-hero h1 em { display: block; font-family: var(--font-serif); font-weight: 400; font-style: italic; letter-spacing: -.03em; color: var(--blue-dark); }
+  .at-hero__lede { margin: 1.25rem 0 0; font-family: var(--font-serif); font-size: 1.12rem; line-height: 1.5; color: var(--ink-soft); }
+  .at-hero__eyebrow { margin: 1rem 0 0; font-size: .64rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--at-muted); }
+  .at-legend { margin: 1.75rem 0 0; padding: 0; list-style: none; border-top: 1px solid var(--pt-line); }
+  .at-legend a { display: grid; grid-template-columns: 2.2rem 1fr auto; gap: .75rem; align-items: center; padding: .8rem .5rem; border-radius: .7rem; }
+  .at-legend a:hover { background: #fff0eb; }
+  .at-legend i { display: grid; place-items: center; width: 2rem; height: 2rem; border: 2px solid var(--pt-coral); border-radius: 50%; font-size: .62rem; font-style: normal; font-weight: 900; color: var(--pt-coral); background: #fff; }
+  .at-legend li:first-child i { background: var(--pt-coral); color: #fff; box-shadow: 0 0 0 5px #fff0eb; }
+  .at-legend strong { display: block; font-size: .9rem; }
+  .at-legend small { display: block; margin-top: .15rem; font-size: .72rem; line-height: 1.35; color: var(--at-muted); }
+  .at-legend__coord { font-size: .6rem; font-weight: 700; line-height: 1.35; text-align: right; color: var(--at-muted); font-variant-numeric: tabular-nums; }
+
+  .at-plate { position: relative; margin: 0; padding: clamp(1rem, 2.5vw, 2rem); background: var(--sky); display: flex; flex-direction: column; justify-content: center; }
+  .at-plate svg { width: 100%; height: auto; max-height: calc(100svh - 10rem); color: var(--blue-dark); }
+  .at-plate__sea { fill: var(--sky); }
+  .at-plate__ring { fill: none; stroke: var(--sky-deep); stroke-width: 1.2; }
+  .at-plate__grid { stroke: var(--grid); stroke-width: 1; }
+  .at-plate__grid.major { stroke-width: 2.2; }
+  .at-plate__equator { stroke: var(--blue-dark); stroke-width: 1.4; stroke-dasharray: 10 6; }
+  .at-plate__tropic { stroke: var(--blue-dark); stroke-width: 1; stroke-dasharray: 2 6; opacity: .7; }
+  .at-plate__deg { font: 700 11px var(--font-sans); letter-spacing: .08em; fill: var(--blue-dark); opacity: .75; }
+  .at-plate__locator { fill: url(#at-hatch); stroke: var(--blue-dark); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  .at-plate__leg { fill: none; stroke: var(--pt-coral); stroke-width: 2.5; stroke-dasharray: 2 8; stroke-linecap: round; }
+  .at-plate__pin { fill: var(--pt-coral); stroke: #fff; stroke-width: 4; }
+  .at-plate__pin-n { font: 900 10px var(--font-sans); fill: #fff; }
+  .at-plate__label { font: 850 18px var(--font-sans); letter-spacing: .1em; fill: var(--ink); paint-order: stroke; stroke: var(--sky); stroke-width: 5px; stroke-linejoin: round; }
+  .at-plate__sub { font: italic 500 16px var(--font-serif); fill: var(--blue-dark); paint-order: stroke; stroke: var(--sky); stroke-width: 5px; }
+  .at-plate__compass circle { fill: none; stroke: var(--blue-dark); stroke-width: 1.2; }
+  .at-plate__compass path { fill: var(--blue-dark); }
+  .at-plate__compass text { font: 900 13px var(--font-sans); fill: var(--blue-dark); }
+  .at-plate figcaption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .3rem 2rem; margin-top: .75rem; font-size: .66rem; font-weight: 650; line-height: 1.4; color: var(--blue-dark); }
+  .at-plate figcaption span:last-child { text-transform: uppercase; letter-spacing: .08em; font-weight: 800; }
+
+  /* section heads */
+  .at-head { max-width: 62rem; }
+  .at-head h2 { font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 800; letter-spacing: -.05em; line-height: .98; }
+  .at-head > p:last-child { max-width: 52ch; margin: 1.1rem 0 0; font-family: var(--font-serif); font-size: 1.2rem; line-height: 1.5; color: var(--ink-soft); }
+  .at-head--row { display: flex; justify-content: space-between; align-items: end; gap: 2rem; flex-wrap: wrap; max-width: none; }
+  .at-cta { display: inline-block; margin-top: 1.25rem; padding: .75rem 1.1rem; border-radius: 999px; background: var(--ink); color: #fff; font-size: .7rem; font-weight: 800; letter-spacing: .04em; }
+  .at-cta:hover { background: var(--pt-coral); color: #fff; }
+  .at-note { max-width: 70ch; margin: 1.5rem 0 0; font-size: .75rem; line-height: 1.5; color: var(--at-muted); }
+
+  /* lines */
+  .at-lines { padding: clamp(3.5rem, 7vw, 6rem) var(--gutter); }
+  .at-lines__map { margin-top: 2.75rem; display: grid; gap: 2.25rem; }
+  .at-line { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+  .at-line__badge { display: flex; gap: .75rem; align-items: center; }
+  .at-line__badge b { display: grid; place-items: center; flex: 0 0 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--line); color: #fff; font-size: 1.1rem; font-weight: 900; }
+  .at-line__badge strong { display: block; font-size: 1.05rem; font-weight: 800; letter-spacing: -.02em; }
+  .at-line__badge small { display: block; font-size: .66rem; font-weight: 650; color: var(--at-muted); }
+  .at-line__track { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); margin: 0; padding: 0; list-style: none; }
+  .at-line__track::before { content: ''; position: absolute; left: 0; right: 0; top: 1.15rem; height: .5rem; border-radius: 1rem; background: var(--line); }
+  .at-line__track li { position: relative; padding-top: 2.4rem; padding-right: .75rem; }
+  .at-line__track li::before { content: ''; position: absolute; left: 0; top: .85rem; width: 1.1rem; height: 1.1rem; border: 3px solid var(--line); border-radius: 50%; background: #fff; }
+  .at-line__track li.major::before { width: 1.5rem; height: 1.5rem; top: .65rem; left: -.2rem; border-width: 4px; border-color: var(--ink); }
+  .at-line__track small { position: absolute; top: -.35rem; left: 0; font-size: .6rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--at-muted); white-space: nowrap; }
+  .at-line__track a > span, .at-line__static > span { display: block; font-size: .82rem; font-weight: 650; line-height: 1.25; }
+  .at-line__track li.major a > span { font-weight: 850; }
+  .at-line__track a:hover > span { color: var(--pt-coral); }
+  .at-line__static em { display: inline-block; margin-top: .25rem; padding: .05rem .35rem; border: 1px dashed var(--at-muted); border-radius: 99px; font-size: .58rem; font-style: normal; font-weight: 800; text-transform: uppercase; color: var(--at-muted); }
+
+  /* Plate II */
+  .at-routes { display: grid; grid-template-columns: minmax(18rem, 26rem) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 4rem); padding: clamp(3rem, 6vw, 5rem) var(--gutter); background: var(--blue-dark); color: #f4f0e5; }
+  .at-routes .at-sys { color: var(--yellow); }
+  .at-routes h2 { font-size: clamp(2.6rem, 5vw, 4.4rem); font-weight: 850; letter-spacing: -.05em; line-height: .9; }
+  .at-routes__lede { margin: 1rem 0 0; font-family: var(--font-serif); font-size: 1.25rem; line-height: 1.4; color: color-mix(in srgb, #f4f0e5 82%, transparent); }
+  .at-routes__ops { display: flex; flex-wrap: wrap; gap: .4rem 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; font-size: .68rem; font-weight: 750; }
+  .at-routes__ops li::before { content: ''; display: inline-block; width: 1.4rem; height: .35rem; margin-right: .4rem; vertical-align: middle; border-radius: 1rem; background: var(--c); }
+  .at-routes__list { margin: 1.25rem 0 0; padding: 0; list-style: none; border-top: 1px solid color-mix(in srgb, #f4f0e5 25%, transparent); }
+  .at-routes__list li { display: flex; gap: .75rem; align-items: center; padding: .5rem 0; border-bottom: 1px solid color-mix(in srgb, #f4f0e5 14%, transparent); font-size: .82rem; font-weight: 600; }
+  .at-routes__list i { display: grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 3px solid var(--c); font-size: .56rem; font-style: normal; font-weight: 900; }
+  .at-routes .at-cta { background: var(--yellow); color: var(--ink); }
+  .at-routes__plate { margin: 0; padding: 1rem; border-radius: 1.25rem; background: #f4f0e5; color: var(--ink); align-self: center; }
+  .at-routes__plate svg { width: 100%; height: auto; }
+  .at-routes__path { fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+  .at-routes__stop { fill: #fff; stroke: var(--ink); stroke-width: 3; }
+  .at-routes__hub { fill: #fff; stroke: var(--ink); stroke-width: 3.5; }
+  .at-routes__label { font: 750 14px var(--font-sans); fill: var(--ink); paint-order: stroke; stroke: #f4f0e5; stroke-width: 5px; stroke-linejoin: round; }
+  .at-routes__plate figcaption { margin-top: .5rem; font-size: .66rem; font-weight: 650; color: var(--at-muted); }
+
+  /* notebook */
+  .at-notebook { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(18rem, .7fr); gap: clamp(2rem, 4vw, 4rem); padding: clamp(3.5rem, 7vw, 6rem) var(--gutter); background: #ece6d6; }
+  .at-page { position: relative; padding: clamp(1.75rem, 4vw, 3.5rem); padding-left: clamp(2.5rem, 5vw, 4.5rem); background: radial-gradient(circle, color-mix(in srgb, var(--blue) 40%, transparent) 1px, transparent 1.4px) 0 0 / 22px 22px, #fffdf6; box-shadow: 0 20px 55px rgba(39, 71, 82, .16); border-radius: 2px; }
+  .at-page::before { content: ''; position: absolute; left: 1.1rem; top: 1.5rem; bottom: 1.5rem; width: .7rem; background: radial-gradient(circle, #ece6d6 .32rem, transparent .34rem) 0 0 / .7rem 2.2rem repeat-y; }
+  .at-page h2 { max-width: 22ch; font-family: var(--font-serif); font-size: clamp(1.8rem, 3.4vw, 3rem); font-variation-settings: 'opsz' 60; font-weight: 450; letter-spacing: -.025em; line-height: 1.08; }
+  .at-page__intro { max-width: 56ch; margin: 1rem 0 0; color: var(--ink-soft); line-height: 1.65; }
+  .at-entries { margin: 2.25rem 0 0; padding: 0; list-style: none; }
+  .at-entries li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1.25rem; padding: 1.4rem 0; border-top: 1px dashed color-mix(in srgb, var(--ink) 40%, transparent); }
+  .at-stamp { display: grid; place-items: center; width: 5rem; height: 5rem; border: 3px double var(--pt-coral); border-radius: 50%; color: var(--pt-coral); transform: rotate(-9deg); }
+  .at-stamp b { font-size: 1.55rem; font-weight: 900; letter-spacing: -.05em; }
+  .at-entries li:nth-child(2) .at-stamp { border-color: var(--blue); color: var(--blue); transform: rotate(6deg); }
+  .at-entries li:nth-child(3) .at-stamp { border-color: #31835a; color: #31835a; transform: rotate(-3deg); }
+  .at-entries__meta { margin: 0; font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--at-muted); }
+  .at-entries h3 { margin: .35rem 0 .5rem; font-family: var(--font-sans); font-size: clamp(1.15rem, 1.7vw, 1.45rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.12; }
+  .at-entries h3 a:hover { color: var(--pt-coral); }
+  .at-entries__ev { margin: 0 0 .5rem; font-family: var(--font-serif); font-style: italic; color: var(--blue-dark); }
+  .at-entries li p:last-child { margin: 0; font-size: .9rem; line-height: 1.55; color: var(--ink-soft); }
+  .at-margin-quote { position: absolute; right: -1.5rem; bottom: 2rem; max-width: 12rem; margin: 0; padding: .8rem 1rem; background: var(--yellow); font-family: var(--font-serif); font-size: 1.15rem; font-style: italic; line-height: 1.2; transform: rotate(3deg); box-shadow: 2px 4px 0 rgba(0,0,0,.12); }
+
+  .at-specimens { display: grid; gap: 1.75rem; align-content: start; }
+  .at-specimens > p { margin: 0; }
+  .at-specimens__note { font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; margin-top: -.9rem !important; }
+  .at-specimen { position: relative; margin: 0; padding: .7rem .7rem 1rem; background: #fff; box-shadow: 0 10px 25px rgba(39, 71, 82, .18); transform: rotate(var(--r, -1.5deg)); }
+  .at-specimen::before { content: ''; position: absolute; top: -.7rem; left: 50%; width: 5.5rem; height: 1.4rem; transform: translateX(-50%) rotate(-3deg); background: color-mix(in srgb, var(--yellow) 60%, transparent); }
+  .at-specimen :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .at-specimen--taipei { --r: 2deg; width: 70%; justify-self: end; }
+  .at-specimen--taipei :global(img) { aspect-ratio: 3 / 4; object-position: center 40%; }
+  .at-specimen--esplanade { --r: -2.5deg; }
+  .at-specimen--baywalk { --r: 1.2deg; width: 88%; }
+  .at-specimen figcaption { margin-top: .6rem; font-family: var(--font-serif); font-size: .98rem; font-style: italic; line-height: 1.3; }
+  .at-specimen figcaption b { font-family: var(--font-sans); font-style: normal; font-size: .62rem; font-weight: 900; letter-spacing: .08em; color: var(--pt-coral); margin-right: .25rem; }
+  .at-specimen figcaption small { display: block; margin-top: .2rem; font-family: var(--font-sans); font-style: normal; font-size: .6rem; font-weight: 700; letter-spacing: .06em; color: var(--at-muted); }
+
+  /* writing waypoints */
+  .at-writing { padding: clamp(3.5rem, 7vw, 6rem) var(--gutter); }
+  .at-writing h2 { font-family: var(--font-serif); font-weight: 450; font-style: italic; letter-spacing: -.03em; }
+  .at-waypoints { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 2.25rem 0 0; padding: 0; list-style: none; }
+  .at-waypoints a { display: grid; gap: .4rem; height: 100%; padding: 1.1rem 1.2rem 1.3rem; border: 1px solid var(--pt-line); border-radius: 1rem; background: #fff; }
+  .at-waypoints a:hover { border-color: var(--pt-coral); box-shadow: 0 0 0 4px #fff0eb; }
+  .at-waypoints i { display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #31835a; color: #fff; font-style: normal; font-size: .7rem; font-weight: 900; }
+  .at-waypoints i span { transform: rotate(45deg); line-height: 1; }
+  .at-waypoints small { font-size: .62rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--at-muted); }
+  .at-waypoints strong { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 500; line-height: 1.2; }
+
+  /* foot */
+  .at-foot { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 2rem; padding: clamp(3.5rem, 7vw, 6rem) var(--gutter) 2.5rem; background: linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 3rem 3rem, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 3rem 3rem, var(--sky); }
+  .at-foot__head { max-width: 18ch; margin: 0; font-size: clamp(2.2rem, 4.6vw, 4.2rem); font-weight: 850; letter-spacing: -.05em; line-height: .95; }
+  .at-foot > div > p:nth-child(3) { max-width: 44ch; margin: 1.1rem 0 0; font-family: var(--font-serif); font-size: 1.2rem; font-style: italic; color: var(--blue-dark); }
+  .at-foot__links { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1.5rem; font-size: .76rem; font-weight: 800; }
+  .at-foot__links a:first-child { padding: .7rem 1.1rem; border-radius: 99px; background: var(--ink); color: #fff; }
+  .at-foot__links a { align-self: center; }
+  .at-foot__scale { display: flex; align-items: center; margin: 0; font-size: .6rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--blue-dark); }
+  .at-foot__scale span { width: 2.5rem; height: .45rem; border: 1.5px solid var(--blue-dark); }
+  .at-foot__scale span:nth-child(odd) { background: var(--blue-dark); }
+  .at-foot__scale span:last-of-type { margin-right: .6rem; }
+
+  @media (max-width: 72rem) {
+    .at-line { grid-template-columns: 1fr; gap: 1rem; }
+    .at-notebook { grid-template-columns: 1fr; }
+    .at-specimens { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .at-specimens > p { grid-column: 1 / -1; }
+    .at-specimen--taipei, .at-specimen--baywalk { width: auto; }
+    .at-margin-quote { right: 1rem; bottom: -1.5rem; }
+  }
+  @media (max-width: 60rem) {
+    .at-hero { grid-template-columns: 1fr; min-height: 0; }
+    .at-hero__rail { border-right: 0; padding-right: var(--gutter); }
+    .at-plate { order: -1; }
+    .at-legend { order: 2; }
+    .at-routes { grid-template-columns: 1fr; }
+    .at-waypoints { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 44rem) {
+    .at-top nav { gap: .3rem 1rem; }
+    .at-plate { padding: .5rem; }
+    .at-plate__label { font-size: 22px; }
+    .at-plate__sub { display: none; }
+    .at-legend a { grid-template-columns: 2.2rem 1fr; }
+    .at-legend__coord { display: none; }
+    /* lines run vertically on small screens */
+    .at-line__track { grid-auto-flow: row; padding-left: 1.6rem; }
+    .at-line__track::before { left: .3rem; right: auto; top: 0; bottom: 0; width: .5rem; height: auto; }
+    .at-line__track li { padding: 0 0 1rem .9rem; }
+    .at-line__track li::before { left: -1.6rem; top: .15rem; }
+    .at-line__track li.major::before { left: -1.8rem; top: 0; }
+    .at-line__track small { position: static; display: block; }
+    .at-specimens { grid-template-columns: 1fr; }
+    .at-waypoints { grid-template-columns: 1fr; }
+    .at-entries li { grid-template-columns: 1fr; gap: .6rem; }
+    .at-stamp { width: 4rem; height: 4rem; }
+    .at-stamp b { font-size: 1.2rem; }
+    .at-margin-quote { position: static; margin-top: 1.5rem; max-width: none; transform: rotate(-1deg); }
+  }
+</style>

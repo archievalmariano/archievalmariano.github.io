@@ -1,0 +1,86 @@
+---
+// Layout for the gated homepage explorations ONLY (src/pages/preview/home/).
+// Deliberately independent of BaseLayout/BaseHead so that previews:
+//   • are never indexed (robots noindex, no canonical, no Open Graph);
+//   • never fire production analytics;
+//   • can load Newsreader's optical-size axis (opsz) without changing the
+//     production font setup.
+// Each variant renders its own masthead and footer; this layout only adds the
+// reviewer's direction switcher.
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { homeVariants } from '../data/homePreview';
+
+interface Props {
+  title: string;
+  current?: string; // variant slug, or undefined on the preview index
+  theme?: string; // theme-color for the browser chrome
+}
+
+const { title, current, theme = '#f4f0e5' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content={theme} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title} · Homepage preview</title>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <aside class="preview-bar" aria-label="Homepage preview">
+      <a class="preview-bar__label" href="/preview/home/">Preview <span>not production</span></a>
+      <nav aria-label="Homepage directions">
+        <ul>
+          {
+            homeVariants.map((v) => (
+              <li>
+                <a href={`/preview/home/${v.slug}/`} aria-current={current === v.slug ? 'page' : undefined}>
+                  <b>{v.number}</b> {v.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </aside>
+    <main id="main">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style>
+  .preview-bar {
+    position: relative;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem 1.5rem;
+    flex-wrap: wrap;
+    padding: .45rem var(--gutter);
+    background: #0d1417;
+    color: #f4f0e5;
+    font-family: var(--font-sans);
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .preview-bar a { text-decoration: none; color: inherit; }
+  .preview-bar__label span { margin-left: .5rem; padding: .15rem .4rem; background: var(--yellow); color: var(--ink); }
+  .preview-bar nav { min-width: 0; max-width: 100%; }
+  .preview-bar ul { display: flex; gap: 1.1rem; margin: 0; padding: 0; list-style: none; overflow-x: auto; }
+  .preview-bar li a { white-space: nowrap; opacity: .62; }
+  .preview-bar li a:hover { color: var(--yellow); opacity: 1; }
+  .preview-bar li a[aria-current='page'] { opacity: 1; color: var(--yellow); }
+  .preview-bar b { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; margin-right: .2rem; border: 1px solid currentColor; font-size: .6rem; }
+  main { display: block; }
+</style>

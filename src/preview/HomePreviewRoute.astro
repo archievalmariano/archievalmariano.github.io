@@ -1,0 +1,72 @@
+---
+// GATED homepage explorations → /preview/home/[...variant]
+//
+// This file deliberately lives OUTSIDE src/pages: astro.config.mjs injects it
+// as a route only when HOME_PREVIEW=true is set locally with no CI indicator
+// (src/preview/gate.mjs). In every ordinary build — including GitHub Actions —
+// it is not part of the build at all. getStaticPaths() re-checks the gate as a
+// second, independent lock.
+import PreviewLayout from '../layouts/PreviewLayout.astro';
+import Broadsheet from '../components/home-preview/Broadsheet.astro';
+import Ledger from '../components/home-preview/Ledger.astro';
+import Atlas from '../components/home-preview/Atlas.astro';
+import { homePreviewEnabled, homeVariants } from '../data/homePreview';
+
+export function getStaticPaths() {
+  if (!homePreviewEnabled()) return [];
+  return [
+    { params: { variant: undefined } }, // /preview/home/ — the review index
+    ...homeVariants.map((v) => ({ params: { variant: v.slug } })),
+  ];
+}
+
+const { variant } = Astro.params;
+const meta = homeVariants.find((v) => v.slug === variant);
+const themes: Record<string, string> = { broadsheet: '#f4f0e5', ledger: '#f7f4ea', atlas: '#d7edf6' };
+---
+
+<PreviewLayout title={meta ? meta.name : 'Three directions'} current={variant} theme={variant ? themes[variant] : undefined}>
+  {variant === 'broadsheet' && <Broadsheet />}
+  {variant === 'ledger' && <Ledger />}
+  {variant === 'atlas' && <Atlas />}
+  {
+    !variant && (
+      <section class="preview-index">
+        <p class="preview-index__kicker">archievalmariano.com · homepage redesign · exploration 01</p>
+        <h1>Three directions for a personal archive.</h1>
+        <p class="preview-index__note">
+          Preview-only. Built from the site’s existing content; the production homepage is unchanged.
+          These pages are generated only when <code>HOME_PREVIEW=true</code> is set outside CI.
+        </p>
+        <ol>
+          {homeVariants.map((v) => (
+            <li>
+              <a href={`/preview/home/${v.slug}/`}>
+                <span class="preview-index__letter">{v.number}</span>
+                <span>
+                  <strong>{v.name}</strong>
+                  <span>{v.summary}</span>
+                </span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+</PreviewLayout>
+
+<style>
+  .preview-index { width: min(100%, 64rem); margin: 0 auto; padding: clamp(3rem, 8vw, 7rem) var(--gutter); }
+  .preview-index__kicker { font-size: .72rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+  .preview-index h1 { max-width: 16ch; font-size: clamp(2.6rem, 6vw, 5rem); font-weight: 500; letter-spacing: -.03em; line-height: 1; }
+  .preview-index__note { max-width: 44rem; margin-top: 1.5rem; color: var(--ink-soft); }
+  .preview-index code { font-size: .9em; background: var(--paper-raised); padding: .1em .35em; }
+  .preview-index ol { margin: 3rem 0 0; padding: 0; list-style: none; border-top: var(--heavy-rule); }
+  .preview-index li { border-bottom: 1px solid var(--ink); }
+  .preview-index li a { display: grid; grid-template-columns: 3.5rem 1fr 1.5rem; gap: 1.5rem; align-items: start; padding: 1.75rem 0; text-decoration: none; }
+  .preview-index__letter { display: grid; place-items: center; width: 3rem; height: 3rem; border: 2px solid var(--ink); font-weight: 800; }
+  .preview-index li strong { display: block; font-family: var(--font-serif); font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 500; line-height: 1.05; }
+  .preview-index li strong + span { display: block; max-width: 48ch; margin-top: .5rem; color: var(--ink-soft); }
+</style>
