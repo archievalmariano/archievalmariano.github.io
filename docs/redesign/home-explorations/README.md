@@ -1,4 +1,6 @@
-# Homepage explorations — three directions
+# Homepage explorations — four directions
+
+Status: A–C reviewed and not approved (metaphors read too literally); D added in response. Nothing here is approved for production.
 
 Exploration 01 for repositioning archievalmariano.com from a professional portfolio
 into a personal archive: professional work, independent software, experiments,
@@ -12,8 +14,10 @@ they are never part of a production or CI build (see [Gate](#gate)).
 | A · Broadsheet | `/preview/home/broadsheet/` | [desktop](broadsheet-desktop-full.jpg) · [mobile](broadsheet-mobile-full.jpg) |
 | B · Index / Ledger | `/preview/home/ledger/` | [desktop](ledger-desktop-full.jpg) · [mobile](ledger-mobile-full.jpg) |
 | C · Field Notebook / Atlas | `/preview/home/atlas/` | [desktop](atlas-desktop-full.jpg) · [mobile](atlas-mobile-full.jpg) |
+| **D · Quiet Personal Site** | `/preview/home/quiet/` | [desktop](quiet-desktop-full.jpg) · [mobile](quiet-mobile-full.jpg) |
+| *Baseline: current production homepage* | `/` | [desktop](production-desktop-full.jpg) · [mobile](production-mobile-full.jpg) |
 
-`/preview/home/` is a short index of the three. A dark bar at the top of every preview
+`/preview/home/` is a short index of the four. A dark bar at the top of every preview
 page switches between directions.
 
 ## Running the previews
@@ -140,6 +144,68 @@ photography into one visual language. **Risks:** the most art-directed, so the
 hardest to keep maintainable. The regional plate only stays meaningful if more
 located material is added over time.
 
+## D · Quiet Personal Site
+
+*Restraint over concept: a careful evolution of the current homepage.*
+
+Review of A–C found that each took its metaphor too literally. Broadsheet made
+the site read like a publication about its owner. Ledger over-classified it.
+Atlas used maps and transit diagrams where they didn't explain anything. D drops
+the metaphor and starts again from the production homepage.
+
+**What stays from production:** the paper and ink palette, Inter for headings,
+Newsreader for reading text, hairline rules, the coral dot beside the name, the
+same cover copy in the same order, the warm photography, and the dark blue
+closing band.
+
+**What changes:**
+
+- **The name is modest.** It is a small wordmark in a plain header, the same
+  size as today. The “Digital strategy · Audience systems” descriptor and the
+  uppercase, letter-spaced nav are gone; nav links are sentence case.
+- **The cover is conversational.** The headline drops from about 6.5rem to about
+  4rem. The portrait shrinks to about 20rem and loses the yellow offset block and
+  ink caption bar. The two calls to action become text links.
+- **Projects come straight after the introduction.** The Desk section uses the
+  Desk page’s own introduction. DOGEAR leads with its device photograph, ON POINT
+  and GOTO follow as smaller entries, and Tools is a single line. The two Pinned
+  prototypes sit beneath, with the Work page’s own caveat that they are not
+  launched products.
+- **Writing is a reading list.** The homepage’s heading and aside sit beside the
+  three featured pieces, set in the serif with their published descriptions.
+- **Personal interests have a place on the homepage.** “Away from the
+  dashboards” brings About’s own copy (“Pretends to be a photographer and a good
+  writer”, the Instagram and travel paragraphs) next to the three photographs it
+  describes, with the published captions.
+- **Professional work is complete but plainer.** The throughline is the
+  section’s heading and text. The three selected case studies follow as plain
+  entries with year, category, title, description and organisation.
+- **Each content type gets its own composition:** device photos with text for
+  projects, a typographic list for writing, a small gallery for photographs, and
+  a two-column essay-and-list for work. There are no chapter numbers, evidence
+  stat panels, coloured case-study blocks, maps or decorative labels.
+
+**Deliberately left out of D** (all still on production and elsewhere on the
+site; listed so nothing disappears silently):
+
+- the “00 Introduction”-style chapter labels;
+- the eyebrow “Digital Strategy & Audience Growth · Philippines”;
+- the case-study evidence panels (05 / ≈40 / 01 and their marks);
+- the full-width Singapore panorama;
+- the per-entry “Read the story” links, since titles are the links.
+
+Any of these can come back if you want them.
+
+**Small changes outside the existing copy:** the Desk heading uses the page name
+“Desk”. Link labels such as “Everything on the desk →” and “More about me →” are
+functional only. Section order puts Desk, Writing and personal interests before
+Work; the cover copy still opens with the professional statement, so the work
+stays visible from the top.
+
+**Open questions for review:** whether Work should move above Writing; whether
+Services belongs in the main nav of a personal site; and whether the Desk band
+(the existing `--paper-raised` tone) is enough emphasis.
+
 ## Shared technical notes
 
 - **Fonts.** The previews load Newsreader’s optical-size axis (`opsz`) instead of the
@@ -164,5 +230,5 @@ located material is added over time.
   excludes `/preview/`.
 - `scripts/home-preview-gate-test.sh` checks the default, non-affirmative and
   CI-present states (each must be byte-identical to the default production build,
-  with no preview HTML, URL or markup), plus the enabled state (four pages render,
+  with no preview HTML, URL or markup), plus the enabled state (five pages render,
   noindex, no analytics, not in the sitemap, homepage markup unchanged).

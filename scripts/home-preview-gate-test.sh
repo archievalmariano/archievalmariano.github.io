@@ -12,7 +12,7 @@
 #   OFF  HOME_PREVIEW set to a non-affirmative value     → previews absent
 #   CI   CI / GITHUB_ACTIONS PRESENT with ANY value,     → previews absent
 #        even with HOME_PREVIEW=true
-#   ON   HOME_PREVIEW=true, no CI indicator              → all four pages render,
+#   ON   HOME_PREVIEW=true, no CI indicator              → all five pages render,
 #                                                          noindex, no analytics,
 #                                                          not in the sitemap
 #   FINAL production build                               → previews absent
@@ -46,6 +46,7 @@ assert_no_preview() {
   assert_nogrep dist "bs-mast"      # Broadsheet-only class
   assert_nogrep dist "lg-holdings"  # Ledger-only class
   assert_nogrep dist "at-plate"     # Atlas-only class
+  assert_nogrep dist "qs-intro"     # Quiet-only class
 }
 
 build() { # $1 = label, rest = env assignments
@@ -88,7 +89,7 @@ assert_no_preview
 
 # ── ON: deliberate local preview renders ────────────────────────────────────
 build "ON local preview" HOME_PREVIEW=true
-for p in "" broadsheet/ ledger/ atlas/; do
+for p in "" broadsheet/ ledger/ atlas/ quiet/; do
   f="dist/preview/home/${p}index.html"
   assert_exist "$f"
   assert_grep  "$f" 'name="robots" content="noindex, nofollow, noarchive"'
@@ -101,19 +102,25 @@ assert_grep dist/preview/home/ledger/index.html "lg-holdings"
 assert_grep dist/preview/home/ledger/index.html "WK·01"
 assert_grep dist/preview/home/atlas/index.html "at-plate"
 assert_grep dist/preview/home/atlas/index.html "Balagtas ↔ TriNoma"
+assert_grep dist/preview/home/quiet/index.html "qs-intro"
+assert_grep dist/preview/home/quiet/index.html "Away from the dashboards"
+assert_grep dist/preview/home/quiet/index.html "Pretends to be a photographer and a good writer."
 for sm in dist/sitemap-0.xml dist/sitemap-index.xml; do
   [ -f "$sm" ] && assert_nogrep "$sm" "/preview/"
 done
 # Unpublished DESK collections stay out of the previews.
 assert_nogrep dist/preview "/desk/artifacts"
 assert_nogrep dist/preview "/desk/field-notes"
-# The homepage markup is unchanged by the preview build. (Only stylesheet chunk
-# names may differ: Vite re-splits shared CSS when the extra route exists. A
-# preview build is never deployed; production builds are compared byte-for-byte
-# above.)
-strip_css() { sed 's/></>\n</g' "$1" | grep -v 'rel="stylesheet"'; }
+# The homepage markup is unchanged by the preview build. (Only CSS delivery may
+# differ: Vite re-splits shared stylesheets, and components reused by a preview
+# — e.g. Footer — can have their CSS inlined. A preview build is never deployed;
+# production builds are compared byte-for-byte above.)
+strip_css() {
+  sed 's/></>\n</g' "$1" | grep -v 'rel="stylesheet"' |
+    awk '/^<style>/{skip=1} !skip{print} /<\/style>$/{skip=0}'
+}
 if diff -q <(strip_css dist/index.html) <(strip_css "${TMPDIR:-/tmp}/home_index_default.html") >/dev/null; then
-  ok "homepage markup identical with and without HOME_PREVIEW (stylesheet links excluded)"
+  ok "homepage markup identical with and without HOME_PREVIEW (CSS delivery excluded)"
 else
   bad "homepage markup differs when HOME_PREVIEW=true"
 fi

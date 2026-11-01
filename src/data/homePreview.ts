@@ -31,4 +31,11 @@ export const homeVariants: HomeVariant[] = [
     summary:
       'An exploratory plate. Places from the archive plotted on a graticule, the work drawn as transit lines, photographs pinned into a notebook.',
   },
+  {
+    slug: 'quiet',
+    number: 'D',
+    name: 'Quiet Personal Site',
+    summary:
+      'A restrained evolution of the current homepage. A modest name, the same type and warmth, and more room for projects, writing and photographs alongside the work.',
+  },
 ];

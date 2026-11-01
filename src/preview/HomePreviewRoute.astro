@@ -10,6 +10,7 @@ import PreviewLayout from '../layouts/PreviewLayout.astro';
 import Broadsheet from '../components/home-preview/Broadsheet.astro';
 import Ledger from '../components/home-preview/Ledger.astro';
 import Atlas from '../components/home-preview/Atlas.astro';
+import Quiet from '../components/home-preview/Quiet.astro';
 import { homePreviewEnabled, homeVariants } from '../data/homePreview';
 
 export function getStaticPaths() {
@@ -22,18 +23,19 @@ export function getStaticPaths() {
 
 const { variant } = Astro.params;
 const meta = homeVariants.find((v) => v.slug === variant);
-const themes: Record<string, string> = { broadsheet: '#f4f0e5', ledger: '#f7f4ea', atlas: '#d7edf6' };
+const themes: Record<string, string> = { broadsheet: '#f4f0e5', ledger: '#f7f4ea', atlas: '#d7edf6', quiet: '#f4f0e5' };
 ---
 
-<PreviewLayout title={meta ? meta.name : 'Three directions'} current={variant} theme={variant ? themes[variant] : undefined}>
+<PreviewLayout title={meta ? meta.name : 'Homepage directions'} current={variant} theme={variant ? themes[variant] : undefined}>
   {variant === 'broadsheet' && <Broadsheet />}
   {variant === 'ledger' && <Ledger />}
   {variant === 'atlas' && <Atlas />}
+  {variant === 'quiet' && <Quiet />}
   {
     !variant && (
       <section class="preview-index">
         <p class="preview-index__kicker">archievalmariano.com · homepage redesign · exploration 01</p>
-        <h1>Three directions for a personal archive.</h1>
+        <h1>Directions for a personal archive.</h1>
         <p class="preview-index__note">
           Preview-only. Built from the site’s existing content; the production homepage is unchanged.
           These pages are generated only when <code>HOME_PREVIEW=true</code> is set outside CI.

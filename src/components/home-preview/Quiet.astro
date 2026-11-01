@@ -1,0 +1,392 @@
+---
+// DIRECTION D — QUIET PERSONAL SITE
+// A restrained evolution of the current production homepage, not a new
+// concept. Same palette, type families, rules and photography; the name is
+// modest; chapter numbers, evidence graphics and colour-block panels are gone.
+// Independent projects, writing and personal interests move up and get their
+// own compositions; professional work stays as a complete, plainer section.
+// All copy is reused verbatim from the homepage, About, Desk and Work pages.
+import { Image } from 'astro:assets';
+import Footer from '../Footer.astro';
+import {
+  closing,
+  cover,
+  experiments,
+  isExternal,
+  loadArchive,
+  photos,
+  portraitPhoto,
+  siteLinks,
+  throughline,
+  workHref,
+  workIntro,
+  writingHref,
+  writingIntro,
+  writingTitle,
+} from './archive';
+
+const { featuredWork, featuredWriting, projects } = await loadArchive();
+const deskProjects = projects.filter((p) => p.data.homepage);
+const [leadProject, ...otherProjects] = deskProjects;
+const tools = projects.find((p) => !p.data.homepage);
+const photo = (k: string) => photos.find((p) => p.key === k)!;
+const taipei = photo('taipei');
+const baywalk = photo('baywalk');
+const esplanade = photo('esplanade');
+
+const nav = [
+  { href: '/work', label: 'Work' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/desk', label: 'Desk' },
+  { href: '/about', label: 'About' },
+  { href: '/services', label: 'Services' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<div class="qs">
+  <header class="qs-head">
+    <div class="qs-wrap qs-head__inner">
+      <a href="/preview/home/quiet/" class="qs-name">Archieval Mariano</a>
+      <nav aria-label="Primary">
+        <ul>
+          {nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Introduction: the homepage cover, at a conversational size -->
+  <section class="qs-wrap qs-intro" aria-labelledby="qs-title">
+    <div class="qs-intro__copy">
+      <h1 id="qs-title">{cover.headline}</h1>
+      <p class="qs-intro__statement">{cover.statement}</p>
+      <p class="qs-intro__body">{cover.intro}</p>
+      <p class="qs-links">
+        <a href="/about">A little about me <span aria-hidden="true">→</span></a>
+        <a href="#qs-work">Explore my work <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+    <figure class="qs-intro__portrait">
+      <Image
+        src={portraitPhoto.src}
+        alt={portraitPhoto.alt}
+        widths={[400, 600, 800]}
+        sizes="(max-width: 52rem) 70vw, 22rem"
+        format="webp"
+        quality={76}
+        loading="eager"
+      />
+    </figure>
+  </section>
+
+  <!-- Desk: independent projects, shown with their own device photographs -->
+  <section class="qs-section qs-desk" aria-labelledby="qs-desk-title">
+    <div class="qs-wrap">
+      <header class="qs-section__head">
+        <h2 id="qs-desk-title">Desk</h2>
+        <p>
+          Things from my digital desk that I’ve decided to share. Some can be useful,
+          definitely specific, and occasionally unnecessary.
+        </p>
+      </header>
+
+      <div class="qs-desk__grid">
+        <article class="qs-project qs-project--lead">
+          <a class="qs-project__image" href={`/desk/${leadProject.data.slug}/`} tabindex="-1" aria-hidden="true">
+            {leadProject.data.heroImage && (
+              <Image src={leadProject.data.heroImage} alt="" widths={[420, 640, 840]} sizes="(max-width: 52rem) 100vw, 30rem" format="webp" quality={74} />
+            )}
+          </a>
+          <div class="qs-project__text">
+            <h3><a href={`/desk/${leadProject.data.slug}/`}>{leadProject.data.name}</a></h3>
+            {leadProject.data.subtitle && <p class="qs-project__subtitle">{leadProject.data.subtitle}</p>}
+            <p>{leadProject.data.purpose}</p>
+            <p class="qs-meta">{leadProject.data.facts.join(' · ')}</p>
+          </div>
+        </article>
+
+        <div class="qs-desk__side">
+          {
+            otherProjects.map((p) => (
+              <article class="qs-project">
+                <a class="qs-project__image" href={`/desk/${p.data.slug}/`} tabindex="-1" aria-hidden="true">
+                  {p.data.heroImage && <Image src={p.data.heroImage} alt="" widths={[200, 300, 400]} sizes="9rem" format="webp" quality={72} />}
+                </a>
+                <div class="qs-project__text">
+                  <h3><a href={`/desk/${p.data.slug}/`}>{p.data.name}</a></h3>
+                  <p>{p.data.purpose}</p>
+                  <p class="qs-meta">{p.data.facts.join(' · ')}</p>
+                </div>
+              </article>
+            ))
+          }
+          {tools && (
+            <p class="qs-desk__tools">
+              <a href={`/desk/${tools.data.slug}/`}>{tools.data.name}</a>: {tools.data.purpose}
+            </p>
+          )}
+
+        </div>
+      </div>
+
+      <div class="qs-prototypes">
+        <div>
+          <h3>Product experiments</h3>
+          <p class="qs-prototypes__note">
+            Independent prototypes exploring product ideas and interactions. These are not
+            launched products or claims of measured outcomes.
+          </p>
+        </div>
+        <ul>
+          {
+            experiments.map((x) => (
+              <li>
+                <a href={x.href} target="_blank" rel="noopener">
+                  {x.title} <span aria-hidden="true">↗</span>
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+                <span>{x.description}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <p class="qs-more"><a href="/desk">Everything on the desk <span aria-hidden="true">→</span></a></p>
+    </div>
+  </section>
+
+  <!-- Writing: a reading list, set in the serif -->
+  <section class="qs-section qs-writing" aria-labelledby="qs-writing-title">
+    <div class="qs-wrap qs-writing__grid">
+      <header class="qs-writing__head">
+        <h2 id="qs-writing-title">{writingIntro.title}</h2>
+        <p>{writingIntro.aside}</p>
+        <p class="qs-more"><a href="/writing">All writing <span aria-hidden="true">→</span></a></p>
+      </header>
+      <ul class="qs-reading">
+        {
+          featuredWriting.map((e) => (
+            <li>
+              <a href={writingHref(e)} {...(isExternal(e) ? { target: '_blank', rel: 'noopener' } : {})}>
+                <strong>
+                  {writingTitle(e)}
+                  {isExternal(e) && <span aria-hidden="true"> ↗</span>}
+                </strong>
+                <span class="qs-reading__desc">{e.data.description}</span>
+                <span class="qs-meta">{[e.data.publisher, e.data.format].filter(Boolean).join(' · ')}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Away from the dashboards: About copy beside the photographs it describes -->
+  <section class="qs-section qs-away" aria-labelledby="qs-away-title">
+    <div class="qs-wrap qs-away__grid">
+      <div class="qs-away__copy">
+        <h2 id="qs-away-title">Away from the dashboards</h2>
+        <p class="qs-away__lead">Pretends to be a photographer and a good writer.</p>
+        <p>
+          That is how I describe myself on Instagram, where I post photographs and the
+          occasional poem or piece of prose. It captures my discomfort with calling myself
+          a photographer, or even a good writer, despite spending years taking photographs
+          and writing.
+        </p>
+        <p>
+          In my twenties, I built trips around hostels and long journeys over land, saving
+          on comfort so I could spend more on experience. I still travel, but I no longer
+          treat discomfort as proof that a trip mattered. I move more slowly now, chase
+          fewer attractions, and leave more room to notice what is actually there.
+        </p>
+        <p class="qs-more"><a href="/about">More about me <span aria-hidden="true">→</span></a></p>
+      </div>
+
+      <div class="qs-photos" aria-label="Selected photographs from my personal archive" oncontextmenu="return false">
+        <figure class="qs-photo qs-photo--tall">
+          <Image src={taipei.src} alt={taipei.alt} widths={[360, 540, 720]} sizes="(max-width: 52rem) 45vw, 18rem" format="webp" quality={74} draggable="false" />
+          <figcaption>{taipei.caption}</figcaption>
+        </figure>
+        <figure class="qs-photo">
+          <Image src={baywalk.src} alt={baywalk.alt} widths={[480, 720, 960]} sizes="(max-width: 52rem) 50vw, 26rem" format="webp" quality={74} draggable="false" />
+          <figcaption>{baywalk.caption}</figcaption>
+        </figure>
+        <figure class="qs-photo">
+          <Image src={esplanade.src} alt={esplanade.alt} widths={[480, 720, 960]} sizes="(max-width: 52rem) 50vw, 26rem" format="webp" quality={74} draggable="false" />
+          <figcaption>{esplanade.caption}</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work: the throughline, then the selected case studies as plain entries -->
+  <section class="qs-section qs-work" id="qs-work" aria-labelledby="qs-work-title">
+    <div class="qs-wrap qs-work__grid">
+      <header class="qs-work__head">
+        <h2 id="qs-work-title">{throughline.title}</h2>
+        {throughline.paragraphs.map((p) => <p>{p}</p>)}
+      </header>
+
+      <div class="qs-work__list">
+        <p class="qs-work__intro"><strong>{workIntro.title}</strong> {workIntro.aside}</p>
+        <ul>
+          {
+            featuredWork.map((e) => (
+              <li>
+                <p class="qs-meta">{[e.data.year, e.data.category].filter(Boolean).join(' · ')}</p>
+                <h3><a href={workHref(e.slug)}>{e.data.title}</a></h3>
+                <p>{e.data.shortDescription}</p>
+                <p class="qs-meta">{e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="qs-more"><a href="/work">See all work <span aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closing -->
+  <section class="qs-section qs-closing" aria-labelledby="qs-closing-title">
+    <div class="qs-wrap qs-closing__inner">
+      <h2 id="qs-closing-title">{closing.title}</h2>
+      <div>
+        <p>{closing.body}</p>
+        <p class="qs-links">
+          <a href="/about">Read about me <span aria-hidden="true">→</span></a>
+          <a href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
+          <a href={siteLinks.linkedin} target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</div>
+
+<style>
+  .qs { color: var(--ink); }
+  .qs-wrap { width: min(100%, 76rem); margin-inline: auto; padding-inline: var(--gutter); }
+
+  /* Shared text treatments, taken from the production homepage at smaller sizes */
+  .qs h2 { font-family: var(--font-sans); font-size: clamp(1.7rem, 2.6vw, 2.5rem); font-weight: 740; letter-spacing: -.04em; line-height: 1.05; }
+  .qs h3 { font-family: var(--font-sans); font-weight: 720; letter-spacing: -.025em; line-height: 1.15; }
+  .qs h3 a { text-decoration: none; }
+  .qs-meta { margin: 0; font-size: .74rem; font-weight: 650; letter-spacing: .02em; color: var(--ink-faint); }
+  .qs-links { display: flex; flex-wrap: wrap; gap: .6rem 1.75rem; margin: 1.75rem 0 0; }
+  .qs-links a, .qs-more a { font-size: .86rem; font-weight: 700; text-decoration-color: var(--rule); text-underline-offset: .3em; }
+  .qs-links a:hover, .qs-more a:hover { text-decoration-color: var(--accent); }
+  .qs-more { margin: 2rem 0 0; }
+
+  /* Header — the wordmark is the same size as the production one */
+  .qs-head { border-bottom: 1px solid var(--rule); }
+  .qs-head__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; padding-block: 1.1rem; }
+  .qs-name { font-size: 1.02rem; font-weight: 780; letter-spacing: -.03em; text-decoration: none; }
+  .qs-name::before { content: ''; display: inline-block; width: .55rem; aspect-ratio: 1; margin-right: .5rem; border-radius: 50%; background: var(--coral); }
+  .qs-head ul { display: flex; flex-wrap: wrap; gap: .3rem 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .qs-head nav a { font-size: .86rem; font-weight: 560; color: var(--ink-soft); text-decoration: none; }
+  .qs-head nav a:hover { color: var(--accent); }
+
+  /* Introduction */
+  .qs-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(14rem, 20rem); gap: clamp(2rem, 7vw, 7rem); align-items: end; padding-top: clamp(3rem, 8vw, 6.5rem); padding-bottom: clamp(3rem, 7vw, 5.5rem); }
+  .qs-intro h1 { max-width: 16ch; font-family: var(--font-sans); font-size: clamp(2.4rem, 4.6vw, 4.1rem); font-weight: 740; letter-spacing: -.05em; line-height: 1; }
+  .qs-intro__statement { max-width: 32rem; margin: 1.5rem 0 0; font-family: var(--font-serif); font-size: clamp(1.25rem, 1.8vw, 1.55rem); line-height: 1.42; }
+  .qs-intro__body { max-width: 36rem; margin: 1rem 0 0; line-height: 1.65; color: var(--ink-soft); }
+  .qs-intro__portrait { margin: 0; }
+  .qs-intro__portrait :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 47% center; filter: saturate(.85) contrast(1.03); border-radius: 2px; }
+
+  /* Sections */
+  .qs-section { padding-block: clamp(3.5rem, 7vw, 6rem); border-top: 1px solid var(--rule); }
+  .qs-section__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1rem clamp(2rem, 6vw, 6rem); align-items: baseline; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .qs-section__head p { max-width: 36rem; margin: 0; font-family: var(--font-serif); font-size: clamp(1.1rem, 1.5vw, 1.3rem); line-height: 1.5; color: var(--ink-soft); }
+
+  /* Desk */
+  .qs-desk { background: var(--paper-raised); border-top: 0; }
+  .qs-desk__grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+  .qs-project { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+  .qs-project + .qs-project { margin-top: 1.75rem; padding-top: 1.75rem; border-top: 1px solid var(--rule); }
+  .qs-project__image { display: block; }
+  .qs-project__image :global(img) { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2px; }
+  .qs-project h3 { font-size: 1.25rem; }
+  .qs-project h3 a:hover { color: var(--accent); }
+  .qs-project__text > p:not(.qs-meta):not(.qs-project__subtitle) { margin: .4rem 0 .5rem; font-family: var(--font-serif); font-size: 1.08rem; line-height: 1.45; }
+  .qs-project--lead { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: 1.5rem; align-items: end; }
+  .qs-project--lead h3 { font-size: clamp(1.6rem, 2.4vw, 2.1rem); }
+  .qs-project__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
+  .qs-desk__tools { margin: 1.75rem 0 0; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .92rem; color: var(--ink-soft); }
+  .qs-desk__tools a { font-weight: 700; color: var(--ink); }
+  .qs-prototypes { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 0 clamp(2rem, 5vw, 4.5rem); margin-top: clamp(2.5rem, 5vw, 3.5rem); padding-top: 1.5rem; border-top: 2px solid var(--ink); }
+  .qs-prototypes h3 { font-size: 1rem; }
+  .qs-prototypes__note { max-width: 30rem; margin: .4rem 0 0; font-size: .9rem; color: var(--ink-faint); }
+  .qs-prototypes ul { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .qs-prototypes li { display: grid; align-content: start; gap: .3rem; }
+  .qs-prototypes li a { font-weight: 700; }
+  .qs-prototypes li > span { font-size: .9rem; line-height: 1.5; color: var(--ink-soft); }
+
+  /* Writing */
+  .qs-writing__grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .qs-writing__head h2 { max-width: 20ch; }
+  .qs-writing__head > p:not(.qs-more) { max-width: 30rem; margin: 1.25rem 0 0; font-family: var(--font-serif); font-size: 1.15rem; line-height: 1.5; color: var(--ink-soft); }
+  .qs-reading { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
+  .qs-reading li { border-bottom: 1px solid var(--rule); }
+  .qs-reading a { display: grid; gap: .45rem; padding: 1.5rem 0; text-decoration: none; }
+  .qs-reading strong { font-family: var(--font-serif); font-size: clamp(1.35rem, 2vw, 1.75rem); font-weight: 520; letter-spacing: -.015em; line-height: 1.15; }
+  .qs-reading a:hover strong { color: var(--accent); }
+  .qs-reading__desc { max-width: 52ch; font-size: .95rem; line-height: 1.55; color: var(--ink-soft); }
+
+  /* Away from the dashboards */
+  .qs-away__grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 5.5rem); align-items: start; }
+  .qs-away__copy > p:not(.qs-more) { max-width: 36rem; font-family: var(--font-serif); font-size: clamp(1.08rem, 1.4vw, 1.22rem); line-height: 1.6; }
+  .qs-away__lead { margin: 1.25rem 0 1.25rem; font-size: clamp(1.45rem, 2.2vw, 1.95rem) !important; line-height: 1.22 !important; }
+  .qs-photos { display: grid; grid-template-columns: minmax(0, .62fr) minmax(0, 1fr); gap: 1rem; user-select: none; }
+  .qs-photo { margin: 0; }
+  .qs-photo--tall { grid-row: span 2; }
+  .qs-photo :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 2px; pointer-events: none; }
+  .qs-photo--tall :global(img) { aspect-ratio: auto; height: calc(100% - 2.2rem); min-height: 22rem; }
+  .qs-photo figcaption { margin-top: .5rem; font-family: var(--font-serif); font-size: .92rem; font-style: italic; line-height: 1.35; color: var(--ink-soft); }
+
+  /* Work */
+  .qs-work__grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .qs-work__head { position: sticky; top: 2rem; }
+  .qs-work__head h2 { max-width: 16ch; }
+  .qs-work__head p { max-width: 32rem; margin: 1.1rem 0 0; font-family: var(--font-serif); font-size: 1.12rem; line-height: 1.55; color: var(--ink-soft); }
+  .qs-work__intro { margin: 0 0 1.25rem; font-size: .95rem; line-height: 1.55; color: var(--ink-soft); }
+  .qs-work__intro strong { color: var(--ink); }
+  .qs-work__list ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
+  .qs-work__list li { padding: 1.6rem 0; border-bottom: 1px solid var(--rule); }
+  .qs-work__list h3 { margin: .35rem 0 .55rem; font-size: clamp(1.25rem, 1.8vw, 1.55rem); }
+  .qs-work__list h3 a:hover { color: var(--accent); }
+  .qs-work__list li > p:not(.qs-meta) { margin: 0 0 .6rem; font-family: var(--font-serif); font-size: 1.05rem; line-height: 1.55; color: var(--ink-soft); }
+
+  /* Closing — the production blue band, made quieter */
+  .qs-closing { border-top: 0; background: var(--blue-dark); color: var(--paper); }
+  .qs-closing__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .qs-closing h2 { max-width: 18ch; }
+  .qs-closing p { max-width: 34rem; margin: 0; font-family: var(--font-serif); font-size: 1.15rem; line-height: 1.55; color: color-mix(in srgb, var(--paper) 86%, transparent); }
+  .qs-closing .qs-links { margin-top: 1.5rem; max-width: none; }
+  .qs-closing .qs-links a { color: var(--paper); text-decoration-color: color-mix(in srgb, var(--paper) 45%, transparent); }
+  .qs-closing .qs-links a:hover { color: var(--yellow); text-decoration-color: var(--yellow); }
+
+  @media (max-width: 64rem) {
+    .qs-desk__grid, .qs-prototypes { grid-template-columns: 1fr; }
+    .qs-prototypes ul { margin-top: 1.25rem; }
+    .qs-project--lead { grid-template-columns: minmax(0, 18rem) minmax(0, 1fr); }
+    .qs-work__head { position: static; }
+  }
+  @media (max-width: 52rem) {
+    .qs-intro { grid-template-columns: 1fr; align-items: start; }
+    .qs-intro__portrait { width: min(100%, 17rem); grid-row: 1; }
+    .qs-section__head, .qs-writing__grid, .qs-away__grid, .qs-work__grid, .qs-closing__inner { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 36rem) {
+    .qs-head ul { gap: .3rem 1.1rem; }
+    .qs-intro__portrait { width: 11rem; }
+    .qs-project { grid-template-columns: 5.5rem minmax(0, 1fr); gap: 1rem; }
+    .qs-photos { grid-template-columns: 1fr 1fr; }
+    .qs-prototypes ul { grid-template-columns: 1fr; }
+    .qs-photo--tall { grid-row: auto; grid-column: 1 / -1; }
+    .qs-photo--tall :global(img) { height: auto; min-height: 0; aspect-ratio: 4 / 5; object-position: center 45%; }
+  }
+</style>
