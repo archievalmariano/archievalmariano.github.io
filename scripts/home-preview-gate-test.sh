@@ -130,10 +130,22 @@ assert_grep dist/preview/home/quiet/index.html "Away from the dashboards"
 assert_grep dist/preview/home/quiet/index.html "Pretends to be a photographer and a good writer."
 # D's Desk directory reserves Artifacts / Field Notes as text only.
 Q=dist/preview/home/quiet/index.html
-assert_grep   "$Q" "Personal writing about gadgets, objects and products."
-assert_grep   "$Q" "Essays, reflections and observations."
+assert_grep   "$Q" "Personal writing about gadgets, objects, and products."
+assert_grep   "$Q" "Essays, reflections, and observations."
 assert_grep   "$Q" "Nothing published yet."
-assert_nogrep "$Q" 'qs-editorial"'
+assert_nogrep "$Q" "SYNTHETIC"                  # no fixture content outside tests
+# Desk features ONE project (the registry's `featured` entry); the others stay
+# on their own pages and are not listed on the homepage.
+assert_grep   "$Q" 'href="/desk/dogear/"'
+assert_nogrep "$Q" 'href="/desk/on-point/"'
+assert_nogrep "$Q" 'href="/desk/goto/"'
+assert_nogrep "$Q" 'href="/desk/tools/"'
+assert_nogrep "$Q" "pinned-shop"
+assert_nogrep "$Q" "pinned-travel"
+# Work: at most two case studies and one commissioned piece.
+assert_grep   "$Q" 'href="/work/digital-intelligence-dashboard"'
+assert_grep   "$Q" 'href="/work/audience-intelligence-system"'
+assert_nogrep "$Q" 'href="/work/social-acquisition-retention"'
 # D's primary navigation is Desk · Work · About · Contact; Writing and
 # Services stay reachable at their existing URLs.
 assert_grep "$Q" 'href="/writing/"'

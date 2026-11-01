@@ -36,6 +36,6 @@ export const homeVariants: HomeVariant[] = [
     number: 'D',
     name: 'Quiet Personal Site',
     summary:
-      'Selected foundation. A restrained evolution of the current homepage, with Desk · Work · About · Contact navigation, a Desk directory ready for Artifacts and Field Notes, and personal photography alongside the work.',
+      'Selected foundation. A restrained evolution of the current homepage: Desk, Work, About, and Contact; one featured project; and personal photography alongside a lighter Work section.',
   },
 ];
