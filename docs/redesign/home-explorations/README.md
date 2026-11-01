@@ -1,6 +1,6 @@
 # Homepage explorations — four directions
 
-Status: **D · Quiet Personal Site is the selected foundation** and is now in its third iteration (a more restrained homepage: one featured project, lighter Work, rebalanced photography). A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
+Status: **D · Quiet Personal Site is the selected foundation** and is now in its fourth iteration (adaptive Desk rows, wider portrait framing, aligned photo captions, and a more compact Work section). A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
 
 Exploration 01 for repositioning archievalmariano.com from a professional portfolio
 into a personal archive: professional work, independent software, experiments,
@@ -144,135 +144,150 @@ photography into one visual language. **Risks:** the most art-directed, so the
 hardest to keep maintainable. The regional plate only stays meaningful if more
 located material is added over time.
 
-## D · Quiet Personal Site — iteration 3 (selected foundation)
+## D · Quiet Personal Site — iteration 4 (selected foundation)
 
 *Restraint over concept.* D keeps the production homepage's palette, Inter and
-Newsreader, understated rules, hero portrait, introduction, and dark closing panel.
-Iteration 2 set the information architecture. Iteration 3 makes the homepage
-lighter: one featured project, a lighter Work section, and a better-balanced
-photo arrangement. Screenshots: [desktop, 1440px](quiet-desktop-full.jpg) ·
-[mobile, 390px](quiet-mobile-full.jpg).
+Newsreader, understated rules, introduction, portrait, Desk · Work · About · Contact
+navigation, personal photography, and the dark blue closing panel. Iteration 4
+refines layout and responsiveness. Screenshots: [desktop, 1440px](quiet-desktop-full.jpg)
+· [mobile, 390px](quiet-mobile-full.jpg). The desktop page is 3,529px tall, down from
+4,074px in iteration 3 and 5,230px in iteration 2.
 
-### Navigation and information architecture
-
-Primary navigation (preview header only): **Desk · Work · About · Contact.**
-Writing and Services are not in the primary nav. Their pages and URLs are
-untouched, and both are linked from the Work section and the footer directory.
+### Navigation and information architecture (unchanged)
 
 | Destination | Contains | Existing URL (unchanged) |
 | --- | --- | --- |
 | **Desk** | Projects: software, utilities, and experiments | `/desk/`, `/desk/projects/`, `/desk/{dogear,on-point,goto,tools}/` |
-| | Artifacts: personal writing about objects | gated; no link until launched |
-| | Field Notes: essays, reflections, and observations | gated; no link until launched |
+| | Artifacts | gated; no link until launched |
+| | Field Notes | gated; no link until launched |
 | **Work** | Case studies | `/work/`, `/work/{slug}/` |
 | | Commissioned writing | `/writing/`, `/writing/{slug}/` (not moved) |
 | | Services | `/services/` |
-| **About** | | `/about/` |
-| **Contact** | | `/contact/` |
+| **About** / **Contact** | | `/about/`, `/contact/` |
 
-No redirects, duplicate canonicals, or route changes. RSS and sitemap output is
-byte-identical to `main`. The shared production `Nav` and `Footer` are not
-modified; D uses its own header and footer.
+No redirects, duplicate canonicals, or route changes. The shared production `Nav`
+and `Footer` are not modified.
 
-### Homepage hierarchy
+### Desk: one row per subsection, adapting to publication state
 
-1. **Introduction:** unchanged copy and the existing portrait.
-2. **Desk:** the Desk page's introduction, then the three-part directory
-   (Projects, Artifacts, and Field Notes), then **one featured project**: its
-   authentic photograph, name, subtitle, existing purpose line, facts, and an
-   “All projects →” link to `/desk/projects/`.
-3. **Away from the dashboards:** About's copy unchanged, beside the three
-   photographs and their published captions.
-4. **Work:** the homepage throughline as lede, then **Case studies** (two
-   entries plus “All case studies →”), **Commissioned writing** (one entry plus
-   “All commissioned writing →”), and **Services** (one-sentence description plus
-   “How I can help →”).
-5. **Closing:** the existing copy, with links to About, Contact, and LinkedIn.
+The directory-plus-feature arrangement is replaced by a stack of rows divided by
+hairline rules. Each row aligns on the same three columns: **identity** (name, and
+subtitle once published), **about** (description, and a link once published), and
+**featured**.
 
-Removed from the homepage, all still reachable at their existing pages: ON POINT,
-GOTO, Tools, the Pinned prototypes, the third selected case study, the other
-featured writing, and the list of service offerings. Nothing was removed or
-rewritten on any destination page.
+- **Expanded row:** shown when the subsection has published content. It fills all
+  three columns. Projects currently shows DOGEAR: its existing device photograph
+  (11rem), title, subtitle, purpose line, facts, and “Open DOGEAR →”, beside
+  “All projects →”.
+- **Compact row:** shown when there is nothing published. It shows the name and
+  the one-line description on a single line, with no link, URL, subtitle, status
+  notice, or empty media area. The unpublished collection is never queried.
 
-### Featured project: data-driven, not hardcoded
+| Published | Rows |
+| --- | --- |
+| Projects only (today) | Projects expanded; Artifacts and Field Notes compact |
+| Projects + one collection | That collection expands with one featured entry (featured first, then latest by `pubDate`; never drafts). The other stays compact. |
+| All three | All three rows expanded; no structural change |
 
-The featured project is the registry entry with `"featured": true` in
-`src/content/projects/*.json`, the existing flag for “the single pinned homepage
-entry”, currently DOGEAR. It falls back to the first homepage-eligible project by
-`order`. Rotating it is a data change only. I verified this in a throwaway copy:
-setting `featured` on ON POINT instead of DOGEAR makes ON POINT the featured
-project with no code change.
+Expansion uses the existing gate (`isPublished()` in `src/data/desk.ts`, read
+only); the gate is unchanged. An editorial entry shows its own hero image if it
+has one, otherwise it is text only, with a serif title. The featured project is
+still data-driven: the registry's `featured` flag, with `order` as fallback.
+ON POINT, GOTO, Tools, and the Pinned prototypes are reached through
+`/desk/projects/` and their own pages.
 
-Optional presentation hints are kept for ON POINT and GOTO. If either becomes the
-featured project, its photograph is framed with CSS to the device screen (the
-departure board, or the top story), as reviewed in iteration 2. The image files
-are never modified. DOGEAR uses its existing physical-device photograph.
+All three states are checked by `scripts/home-preview-gate-test.sh`, using the
+existing synthetic fixtures inside the test only. No fixture content is committed
+to these docs.
 
-### Artifacts and Field Notes (still gated)
+### Portrait
 
-- The directory reads the same gate the DESK pages use (`isPublished()` from
-  `src/data/desk.ts`, imported read-only; unchanged).
-- **Unpublished (today):** name, a one-line description, and “Nothing published
-  yet.” No link, no URL, no subtitle, and no entry; the collection is not queried.
-- **Once launched:** the name links to the collection, its subtitle appears, and
-  **one** entry (featured first, then latest by `pubDate`; never drafts) appears in
-  its directory column, matching the single featured project. The layout does not
-  change.
-- This behaviour is exercised only inside `scripts/home-preview-gate-test.sh`,
-  using the existing synthetic fixtures. No fixture content appears in committed
-  screenshots or docs; the earlier synthetic screenshot has been removed.
-- **Draft copy for approval:** “Personal writing about gadgets, objects, and
-  products.” and “Essays, reflections, and observations.” are paraphrased from the
-  brief. They now use the serial comma.
+The source is a 3:2 landscape (2000×1333). Iteration 3 cropped it to 4:5, keeping
+about half the width. Iteration 4 uses a **square** crop: it keeps two-thirds of
+the width (more of the wall, shoulders, and both arms), is anchored slightly above
+centre, and stays in the same 20rem column. The image is shorter than before
+(about 320px rather than 400px at desktop), so its size relative to the headline
+stays modest. Same photograph; no frame was added.
 
-### Photography
+### Photography and captions
 
-The three photographs are never cropped. The tall Taipei panorama sits beside a
-stack of the two landscapes. Each column's flex-grow equals its aspect ratio
-(the stack uses the combined ratio of its two images), so the columns share one
-height at their natural proportions. This works at 1440px and at 390px.
-Captions stay as published. Right-click and drag remain disabled, as on About.
+The tall Taipei panorama sits beside the two stacked landscapes, all uncropped.
+The tall column's width is now solved from the photos' proportions **and** the
+one caption row inside the stack:
+
+`W_tall = ((W − gap) · Σ(h/w)_stack + caption row) / (h/w_tall + Σ(h/w)_stack)`
+
+The panorama therefore ends exactly level with the lower landscape, and the two
+bottom captions share a line. A CSS subgrid aligns the rows while each figure
+keeps its own image and caption. At 1440px the Taipei caption wraps to two
+balanced lines instead of four. On mobile, the panorama sits at 11rem with its
+caption beside it, aligned to the bottom, and the two landscapes follow at full
+width. The section's top and bottom spacing is unchanged.
+
+### Work
+
+- **Introduction:** “Work” and the throughline title now share the first column,
+  with the two throughline paragraphs in the next two. This replaces the large
+  empty area beside the heading.
+- **Categories:** one row of three columns under Work, separated by hairlines:
+  - **Case studies** (wider column): two selected entries plus “All case
+    studies →”.
+  - **Commissioned writing:** the existing `/writing/` description plus “All
+    commissioned writing →”. No article is featured.
+  - **Services:** the existing one-sentence Services description plus “How I can
+    help →”.
+- No destination page or URL changed.
 
 ### Editorial style
 
-New or revised copy uses the serial (Oxford) comma: the two draft descriptions,
-the Services line (existing Services page description, which already uses it),
-and these notes. Existing copy reused verbatim is unchanged, including the Desk
-Projects description (“Independent applications, utilities and experiments.”).
-No sitewide copy edit was made.
+New or revised copy uses the serial comma. The provisional Desk descriptions are
+“Personal writing about gadgets, objects, and products.” and “Essays, reflections,
+and observations.” Existing published prose was not changed. Inconsistencies
+noticed for later editorial review (not edited):
+
+- `/desk/projects/` (intro and meta description): “applications, utilities and
+  experiments” (also reused verbatim on D).
+- `/desk/tools/` and `src/content/projects/tools.json`: “a calendar, a calculator
+  and a clock”.
+- `/desk/` meta description: “a calendar, calculator and clock”.
+- `/desk/dogear/`: “books, literary anniversaries and discoveries” (twice).
+- `/work/` heading: “audiences, systems and digital work”.
+- Homepage throughline (also on D): “analytics, e-commerce and digital
+  operations”, while the cover intro on the same page uses “e-commerce, and
+  digital operations”.
 
 ### Images
 
 | Item | Asset | Presentation |
 | --- | --- | --- |
-| Featured project (DOGEAR) | `dogear-01-issue-x4-x4pro.jpg` | Full physical-device photograph |
-| Hero | `archieval-portrait.jpg` | Unchanged |
+| Hero | `archieval-portrait.jpg` | Square crop of the 3:2 source |
+| Featured project (DOGEAR) | `dogear-01-issue-x4-x4pro.jpg` | Device photograph, uncropped |
 | Photography | `about-taipei-street.jpg`, `about-baywalk-cat.jpg`, `about-esplanade-bridge.jpg` | Uncropped, natural proportions |
 
-Still missing (not fabricated): straight screen captures of ON POINT and GOTO
-(every app asset is a photo of an e-reader), and any imagery for Artifacts or
-Field Notes. Neither is needed while DOGEAR is featured.
+Still missing (not fabricated): straight screen captures of ON POINT and GOTO, which
+are only needed if either becomes the featured project (CSS screen framing exists
+as a fallback), and any imagery for Artifacts or Field Notes, which is not needed
+because launched entries render as text.
 
-### Accessibility
+### Accessibility and responsive notes
 
-- **Heading outline:** H1, then an H2 per section, H3 for the featured project
-  and Work categories, and H4 for case studies. The Desk directory is a list.
-- **Images:** all have alt text; no image-only links and no empty links.
-- **Contrast:** muted text on the Desk band uses `--ink-soft` (7.1:1);
-  `--ink-faint` measures only 4.15:1 there.
+- **Heading outline:** H1; then H2 per section; H3 for Projects, Artifacts, Field
+  Notes, and the three Work categories; H4 for DOGEAR and case studies.
+- **Images:** all have alt text. There are no image-only links and no empty
+  links; the featured link names its target (“Open DOGEAR”, or “Read” plus a
+  hidden title).
+- **Contrast:** muted text on the Desk band uses `--ink-soft` (7.1:1). Case-study
+  meta on cream measures 4.66:1.
 - **Remaining:**
-  - Repeated link patterns (“All … →”) are distinguishable by context but not
-    unique.
-  - External writing links open in new tabs, as on `/writing/`.
-  - “Nothing published yet.” is visible to visitors before launch. Hiding the
-    two reserved columns entirely is a one-line change if you prefer.
-
-### Deliberately left out of the current homepage
-
-The “00 Introduction”-style chapter labels; the eyebrow “Digital Strategy &
-Audience Growth · Philippines”; the 05 / ≈40 / 01 evidence panels; the full-width
-Singapore panorama; and the per-entry “Read the story” links. All of these remain
-on production and can return.
+  - Compact rows are plain text. Sighted users read the absence of a link, but
+    nothing tells screen-reader users the category has no content yet. That is
+    deliberate, since you asked for no notices.
+  - The photo alignment assumes the upper caption fits on one line at desktop
+    widths. If it wraps, the panorama ends one line short (no cropping or
+    overlap).
+  - Between 36rem and 64rem the Desk rows use two columns, with featured content
+    under the description.
+  - Repeated “All … →” labels are clear in context but not unique.
 
 ## Shared technical notes
 

@@ -31,6 +31,11 @@ bad() { FAIL=$((FAIL+1)); printf '   \033[31mFAIL\033[0m %s\n' "$1"; }
 assert_exist()  { if [ -e "$1" ]; then ok "exists: $1"; else bad "MISSING: $1"; fi; }
 assert_absent() { if [ -e "$1" ]; then bad "SHOULD BE ABSENT: $1"; else ok "absent: $1"; fi; }
 assert_grep()   { if grep -rqF -- "$2" "$1" 2>/dev/null; then ok "contains '$2': $1"; else bad "MISSING '$2' in $1"; fi; }
+# Count non-overlapping occurrences of a fixed string in one file.
+assert_count() { # file, string, expected
+  local n; n=$(grep -oF -- "$2" "$1" 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$n" = "$3" ]; then ok "count('$2') = $3: $1"; else bad "count('$2') = $n, expected $3: $1"; fi
+}
 assert_nogrep() { if grep -rqF -- "$2" "$1" 2>/dev/null; then bad "SHOULD NOT contain '$2': $1"; else ok "absent '$2' in $1"; fi; }
 
 # No preview output, URL, or preview-only markup anywhere in dist/ — and the
@@ -132,7 +137,11 @@ assert_grep dist/preview/home/quiet/index.html "Pretends to be a photographer an
 Q=dist/preview/home/quiet/index.html
 assert_grep   "$Q" "Personal writing about gadgets, objects, and products."
 assert_grep   "$Q" "Essays, reflections, and observations."
-assert_grep   "$Q" "Nothing published yet."
+# State 1 — only Projects published: one featured row, two compact rows, no
+# status notices, and no links or entries for the gated collections.
+assert_count  "$Q" 'qs-row--featured' 1
+assert_count  "$Q" 'qs-row--compact' 2
+assert_nogrep "$Q" "Nothing published yet."
 assert_nogrep "$Q" "SYNTHETIC"                  # no fixture content outside tests
 # Desk features ONE project (the registry's `featured` entry); the others stay
 # on their own pages and are not listed on the homepage.
@@ -142,10 +151,13 @@ assert_nogrep "$Q" 'href="/desk/goto/"'
 assert_nogrep "$Q" 'href="/desk/tools/"'
 assert_nogrep "$Q" "pinned-shop"
 assert_nogrep "$Q" "pinned-travel"
-# Work: at most two case studies and one commissioned piece.
+# Work: two case studies; Commissioned writing and Services as description +
+# link only (no individual article featured).
 assert_grep   "$Q" 'href="/work/digital-intelligence-dashboard"'
 assert_grep   "$Q" 'href="/work/audience-intelligence-system"'
 assert_nogrep "$Q" 'href="/work/social-acquisition-retention"'
+assert_nogrep "$Q" "esquiremag.ph"
+assert_nogrep "$Q" 'href="/writing/0'
 # D's primary navigation is Desk · Work · About · Contact; Writing and
 # Services stay reachable at their existing URLs.
 assert_grep "$Q" 'href="/writing/"'
@@ -170,10 +182,25 @@ else
   bad "homepage markup differs when HOME_PREVIEW=true"
 fi
 
-# ── ON + DESK preview: D follows the DESK gate once collections launch ──────
+# ── State 2 — Projects + Artifacts: Artifacts expands, Field Notes stays ─────
+#    compact and unlinked.
 stage
-build "ON + DESK fixtures" HOME_PREVIEW=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
+build "ON + DESK artifacts only" HOME_PREVIEW=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts
 Q=dist/preview/home/quiet/index.html
+assert_count  "$Q" 'qs-row--featured' 2
+assert_count  "$Q" 'qs-row--compact' 1
+assert_grep   "$Q" 'href="/desk/artifacts/"'
+assert_grep   "$Q" 'href="/desk/artifacts/gate-published/"'
+assert_nogrep "$Q" '/desk/field-notes'
+assert_nogrep "$Q" "gate-draft"
+unstage
+
+# ── State 3 — all three populated: every row expands, no redesign needed ────
+stage
+build "ON + DESK all collections" HOME_PREVIEW=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
+Q=dist/preview/home/quiet/index.html
+assert_count  "$Q" 'qs-row--featured' 3
+assert_count  "$Q" 'qs-row--compact' 0
 assert_grep   "$Q" 'href="/desk/artifacts/"'
 assert_grep   "$Q" 'href="/desk/field-notes/"'
 assert_grep   "$Q" 'href="/desk/artifacts/gate-published/"'

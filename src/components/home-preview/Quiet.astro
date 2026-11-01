@@ -1,5 +1,5 @@
 ---
-// DIRECTION D — QUIET PERSONAL SITE (iteration 3: restrained homepage)
+// DIRECTION D — QUIET PERSONAL SITE (iteration 4: adaptive Desk, composition)
 //
 // Selected foundation. A restrained evolution of the production homepage:
 // same palette, Inter + Newsreader, rules, portrait, photography, and dark
@@ -17,17 +17,21 @@
 //   About    /about/
 //   Contact  /contact/
 //
-// The homepage shows ONE item per Desk section at most:
-//   • Projects: the registry's `featured` project (falling back to the first
-//     homepage-eligible project by `order`). Rotating it is a data change in
-//     src/content/projects/*.json — nothing here names a project.
-//   • Artifacts / Field Notes: read the SAME publication gate the DESK pages
-//     use (isPublished). Unpublished → plain text only: no link, no URL, no
-//     entry, and the collection is never queried. Launched → a link and one
-//     entry (featured first, then latest by pubDate; never drafts).
+// DESK is a stack of rows, one per subsection. A row EXPANDS (identity,
+// description, link, and one featured item) only when that subsection has
+// published content; otherwise it stays COMPACT (name and description only —
+// no link, no URL, no status notice, no empty media area). So the page is
+// complete with Projects alone, and Artifacts / Field Notes expand on their own
+// once launched through the existing gate (isPublished, read-only here).
 //
-// All copy is reused from existing pages, except the two short category
-// descriptions for Artifacts and Field Notes (draft, marked below).
+//   • Projects' featured item: the registry's `featured` project (falling back
+//     to the first homepage-eligible project by `order`). Rotating it is a data
+//     change in src/content/projects/*.json.
+//   • Artifacts / Field Notes' featured item: featured entry first, then latest
+//     by pubDate; never drafts. Unpublished collections are never queried.
+//
+// All copy is reused from existing pages, except the two provisional
+// descriptions for Artifacts and Field Notes (marked below).
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
@@ -37,35 +41,49 @@ import gotoStory from '../../assets/photos/goto-edition-01-story.jpg';
 import {
   closing,
   cover,
-  isExternal,
   loadArchive,
   photos,
   portraitPhoto,
   siteLinks,
   throughline,
   workHref,
-  workIntro,
-  writingHref,
   writingIntro,
-  writingTitle,
 } from './archive';
 
 const HOME_CASE_STUDIES = 2;
-const HOME_WRITING = 1;
 
-const { featuredWork, featuredWriting, projects } = await loadArchive();
+const { featuredWork, projects } = await loadArchive();
 const caseStudies = featuredWork.slice(0, HOME_CASE_STUDIES); // ordered by `order`
-const writingPicks = featuredWriting.slice(0, HOME_WRITING);
 
-// ── Featured project (data-driven) ──────────────────────────────────────────
+// ── DESK rows ───────────────────────────────────────────────────────────────
+type Featured = {
+  title: string;
+  subtitle?: string;
+  description: string;
+  meta?: string;
+  href: string;
+  linkLabel: string;
+  image?: { src: ImageMetadata; alt: string };
+  frame?: string; // CSS custom properties for a framed (cropped) screen
+};
+type Row = {
+  key: string;
+  name: string;
+  subtitle?: string;
+  description: string;
+  href?: string; // only for published destinations
+  linkLabel?: string;
+  featured?: Featured;
+};
+
+// Projects: data-driven featured project.
 const eligibleProjects = projects.filter((p) => p.data.homepage && p.data.heroImage); // sorted by `order`
 const featuredProject = eligibleProjects.find((p) => p.data.featured) ?? eligibleProjects[0];
 
-// Optional presentation hints, used only if a project with a hint becomes the
-// featured one. Each frames an existing, unmodified photograph to its screen
-// (crop box in source pixels) so the image shows what the project does.
-type Frame = { src: ImageMetadata; alt: string; box: [number, number, number, number] };
-const framing: Record<string, Frame> = {
+// Optional presentation hints, used only if one of these projects becomes the
+// featured one: frame an existing, unmodified photograph to its screen (crop
+// box in source pixels) so the image shows what the project does.
+const framing: Record<string, { src: ImageMetadata; alt: string; box: [number, number, number, number] }> = {
   'on-point': {
     src: onPointBoard,
     alt: 'ON POINT showing 15 minutes until the 09:30 bus from Balagtas to TriNoma, with the next trip at 10:00 and the last at 20:00.',
@@ -77,73 +95,84 @@ const framing: Record<string, Frame> = {
     box: [198, 146, 918, 634],
   },
 };
-const frame = featuredProject ? framing[featuredProject.data.slug] : undefined;
-const featuredImage = frame
-  ? { src: frame.src, alt: frame.alt }
-  : featuredProject
-    ? { src: featuredProject.data.heroImage!, alt: featuredProject.data.heroAlt ?? '' }
-    : undefined;
-const frameStyle = frame
-  ? `--iw:${frame.src.width};--cx:${frame.box[0]};--cy:${frame.box[1]};--cw:${frame.box[2] - frame.box[0]};--ch:${frame.box[3] - frame.box[1]}`
-  : undefined;
 
-// ── Desk directory ──────────────────────────────────────────────────────────
-type Entry = { href: string; title: string; description: string };
-type Sub = { name: string; subtitle?: string; description: string; href?: string; entry?: Entry };
+function projectFeature(): Featured | undefined {
+  if (!featuredProject) return undefined;
+  const d = featuredProject.data;
+  const f = framing[d.slug];
+  return {
+    title: d.name,
+    subtitle: d.subtitle && d.subtitle !== d.name ? d.subtitle : undefined,
+    description: d.purpose,
+    meta: d.facts.join(' · '),
+    href: `/desk/${d.slug}/`,
+    linkLabel: `Open ${d.name}`,
+    image: f ? { src: f.src, alt: f.alt } : { src: d.heroImage!, alt: d.heroAlt ?? '' },
+    frame: f
+      ? `--iw:${f.src.width};--cx:${f.box[0]};--cy:${f.box[1]};--cw:${f.box[2] - f.box[0]};--ch:${f.box[3] - f.box[1]}`
+      : undefined,
+  };
+}
 
-// DRAFT descriptions for the unpublished categories (paraphrased from the
-// redesign brief; for the author to approve or rewrite). Plain text only.
-const reservedCopy: Record<DeskCollectionKey, string> = {
+// PROVISIONAL descriptions for the editorial categories (paraphrased from the
+// redesign brief; for the author to approve or rewrite). Plain text.
+const editorialCopy: Record<DeskCollectionKey, string> = {
   artifacts: 'Personal writing about gadgets, objects, and products.',
   fieldNotes: 'Essays, reflections, and observations.',
 };
 
-async function homepageEntry(key: DeskCollectionKey, slug: string): Promise<Entry | undefined> {
+async function editorialFeature(key: DeskCollectionKey, slug: string): Promise<Featured | undefined> {
   const all = await getCollection(key as any, ({ data }: any) => !data.draft);
   const sorted = [...all].sort((a: any, b: any) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-  const pick: any = sorted.find((e: any) => e.data.featured) ?? sorted[0];
-  return pick ? { href: `/desk/${slug}/${pick.slug}/`, title: pick.data.title, description: pick.data.description } : undefined;
+  const e: any = sorted.find((x: any) => x.data.featured) ?? sorted[0];
+  if (!e) return undefined;
+  return {
+    title: e.data.title,
+    subtitle: e.data.subtitle,
+    description: e.data.description,
+    href: `/desk/${slug}/${e.slug}/`,
+    linkLabel: 'Read',
+    image: e.data.heroImage ? { src: e.data.heroImage, alt: e.data.heroAlt ?? '' } : undefined,
+  };
 }
 
-const deskSubs: Sub[] = [
+const rows: Row[] = [
   {
+    key: 'projects',
     name: 'Projects',
     subtitle: 'Works in Progress',
     description:
       'Independent applications, utilities and experiments. Some are useful, definitely specific, and occasionally unnecessary.',
     href: '/desk/projects/',
+    linkLabel: 'All projects',
+    featured: projectFeature(),
   },
 ];
 for (const c of deskCollections) {
-  if (isPublished(c.key)) {
-    const entry = await homepageEntry(c.key, c.slug);
-    deskSubs.push({
-      name: c.label,
-      subtitle: entry ? c.subtitle : undefined,
-      description: reservedCopy[c.key],
-      href: entry ? `/desk/${c.slug}/` : undefined,
-      entry,
-    });
-  } else {
-    // Unpublished: description only. The collection is not queried.
-    deskSubs.push({ name: c.label, description: reservedCopy[c.key] });
-  }
+  // Unpublished → compact row; the collection is not queried at all.
+  const featured = isPublished(c.key) ? await editorialFeature(c.key, c.slug) : undefined;
+  rows.push(
+    featured
+      ? { key: c.slug, name: c.label, subtitle: c.subtitle, description: editorialCopy[c.key], href: `/desk/${c.slug}/`, linkLabel: `All ${c.label}`, featured }
+      : { key: c.slug, name: c.label, description: editorialCopy[c.key] }
+  );
 }
 
-// ── Photographs: one tall image beside a stack of two, sized from their own
-// proportions so the columns meet without cropping any of them.
+// ── Portrait: wider (square) framing of the 3:2 source ─────────────────────
+// ── Photographs: one tall image beside a stack of two. The tall column's
+// width is solved from the photos' own proportions (and the one caption row
+// inside the stack) so the tall image ends where the lower landscape ends and
+// the two bottom captions share a line. No image is cropped.
 const photo = (k: string) => photos.find((p) => p.key === k)!;
 const tall = photo('taipei');
-const stack = [photo('baywalk'), photo('esplanade')];
-const tallAR = tall.src.width / tall.src.height;
-const stackAR = 1 / stack.reduce((sum, p) => sum + p.src.height / p.src.width, 0);
+const [upper, lower] = [photo('baywalk'), photo('esplanade')];
+const invTall = tall.src.height / tall.src.width; // 1 / aspect
+const invStack = upper.src.height / upper.src.width + lower.src.height / lower.src.width;
+const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
 
 // ── Footer directory (destinations only) ────────────────────────────────────
 const directory = [
-  {
-    head: { href: '/desk/', label: 'Desk' },
-    links: deskSubs.filter((s) => s.href).map((s) => ({ href: s.href!, label: s.name })),
-  },
+  { head: { href: '/desk/', label: 'Desk' }, links: rows.filter((r) => r.href).map((r) => ({ href: r.href!, label: r.name })) },
   {
     head: { href: '/work/', label: 'Work' },
     links: [
@@ -192,8 +221,8 @@ const year = new Date().getFullYear();
       <Image
         src={portraitPhoto.src}
         alt={portraitPhoto.alt}
-        widths={[400, 600, 800]}
-        sizes="(max-width: 52rem) 70vw, 22rem"
+        widths={[400, 600, 800, 1000]}
+        sizes="(max-width: 36rem) 13rem, (max-width: 52rem) 17rem, 20rem"
         format="webp"
         quality={76}
         loading="eager"
@@ -212,48 +241,46 @@ const year = new Date().getFullYear();
         </p>
       </header>
 
-      <!-- Directory: descriptions are text; only published destinations link -->
-      <ul class="qs-dir" aria-label="Desk sections">
+      <div class="qs-rows">
         {
-          deskSubs.map((s) => (
-            <li class:list={['qs-dir__item', { 'is-reserved': !s.href }]}>
-              <p class="qs-dir__name">{s.href ? <a href={s.href}>{s.name}</a> : s.name}</p>
-              {s.subtitle && <p class="qs-dir__subtitle">{s.subtitle}</p>}
-              <p class="qs-dir__desc">{s.description}</p>
-              {s.entry && (
-                <p class="qs-dir__entry">
-                  <a href={s.entry.href}>{s.entry.title}</a>
-                  <span>{s.entry.description}</span>
-                </p>
+          rows.map((r) => (
+            <section class:list={['qs-row', r.featured ? 'qs-row--featured' : 'qs-row--compact']} aria-label={r.name}>
+              <div class="qs-row__id">
+                <h3 class="qs-row__name">{r.href ? <a href={r.href}>{r.name}</a> : r.name}</h3>
+                {r.featured && r.subtitle && <p class="qs-row__subtitle">{r.subtitle}</p>}
+              </div>
+              <div class="qs-row__about">
+                <p class="qs-row__desc">{r.description}</p>
+                {r.href && r.linkLabel && (
+                  <p class="qs-go"><a href={r.href}>{r.linkLabel} <span aria-hidden="true">→</span></a></p>
+                )}
+              </div>
+              {r.featured && (
+                <article class:list={['qs-feature', { 'qs-feature--text': !r.featured.image }]}>
+                  {r.featured.image && (
+                    <figure class:list={['qs-feature__figure', { 'qs-frame': r.featured.frame }]} style={r.featured.frame}>
+                      <Image src={r.featured.image.src} alt={r.featured.image.alt} widths={[240, 360, 480, 720]} sizes="(max-width: 36rem) 40vw, 11rem" format="webp" quality={76} />
+                    </figure>
+                  )}
+                  <div class="qs-feature__text">
+                    <h4>{r.featured.title}</h4>
+                    {r.featured.subtitle && <p class="qs-feature__subtitle">{r.featured.subtitle}</p>}
+                    <p class="qs-feature__desc">{r.featured.description}</p>
+                    {r.featured.meta && <p class="qs-meta">{r.featured.meta}</p>}
+                    <p class="qs-go">
+                      <a href={r.featured.href}>
+                        {r.featured.linkLabel}
+                        {r.featured.linkLabel === 'Read' && <span class="visually-hidden"> {r.featured.title}</span>}
+                        <span aria-hidden="true"> →</span>
+                      </a>
+                    </p>
+                  </div>
+                </article>
               )}
-              {s.href ? (
-                <p class="qs-go"><a href={s.href}>Open {s.name} <span aria-hidden="true">→</span></a></p>
-              ) : (
-                <p class="qs-dir__status">Nothing published yet.</p>
-              )}
-            </li>
+            </section>
           ))
         }
-      </ul>
-
-      <!-- One featured project -->
-      {featuredProject && featuredImage && (
-        <article class="qs-feature" aria-labelledby="qs-feature-title">
-          <figure class:list={['qs-feature__figure', { 'qs-frame': frame }]} style={frameStyle}>
-            <Image src={featuredImage.src} alt={featuredImage.alt} widths={[360, 540, 720, 1080]} sizes="(max-width: 36rem) 70vw, 17rem" format="webp" quality={76} />
-          </figure>
-          <div class="qs-feature__text">
-            <p class="qs-feature__label">From Projects</p>
-            <h3 id="qs-feature-title"><a href={`/desk/${featuredProject.data.slug}/`}>{featuredProject.data.name}</a></h3>
-            {featuredProject.data.subtitle && featuredProject.data.subtitle !== featuredProject.data.name && (
-              <p class="qs-feature__subtitle">{featuredProject.data.subtitle}</p>
-            )}
-            <p class="qs-feature__purpose">{featuredProject.data.purpose}</p>
-            <p class="qs-meta">{featuredProject.data.facts.join(' · ')}</p>
-            <p class="qs-go"><a href="/desk/projects/">All projects <span aria-hidden="true">→</span></a></p>
-          </div>
-        </article>
-      )}
+      </div>
     </div>
   </section>
 
@@ -278,20 +305,20 @@ const year = new Date().getFullYear();
         <p class="qs-go"><a href="/about/">More about me <span aria-hidden="true">→</span></a></p>
       </div>
 
-      <div class="qs-photos" aria-label="Selected photographs from my personal archive" oncontextmenu="return false">
-        <figure class="qs-photo" style={`--ar:${tallAR}`}>
-          <Image src={tall.src} alt={tall.alt} widths={[300, 450, 600]} sizes="(max-width: 52rem) 30vw, 13rem" format="webp" quality={76} draggable="false" />
-          <figcaption>{tall.caption}</figcaption>
-        </figure>
-        <div class="qs-photos__stack" style={`--ar:${stackAR}`}>
-          {
-            stack.map((p) => (
-              <figure class="qs-photo">
-                <Image src={p.src} alt={p.alt} widths={[480, 720, 960]} sizes="(max-width: 52rem) 60vw, 26rem" format="webp" quality={76} draggable="false" />
-                <figcaption>{p.caption}</figcaption>
-              </figure>
-            ))
-          }
+      <div class="qs-photos-wrap" style={photoVars}>
+        <div class="qs-photos" aria-label="Selected photographs from my personal archive" oncontextmenu="return false">
+          <figure class="qs-photo qs-photo--tall">
+            <Image src={tall.src} alt={tall.alt} widths={[300, 450, 600]} sizes="(max-width: 36rem) 55vw, 14rem" format="webp" quality={76} draggable="false" />
+            <figcaption>{tall.caption}</figcaption>
+          </figure>
+          <figure class="qs-photo qs-photo--upper">
+            <Image src={upper.src} alt={upper.alt} widths={[480, 720, 960]} sizes="(max-width: 36rem) 90vw, 26rem" format="webp" quality={76} draggable="false" />
+            <figcaption>{upper.caption}</figcaption>
+          </figure>
+          <figure class="qs-photo qs-photo--lower">
+            <Image src={lower.src} alt={lower.alt} widths={[480, 720, 960]} sizes="(max-width: 36rem) 90vw, 26rem" format="webp" quality={76} draggable="false" />
+            <figcaption>{lower.caption}</figcaption>
+          </figure>
         </div>
       </div>
     </div>
@@ -300,64 +327,46 @@ const year = new Date().getFullYear();
   <!-- 4 · Work -->
   <section class="qs-section qs-work" id="qs-work" aria-labelledby="qs-work-title">
     <div class="qs-wrap">
-      <header class="qs-section__head">
-        <h2 id="qs-work-title"><a href="/work/">Work</a></h2>
-        <div class="qs-work__lede">
+      <header class="qs-work__head">
+        <div>
+          <h2 id="qs-work-title"><a href="/work/">Work</a></h2>
           <p class="qs-work__through">{throughline.title}</p>
-          {throughline.paragraphs.map((p) => <p>{p}</p>)}
         </div>
+        {throughline.paragraphs.map((p) => <p class="qs-work__para">{p}</p>)}
       </header>
 
-      <div class="qs-work__cases">
-        <div class="qs-work__label">
-          <h3><a href="/work/">Case studies</a></h3>
-          <p>{workIntro.title}</p>
+      <div class="qs-work__grid">
+        <section class="qs-work__cat qs-work__cat--cases" aria-labelledby="qs-cases-title">
+          <h3 id="qs-cases-title"><a href="/work/">Case studies</a></h3>
+          <ul class="qs-cases">
+            {
+              caseStudies.map((e) => (
+                <li>
+                  <p class="qs-meta">{[e.data.year, e.data.category].filter(Boolean).join(' · ')}</p>
+                  <h4><a href={workHref(e.slug)}>{e.data.title}</a></h4>
+                  <p>{e.data.shortDescription}</p>
+                  <p class="qs-meta">{e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</p>
+                </li>
+              ))
+            }
+          </ul>
           <p class="qs-go"><a href="/work/">All case studies <span aria-hidden="true">→</span></a></p>
-        </div>
-        <ul class="qs-cases">
-          {
-            caseStudies.map((e) => (
-              <li>
-                <p class="qs-meta">{[e.data.year, e.data.category].filter(Boolean).join(' · ')}</p>
-                <h4><a href={workHref(e.slug)}>{e.data.title}</a></h4>
-                <p>{e.data.shortDescription}</p>
-                <p class="qs-meta">{e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</p>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
+        </section>
 
-      <div class="qs-work__pair">
-        <div class="qs-work__item">
-          <h3><a href="/writing/">Commissioned writing</a></h3>
+        <section class="qs-work__cat" aria-labelledby="qs-writing-title">
+          <h3 id="qs-writing-title"><a href="/writing/">Commissioned writing</a></h3>
           <p>{writingIntro.aside}</p>
-          {
-            writingPicks.map((e) => (
-              <p class="qs-work__pick">
-                <a href={writingHref(e)} {...(isExternal(e) ? { target: '_blank', rel: 'noopener' } : {})}>
-                  {writingTitle(e)}
-                  {isExternal(e) && (
-                    <>
-                      <span aria-hidden="true"> ↗</span>
-                      <span class="visually-hidden"> (opens in a new tab)</span>
-                    </>
-                  )}
-                </a>
-                <span class="qs-meta">{[e.data.publisher, e.data.format].filter(Boolean).join(' · ')}</span>
-              </p>
-            ))
-          }
           <p class="qs-go"><a href="/writing/">All commissioned writing <span aria-hidden="true">→</span></a></p>
-        </div>
-        <div class="qs-work__item">
-          <h3><a href="/services/">Services</a></h3>
+        </section>
+
+        <section class="qs-work__cat" aria-labelledby="qs-services-title">
+          <h3 id="qs-services-title"><a href="/services/">Services</a></h3>
           <p>
             Audience intelligence, digital strategy and growth, and content and digital
             operations for teams that need clearer decisions and working systems.
           </p>
           <p class="qs-go"><a href="/services/">How I can help <span aria-hidden="true">→</span></a></p>
-        </div>
+        </section>
       </div>
     </div>
   </section>
@@ -414,7 +423,7 @@ const year = new Date().getFullYear();
   .qs-links { display: flex; flex-wrap: wrap; gap: .6rem 1.75rem; margin: 1.75rem 0 0; }
   .qs-links a, .qs-go a { font-size: .86rem; font-weight: 700; text-decoration-color: var(--rule); text-underline-offset: .3em; }
   .qs-links a:hover, .qs-go a:hover { text-decoration-color: var(--accent); }
-  .qs-go { margin: 1rem 0 0; }
+  .qs-go { margin: .9rem 0 0; }
 
   /* Header */
   .qs-head { border-bottom: 1px solid var(--rule); }
@@ -425,76 +434,89 @@ const year = new Date().getFullYear();
   .qs-head nav a { display: inline-block; padding-block: .25rem; font-size: .9rem; font-weight: 580; color: var(--ink-soft); text-decoration: none; }
   .qs-head nav a:hover { color: var(--accent); }
 
-  /* 1 · Introduction */
+  /* 1 · Introduction — square framing of the 3:2 portrait (wider than 4:5) */
   .qs-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(14rem, 20rem); gap: clamp(2rem, 7vw, 7rem); align-items: end; padding-top: clamp(3rem, 8vw, 6.5rem); padding-bottom: clamp(3rem, 7vw, 5.5rem); }
   .qs-intro h1 { max-width: 16ch; font-family: var(--font-sans); font-size: clamp(2.4rem, 4.6vw, 4.1rem); font-weight: 740; letter-spacing: -.05em; line-height: 1; }
   .qs-intro__statement { max-width: 32rem; margin: 1.5rem 0 0; font-family: var(--font-serif); font-size: clamp(1.25rem, 1.8vw, 1.55rem); line-height: 1.42; }
   .qs-intro__body { max-width: 36rem; margin: 1rem 0 0; line-height: 1.65; color: var(--ink-soft); }
   .qs-intro__portrait { margin: 0; }
-  .qs-intro__portrait :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 47% center; filter: saturate(.85) contrast(1.03); border-radius: 2px; }
+  .qs-intro__portrait :global(img) { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: 46% 40%; filter: saturate(.85) contrast(1.03); border-radius: 2px; }
 
   /* Sections */
-  .qs-section { padding-block: clamp(3.5rem, 7vw, 6rem); border-top: 1px solid var(--rule); }
-  .qs-section__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 1rem clamp(2rem, 6vw, 6rem); align-items: baseline; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .qs-section { padding-block: clamp(3.5rem, 7vw, 5.5rem); border-top: 1px solid var(--rule); }
+  .qs-section__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 1rem clamp(2rem, 6vw, 6rem); align-items: baseline; margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem); }
   .qs-section__head > p { max-width: 36rem; margin: 0; font-family: var(--font-serif); font-size: clamp(1.1rem, 1.5vw, 1.3rem); line-height: 1.5; color: var(--ink-soft); }
 
-  /* 2 · Desk */
+  /* 2 · Desk rows: identity | about | featured. Compact rows use only the
+     first two columns' worth of height; the featured column simply isn't there. */
   .qs-desk { background: var(--paper-raised); border-top: 0; }
-  .qs-dir { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
-  .qs-dir__item { padding: 1.25rem 1.5rem 1.4rem 0; }
-  .qs-dir__item + .qs-dir__item { padding-left: 1.5rem; border-left: 1px solid var(--rule); }
-  .qs-dir__name { margin: 0; font-size: 1.2rem; font-weight: 720; letter-spacing: -.025em; line-height: 1.15; }
-  .qs-dir__name a { text-decoration: none; }
-  .qs-dir__name a:hover { color: var(--accent); }
-  .qs-dir__subtitle { margin: .15rem 0 0; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
-  .qs-dir__desc { max-width: 24rem; margin: .5rem 0 0; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.45; color: var(--ink-soft); }
-  .qs-dir__entry { display: grid; gap: .2rem; margin: .9rem 0 0; padding-top: .8rem; border-top: 1px solid var(--rule); }
-  .qs-dir__entry a { font-family: var(--font-serif); font-size: 1.12rem; line-height: 1.25; text-decoration: none; }
-  .qs-dir__entry a:hover { color: var(--accent); }
-  .qs-dir__entry span { font-size: .86rem; color: var(--ink-soft); }
-  .qs-dir__status { margin: 1rem 0 0; font-size: .8rem; font-weight: 600; }
-  .qs-dir__item.is-reserved .qs-dir__name { color: var(--ink-soft); }
-  /* AA contrast on the darker Desk band: --ink-faint is only 4.15:1 here */
-  .qs-desk .qs-meta, .qs-desk .qs-dir__status { color: var(--ink-soft); }
+  .qs-rows { border-top: 2px solid var(--ink); }
+  .qs-row { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 17rem) minmax(0, 1fr); gap: .5rem clamp(1.5rem, 3.5vw, 3rem); align-items: start; padding-block: 1.75rem; border-bottom: 1px solid var(--rule); }
+  .qs-row--compact { padding-block: 1rem; align-items: baseline; }
+  .qs-row--compact .qs-row__about { grid-column: 2 / -1; }
+  .qs-row__name { margin: 0; font-size: 1.2rem; }
+  .qs-row--compact .qs-row__name { font-size: 1.02rem; font-weight: 680; color: var(--ink-soft); }
+  .qs-row__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
+  .qs-row__desc { max-width: 34rem; margin: 0; font-family: var(--font-serif); font-size: 1.05rem; line-height: 1.5; color: var(--ink-soft); }
+  .qs-row--compact .qs-row__desc { font-size: 1rem; }
 
-  .qs-feature { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: end; max-width: 50rem; margin-top: clamp(2rem, 4vw, 3rem); }
+  .qs-feature { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: clamp(1.25rem, 2.5vw, 2rem); align-items: start; }
+  .qs-feature--text { grid-template-columns: 1fr; }
+  .qs-feature--text h4 { font-family: var(--font-serif); font-weight: 520; letter-spacing: -.015em; line-height: 1.2; }
   .qs-feature__figure { margin: 0; }
   .qs-feature__figure :global(img) { display: block; width: 100%; height: auto; border-radius: 2px; }
-  .qs-feature__label { margin: 0 0 .4rem; font-size: .8rem; font-weight: 650; color: var(--ink-soft); }
-  .qs-feature h3 { font-size: clamp(1.6rem, 2.4vw, 2.1rem); }
+  .qs-feature h4 { font-size: clamp(1.4rem, 2vw, 1.75rem); }
   .qs-feature__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
-  .qs-feature__purpose { margin: .6rem 0 .5rem; font-family: var(--font-serif); font-size: 1.15rem; line-height: 1.45; }
+  .qs-feature__desc { max-width: 32rem; margin: .55rem 0 .5rem; font-family: var(--font-serif); font-size: 1.12rem; line-height: 1.45; }
+  /* AA contrast on the darker Desk band: --ink-faint is only 4.15:1 here */
+  .qs-desk .qs-meta { color: var(--ink-soft); }
 
   /* Framed screen crop (used only if a framed project is featured) */
   .qs-frame { position: relative; overflow: hidden; aspect-ratio: var(--cw) / var(--ch); border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); border-radius: 2px; }
   .qs-frame :global(img) { position: absolute; max-width: none; width: calc(var(--iw) / var(--cw) * 100%) !important; left: calc(var(--cx) / var(--cw) * -100%); top: calc(var(--cy) / var(--ch) * -100%); border-radius: 0; }
 
   /* 3 · Away from the dashboards */
-  .qs-away__grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+  .qs-away__grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
   .qs-away__lead { max-width: 20ch; margin: 1rem 0 1.25rem; font-family: var(--font-serif); font-size: clamp(1.45rem, 2.2vw, 1.95rem); line-height: 1.22; }
   .qs-away__copy > p:not(.qs-away__lead):not(.qs-go) { max-width: 36rem; margin: 0 0 1rem; font-family: var(--font-serif); font-size: clamp(1.05rem, 1.35vw, 1.18rem); line-height: 1.6; }
-  /* Flex-grow = aspect ratio, so the tall photo and the stack of two share one
-     height at their natural proportions. No image is cropped. */
-  .qs-photos { display: flex; gap: clamp(.75rem, 1.5vw, 1.1rem); align-items: flex-start; user-select: none; }
-  .qs-photos > .qs-photo, .qs-photos__stack { flex: var(--ar) 1 0; min-width: 0; }
-  .qs-photos__stack { display: grid; gap: clamp(.75rem, 1.5vw, 1.1rem); }
+
+  /* The tall column's width W_t solves  W_t·invTall = (W − g − W_t)·invStack + c
+     where c is the upper caption row (caption + spacing). Then the tall photo
+     ends level with the lower landscape and both bottom captions share a row. */
+  .qs-photos-wrap { container-type: inline-size; --g: 1.1rem; --cap: 1.2rem; --cap-gap: .5rem; --row-gap: 1.1rem; }
+  .qs-photos {
+    --c: calc(var(--cap-gap) + var(--cap) + var(--row-gap));
+    display: grid;
+    grid-template-columns: calc(((100cqw - var(--g)) * var(--inv-stack) + var(--c)) * var(--solve)) minmax(0, 1fr);
+    grid-template-rows: auto auto auto; /* upper photo + caption | lower photo | bottom captions */
+    column-gap: var(--g);
+    user-select: none;
+  }
   .qs-photo { margin: 0; }
   .qs-photo :global(img) { display: block; width: 100%; height: auto; pointer-events: none; border-radius: 2px; }
-  .qs-photo figcaption { margin-top: .45rem; font-family: var(--font-serif); font-size: .9rem; font-style: italic; line-height: 1.3; color: var(--ink-soft); }
+  .qs-photo figcaption { font-family: var(--font-serif); font-size: .9rem; font-style: italic; line-height: var(--cap); color: var(--ink-soft); text-wrap: pretty; }
+  /* Tall and lower figures share the grid's rows (subgrid), so their captions
+     land on the same row while each figure keeps its own image + caption. */
+  .qs-photo--tall { grid-column: 1; grid-row: 1 / 4; display: grid; grid-template-rows: subgrid; }
+  .qs-photo--tall :global(img) { grid-row: 1 / 3; }
+  .qs-photo--tall figcaption { grid-row: 3; padding-top: var(--cap-gap); }
+  .qs-photo--upper { grid-column: 2; grid-row: 1; }
+  .qs-photo--upper figcaption { margin: var(--cap-gap) 0 var(--row-gap); }
+  .qs-photo--lower { grid-column: 2; grid-row: 2 / 4; display: grid; grid-template-rows: subgrid; }
+  .qs-photo--lower :global(img) { grid-row: 1; align-self: end; }
+  .qs-photo--lower figcaption { grid-row: 2; padding-top: var(--cap-gap); }
 
   /* 4 · Work */
-  .qs-work__lede > p { max-width: 36rem; margin: 0 0 .9rem; font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.55; color: var(--ink-soft); }
-  .qs-work__lede > .qs-work__through { margin-bottom: 1rem; font-size: clamp(1.35rem, 2vw, 1.7rem); line-height: 1.25; color: var(--ink); }
-  .qs-work__cases { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 1rem clamp(2rem, 5vw, 4.5rem); padding-block: 1.75rem 2.25rem; border-top: 2px solid var(--ink); }
-  .qs-work__label h3, .qs-work__item h3 { font-size: 1.15rem; }
-  .qs-work__label > p:not(.qs-go), .qs-work__item > p:not(.qs-go):not(.qs-work__pick) { max-width: 30rem; margin: .5rem 0 0; font-size: .92rem; line-height: 1.5; color: var(--ink-soft); }
-  .qs-cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; margin: 0; padding: 0; list-style: none; }
-  .qs-cases h4 { margin: .4rem 0 .55rem; font-size: 1.15rem; }
-  .qs-cases li > p:not(.qs-meta) { margin: 0 0 .6rem; font-family: var(--font-serif); font-size: 1.02rem; line-height: 1.5; color: var(--ink-soft); }
-  .qs-work__pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem clamp(2rem, 5vw, 4.5rem); padding-top: 1.75rem; border-top: 1px solid var(--rule); }
-  .qs-work__pick { display: grid; gap: .3rem; margin: 1rem 0 0; }
-  .qs-work__pick a { font-family: var(--font-serif); font-size: clamp(1.12rem, 1.5vw, 1.3rem); line-height: 1.25; text-decoration: none; }
-  .qs-work__pick a:hover { color: var(--accent); }
+  .qs-work__head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1rem clamp(1.5rem, 3.5vw, 3rem); align-items: start; margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem); }
+  .qs-work__through { max-width: 22ch; margin: .9rem 0 0; font-family: var(--font-serif); font-size: clamp(1.3rem, 1.9vw, 1.6rem); line-height: 1.25; }
+  .qs-work__para { margin: 0; padding-top: .35rem; font-family: var(--font-serif); font-size: 1.04rem; line-height: 1.6; color: var(--ink-soft); }
+  .qs-work__grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem clamp(1.5rem, 3.5vw, 3rem); padding-top: 1.5rem; border-top: 2px solid var(--ink); }
+  .qs-work__cat + .qs-work__cat { padding-left: clamp(1.5rem, 3.5vw, 3rem); margin-left: calc(-1 * clamp(.75rem, 1.75vw, 1.5rem)); border-left: 1px solid var(--rule); }
+  .qs-work__cat h3 { font-size: 1.15rem; }
+  .qs-work__cat > p:not(.qs-go) { max-width: 30rem; margin: .6rem 0 0; font-family: var(--font-serif); font-size: 1.04rem; line-height: 1.5; color: var(--ink-soft); }
+  .qs-cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem; margin: .9rem 0 0; padding: 0; list-style: none; }
+  .qs-cases h4 { margin: .35rem 0 .5rem; font-size: 1.08rem; }
+  .qs-cases li > p:not(.qs-meta) { margin: 0 0 .55rem; font-family: var(--font-serif); font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
 
   /* 5 · Closing */
   .qs-closing { border-top: 0; background: var(--blue-dark); color: var(--paper); }
@@ -518,25 +540,46 @@ const year = new Date().getFullYear();
   .qs-foot__base span { margin-left: .4rem; color: color-mix(in srgb, var(--paper) 60%, transparent); }
 
   @media (max-width: 64rem) {
+    .qs-row { grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); }
+    .qs-row--featured .qs-feature { grid-column: 2; margin-top: 1.25rem; }
     .qs-away__grid { grid-template-columns: 1fr; }
-    .qs-photos { max-width: 44rem; }
+    .qs-photos-wrap { max-width: 42rem; }
+    .qs-work__head { grid-template-columns: 1fr 1fr; }
+    .qs-work__head > div { grid-column: 1 / -1; }
+    .qs-work__grid { grid-template-columns: 1fr 1fr; }
+    .qs-work__cat--cases { grid-column: 1 / -1; }
+    .qs-work__cat + .qs-work__cat { padding-left: 0; margin-left: 0; border-left: 0; }
+    .qs-work__cat:nth-child(3) { padding-left: clamp(1.5rem, 3.5vw, 3rem); border-left: 1px solid var(--rule); }
   }
   @media (max-width: 52rem) {
     .qs-intro { grid-template-columns: 1fr; align-items: start; }
     .qs-intro__portrait { width: min(100%, 17rem); grid-row: 1; }
-    .qs-section__head, .qs-closing__inner, .qs-work__cases, .qs-work__pair { grid-template-columns: 1fr; }
-    .qs-dir { grid-template-columns: 1fr; }
-    .qs-dir__item, .qs-dir__item + .qs-dir__item { padding: 1.1rem 0; border-left: 0; }
-    .qs-dir__item + .qs-dir__item { border-top: 1px solid var(--rule); }
+    .qs-section__head, .qs-closing__inner, .qs-work__head { grid-template-columns: 1fr; }
     .qs-foot__dir { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 36rem) {
     .qs-head ul { gap: .3rem 1.4rem; }
-    .qs-intro__portrait { width: 11rem; }
-    .qs-feature { grid-template-columns: 1fr; }
-    .qs-feature__figure { width: min(100%, 15rem); }
+    .qs-intro__portrait { width: 13rem; }
+    /* Rows stack; featured content only where it exists */
+    .qs-row, .qs-row--compact { grid-template-columns: 1fr; gap: .4rem; }
+    .qs-row--compact .qs-row__about, .qs-row--featured .qs-feature { grid-column: 1; }
+    .qs-row--featured .qs-feature { margin-top: 1rem; }
+    .qs-feature { grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr); gap: 1rem; }
+    .qs-feature h4 { font-size: 1.3rem; }
+    .qs-feature__desc { font-size: 1.04rem; }
+    /* Photos: the tall panorama with its caption beside it, then the two
+       landscapes at full width. */
+    .qs-photos { display: block; }
+    .qs-photo--tall { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); grid-template-rows: none; gap: 1rem; align-items: end; }
+    .qs-photo--tall :global(img), .qs-photo--tall figcaption { grid-row: auto; }
+    .qs-photo--tall figcaption { padding: 0 0 .1rem; }
+    .qs-photo--upper { margin-top: 1.25rem; }
+    .qs-photo--upper figcaption { margin-bottom: 1.1rem; }
+    .qs-photo--lower { display: block; }
+    .qs-work__grid { grid-template-columns: 1fr; }
+    .qs-work__cat:nth-child(3) { padding-left: 0; border-left: 0; }
+    .qs-work__cat + .qs-work__cat { padding-top: 1.25rem; border-top: 1px solid var(--rule); }
     .qs-cases { grid-template-columns: 1fr; gap: 0; }
     .qs-cases li + li { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
-    .qs-work__pair > * + * { padding-top: 1.5rem; border-top: 1px solid var(--rule); }
   }
 </style>
