@@ -132,11 +132,34 @@ assert_grep dist/preview/home/atlas/index.html "at-plate"
 assert_grep dist/preview/home/atlas/index.html "Balagtas ↔ TriNoma"
 assert_grep dist/preview/home/quiet/index.html "qs-intro"
 assert_grep dist/preview/home/quiet/index.html "Away from the dashboards"
-assert_grep dist/preview/home/quiet/index.html "Pretends to be a photographer and a good writer."
+assert_grep dist/preview/home/quiet/index.html "The bored storyteller pretending to be a photographer and a good writer."
 # D's Desk directory reserves Artifacts / Field Notes as text only.
 Q=dist/preview/home/quiet/index.html
-assert_grep   "$Q" "Personal writing about gadgets, objects, and products."
-assert_grep   "$Q" "Essays, reflections, and observations."
+# Approved copy (iteration 5), reproduced exactly. Apostrophes are ’ (U+2019).
+for line in \
+  "Have you heard of AI? Not that one." \
+  "I work with AI. Audience intelligence, that is. Turning insight into better digital work." \
+  "Things from my digital desk that I’ve decided to share. Some can be useful, definitely specific, and occasionally unnecessary." \
+  "Works in Progress" \
+  "Independent applications, utilities, and experiments." \
+  "As Things Stand" \
+  "Notes on objects I’ve lived with as they turn from purchases into artifacts (and sometimes back)." \
+  "From the Margins" \
+  "Thoughts that have managed to escape from my numerous draft folders." \
+  "Away from the dashboards" \
+  "The bored storyteller pretending to be a photographer and a good writer." \
+  "That is how I describe myself on Instagram, where I put photographs and the occasional poem or piece of prose. It captures my discomfort with calling myself a photographer, or even a good writer, despite spending years taking photographs and writing." \
+  "I’ve been told I’m an amazing conversationalist. I choose to interpret that as being an acquired taste." \
+  "The heart of it has always been writing." \
+  "When I write, I often know the ending before I’ve written the opening. Sometimes it’s the final line, sometimes a kicker, sometimes a quote. The interesting part is figuring out how to get there." \
+  "I approach other work much the same way. I start with an outcome in mind and work backward through the decisions needed to reach it." \
+  "Of course, the result still has to survive contact with actual work. It has to make sense to the people using it, respect the limits they work within, and remain useful long after the presentation ends."; do
+  assert_grep "$Q" "$line"
+done
+# Superseded copy is gone from D.
+assert_nogrep "$Q" "Across strategy, content, analytics"
+assert_nogrep "$Q" "Some are useful, definitely specific, and occasionally unnecessary."
+assert_nogrep "$Q" "In my twenties"
 # State 1 — only Projects published: one featured row, two compact rows, no
 # status notices, and no links or entries for the gated collections.
 assert_count  "$Q" 'qs-row--featured' 1

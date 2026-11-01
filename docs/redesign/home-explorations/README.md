@@ -1,6 +1,6 @@
 # Homepage explorations — four directions
 
-Status: **D · Quiet Personal Site is the selected foundation** and is now in its fourth iteration (adaptive Desk rows, wider portrait framing, aligned photo captions, and a more compact Work section). A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
+Status: **D · Quiet Personal Site is the selected foundation** and is now in its fifth iteration (approved copy, the full uncropped portrait, and a single-column Work introduction). A–C are kept for reference only and are no longer developed. Nothing here is approved for production.
 
 Exploration 01 for repositioning archievalmariano.com from a professional portfolio
 into a personal archive: professional work, independent software, experiments,
@@ -144,14 +144,47 @@ photography into one visual language. **Risks:** the most art-directed, so the
 hardest to keep maintainable. The regional plate only stays meaningful if more
 located material is added over time.
 
-## D · Quiet Personal Site — iteration 4 (selected foundation)
+## D · Quiet Personal Site — iteration 5 (selected foundation)
 
-*Restraint over concept.* D keeps the production homepage's palette, Inter and
-Newsreader, understated rules, introduction, portrait, Desk · Work · About · Contact
-navigation, personal photography, and the dark blue closing panel. Iteration 4
-refines layout and responsiveness. Screenshots: [desktop, 1440px](quiet-desktop-full.jpg)
-· [mobile, 390px](quiet-mobile-full.jpg). The desktop page is 3,529px tall, down from
-4,074px in iteration 3 and 5,230px in iteration 2.
+*Approved direction.* Iteration 5 applies the author-approved copy, restores the full
+portrait, and adjusts the layout around the new text. Screenshots:
+[desktop, 1440px](quiet-desktop-full.jpg) · [mobile, 390px](quiet-mobile-full.jpg).
+
+### Iteration 5 changes
+
+- **Approved copy:** all section copy is the author-approved text, kept in a single
+  `copy` object at the top of `Quiet.astro` (not in the shared `archive.ts`, so A–C
+  are unchanged). It is reproduced exactly; the only character difference is that
+  apostrophes are set as typographic ’ to match the rest of the site. The gate test
+  asserts every approved line verbatim, and asserts that the superseded copy (hero
+  intro paragraph, old Projects description, travel paragraph) is gone.
+- **Hero:** the headline, then “I work with AI. Audience intelligence, that is.
+  Turning insight into better digital work.”, then the links “Explore my work” and
+  “A little about me”, in that order. The earlier “Across strategy…” paragraph is
+  not part of the approved hero and was removed from D only (production is
+  unchanged).
+- **Portrait:** the **entire 2000×1333 photograph** at its native 3:2. No
+  `object-fit`, no forced ratio, and no crop; the rendered ratio matches the
+  natural ratio at 1440px and 390px. It sits in a column of up to 28rem
+  (about 448×299px at desktop), bottom-aligned with the links, so the headline
+  stays primary. On mobile it follows the text at full width.
+- **Desk:** the approved introduction, subtitles, and descriptions. The subtitles
+  “As Things Stand” and “From the Margins” are now shown on the compact rows as
+  well. Rows, gating, and the DOGEAR feature are unchanged.
+- **Away from the dashboards:** the approved subheading and two paragraphs, with
+  the same three photographs, captions, and gallery layout.
+- **Work introduction:** see below.
+
+### Work introduction: reading order
+
+The three approved paragraphs are one argument, so they stay together in **one
+column** with a reading measure of about 36rem, never split across columns. The
+grid uses the same two columns as the Desk introduction: the heading “Work” and
+the subheading “The heart of it has always been writing.” on the left, and the
+continuous body column on the right. Source order is heading, subheading,
+paragraphs 1 to 3, then the categories. That is the reading order for screen
+readers and on mobile, where everything stacks in that order. The categories row
+(Case studies, Commissioned writing, and Services) follows unchanged.
 
 ### Navigation and information architecture (unchanged)
 
@@ -200,15 +233,6 @@ All three states are checked by `scripts/home-preview-gate-test.sh`, using the
 existing synthetic fixtures inside the test only. No fixture content is committed
 to these docs.
 
-### Portrait
-
-The source is a 3:2 landscape (2000×1333). Iteration 3 cropped it to 4:5, keeping
-about half the width. Iteration 4 uses a **square** crop: it keeps two-thirds of
-the width (more of the wall, shoulders, and both arms), is anchored slightly above
-centre, and stays in the same 20rem column. The image is shorter than before
-(about 320px rather than 400px at desktop), so its size relative to the headline
-stays modest. Same photograph; no frame was added.
-
 ### Photography and captions
 
 The tall Taipei panorama sits beside the two stacked landscapes, all uncropped.
@@ -224,11 +248,8 @@ balanced lines instead of four. On mobile, the panorama sits at 11rem with its
 caption beside it, aligned to the bottom, and the two landscapes follow at full
 width. The section's top and bottom spacing is unchanged.
 
-### Work
+### Work categories
 
-- **Introduction:** “Work” and the throughline title now share the first column,
-  with the two throughline paragraphs in the next two. This replaces the large
-  empty area beside the heading.
 - **Categories:** one row of three columns under Work, separated by hairlines:
   - **Case studies** (wider column): two selected entries plus “All case
     studies →”.
@@ -240,27 +261,27 @@ width. The section's top and bottom spacing is unchanged.
 
 ### Editorial style
 
-New or revised copy uses the serial comma. The provisional Desk descriptions are
-“Personal writing about gadgets, objects, and products.” and “Essays, reflections,
-and observations.” Existing published prose was not changed. Inconsistencies
+The homepage copy is the approved text and uses the serial comma. Existing
+published prose on other pages was not changed. Inconsistencies
 noticed for later editorial review (not edited):
 
 - `/desk/projects/` (intro and meta description): “applications, utilities and
-  experiments” (also reused verbatim on D).
+  experiments”. D now uses the approved “applications, utilities, and
+  experiments.”
 - `/desk/tools/` and `src/content/projects/tools.json`: “a calendar, a calculator
   and a clock”.
 - `/desk/` meta description: “a calendar, calculator and clock”.
 - `/desk/dogear/`: “books, literary anniversaries and discoveries” (twice).
 - `/work/` heading: “audiences, systems and digital work”.
-- Homepage throughline (also on D): “analytics, e-commerce and digital
+- Production homepage throughline: “analytics, e-commerce and digital
   operations”, while the cover intro on the same page uses “e-commerce, and
-  digital operations”.
+  digital operations”. (D no longer uses the throughline.)
 
 ### Images
 
 | Item | Asset | Presentation |
 | --- | --- | --- |
-| Hero | `archieval-portrait.jpg` | Square crop of the 3:2 source |
+| Hero | `archieval-portrait.jpg` | Entire photograph, native 3:2, uncropped |
 | Featured project (DOGEAR) | `dogear-01-issue-x4-x4pro.jpg` | Device photograph, uncropped |
 | Photography | `about-taipei-street.jpg`, `about-baywalk-cat.jpg`, `about-esplanade-bridge.jpg` | Uncropped, natural proportions |
 
@@ -281,7 +302,8 @@ because launched entries render as text.
 - **Remaining:**
   - Compact rows are plain text. Sighted users read the absence of a link, but
     nothing tells screen-reader users the category has no content yet. That is
-    deliberate, since you asked for no notices.
+    deliberate, since you asked for no notices. The approved subtitles now give
+    these rows a little more presence.
   - The photo alignment assumes the upper caption fits on one line at desktop
     widths. If it wraps, the panorama ends one line short (no cropping or
     overlap).

@@ -30,8 +30,8 @@
 //   • Artifacts / Field Notes' featured item: featured entry first, then latest
 //     by pubDate; never drafts. Unpublished collections are never queried.
 //
-// All copy is reused from existing pages, except the two provisional
-// descriptions for Artifacts and Field Notes (marked below).
+// Section copy is the author-approved text in `copy` below; other strings
+// (project facts, case studies, captions, closing) come from existing content.
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
@@ -40,12 +40,10 @@ import onPointBoard from '../../assets/photos/onpoint-01-board.jpg';
 import gotoStory from '../../assets/photos/goto-edition-01-story.jpg';
 import {
   closing,
-  cover,
   loadArchive,
   photos,
   portraitPhoto,
   siteLinks,
-  throughline,
   workHref,
   writingIntro,
 } from './archive';
@@ -114,12 +112,43 @@ function projectFeature(): Featured | undefined {
   };
 }
 
-// PROVISIONAL descriptions for the editorial categories (paraphrased from the
-// redesign brief; for the author to approve or rewrite). Plain text.
-const editorialCopy: Record<DeskCollectionKey, string> = {
-  artifacts: 'Personal writing about gadgets, objects, and products.',
-  fieldNotes: 'Essays, reflections, and observations.',
-};
+// ── APPROVED COPY (iteration 5) ─────────────────────────────────────────────
+// Reproduced exactly as approved by the author; apostrophes are set as
+// typographic ’ to match the site. Do not paraphrase. Kept here (not in the
+// shared archive.ts) so explorations A–C are unaffected.
+const copy = {
+  hero: {
+    headline: 'Have you heard of AI? Not that one.',
+    statement: 'I work with AI. Audience intelligence, that is. Turning insight into better digital work.',
+  },
+  desk: {
+    intro:
+      'Things from my digital desk that I’ve decided to share. Some can be useful, definitely specific, and occasionally unnecessary.',
+    projects: { subtitle: 'Works in Progress', description: 'Independent applications, utilities, and experiments.' },
+    artifacts: {
+      subtitle: 'As Things Stand',
+      description: 'Notes on objects I’ve lived with as they turn from purchases into artifacts (and sometimes back).',
+    },
+    fieldNotes: { subtitle: 'From the Margins', description: 'Thoughts that have managed to escape from my numerous draft folders.' },
+  },
+  away: {
+    heading: 'Away from the dashboards',
+    subheading: 'The bored storyteller pretending to be a photographer and a good writer.',
+    body: [
+      'That is how I describe myself on Instagram, where I put photographs and the occasional poem or piece of prose. It captures my discomfort with calling myself a photographer, or even a good writer, despite spending years taking photographs and writing.',
+      'I’ve been told I’m an amazing conversationalist. I choose to interpret that as being an acquired taste.',
+    ],
+  },
+  work: {
+    heading: 'Work',
+    subheading: 'The heart of it has always been writing.',
+    body: [
+      'When I write, I often know the ending before I’ve written the opening. Sometimes it’s the final line, sometimes a kicker, sometimes a quote. The interesting part is figuring out how to get there.',
+      'I approach other work much the same way. I start with an outcome in mind and work backward through the decisions needed to reach it.',
+      'Of course, the result still has to survive contact with actual work. It has to make sense to the people using it, respect the limits they work within, and remain useful long after the presentation ends.',
+    ],
+  },
+} as const;
 
 async function editorialFeature(key: DeskCollectionKey, slug: string): Promise<Featured | undefined> {
   const all = await getCollection(key as any, ({ data }: any) => !data.draft);
@@ -140,9 +169,8 @@ const rows: Row[] = [
   {
     key: 'projects',
     name: 'Projects',
-    subtitle: 'Works in Progress',
-    description:
-      'Independent applications, utilities and experiments. Some are useful, definitely specific, and occasionally unnecessary.',
+    subtitle: copy.desk.projects.subtitle,
+    description: copy.desk.projects.description,
     href: '/desk/projects/',
     linkLabel: 'All projects',
     featured: projectFeature(),
@@ -153,12 +181,11 @@ for (const c of deskCollections) {
   const featured = isPublished(c.key) ? await editorialFeature(c.key, c.slug) : undefined;
   rows.push(
     featured
-      ? { key: c.slug, name: c.label, subtitle: c.subtitle, description: editorialCopy[c.key], href: `/desk/${c.slug}/`, linkLabel: `All ${c.label}`, featured }
-      : { key: c.slug, name: c.label, description: editorialCopy[c.key] }
+      ? { key: c.slug, name: c.label, subtitle: copy.desk[c.key].subtitle, description: copy.desk[c.key].description, href: `/desk/${c.slug}/`, linkLabel: `All ${c.label}`, featured }
+      : { key: c.slug, name: c.label, subtitle: copy.desk[c.key].subtitle, description: copy.desk[c.key].description }
   );
 }
 
-// ── Portrait: wider (square) framing of the 3:2 source ─────────────────────
 // ── Photographs: one tall image beside a stack of two. The tall column's
 // width is solved from the photos' own proportions (and the one caption row
 // inside the stack) so the tall image ends where the lower landscape ends and
@@ -209,20 +236,19 @@ const year = new Date().getFullYear();
   <!-- 1 · Introduction -->
   <section class="qs-wrap qs-intro" aria-labelledby="qs-title">
     <div class="qs-intro__copy">
-      <h1 id="qs-title">{cover.headline}</h1>
-      <p class="qs-intro__statement">{cover.statement}</p>
-      <p class="qs-intro__body">{cover.intro}</p>
+      <h1 id="qs-title">{copy.hero.headline}</h1>
+      <p class="qs-intro__statement">{copy.hero.statement}</p>
       <p class="qs-links">
-        <a href="/about/">A little about me <span aria-hidden="true">→</span></a>
         <a href="#qs-work">Explore my work <span aria-hidden="true">→</span></a>
+        <a href="/about/">A little about me <span aria-hidden="true">→</span></a>
       </p>
     </div>
     <figure class="qs-intro__portrait">
       <Image
         src={portraitPhoto.src}
         alt={portraitPhoto.alt}
-        widths={[400, 600, 800, 1000]}
-        sizes="(max-width: 36rem) 13rem, (max-width: 52rem) 17rem, 20rem"
+        widths={[480, 720, 960, 1280]}
+        sizes="(max-width: 52rem) min(100vw, 30rem), 28rem"
         format="webp"
         quality={76}
         loading="eager"
@@ -235,10 +261,7 @@ const year = new Date().getFullYear();
     <div class="qs-wrap">
       <header class="qs-section__head">
         <h2 id="qs-desk-title"><a href="/desk/">Desk</a></h2>
-        <p>
-          Things from my digital desk that I’ve decided to share. Some can be useful,
-          definitely specific, and occasionally unnecessary.
-        </p>
+        <p>{copy.desk.intro}</p>
       </header>
 
       <div class="qs-rows">
@@ -247,7 +270,7 @@ const year = new Date().getFullYear();
             <section class:list={['qs-row', r.featured ? 'qs-row--featured' : 'qs-row--compact']} aria-label={r.name}>
               <div class="qs-row__id">
                 <h3 class="qs-row__name">{r.href ? <a href={r.href}>{r.name}</a> : r.name}</h3>
-                {r.featured && r.subtitle && <p class="qs-row__subtitle">{r.subtitle}</p>}
+                {r.subtitle && <p class="qs-row__subtitle">{r.subtitle}</p>}
               </div>
               <div class="qs-row__about">
                 <p class="qs-row__desc">{r.description}</p>
@@ -288,20 +311,9 @@ const year = new Date().getFullYear();
   <section class="qs-section qs-away" aria-labelledby="qs-away-title">
     <div class="qs-wrap qs-away__grid">
       <div class="qs-away__copy">
-        <h2 id="qs-away-title">Away from the dashboards</h2>
-        <p class="qs-away__lead">Pretends to be a photographer and a good writer.</p>
-        <p>
-          That is how I describe myself on Instagram, where I post photographs and the
-          occasional poem or piece of prose. It captures my discomfort with calling myself
-          a photographer, or even a good writer, despite spending years taking photographs
-          and writing.
-        </p>
-        <p>
-          In my twenties, I built trips around hostels and long journeys over land, saving
-          on comfort so I could spend more on experience. I still travel, but I no longer
-          treat discomfort as proof that a trip mattered. I move more slowly now, chase
-          fewer attractions, and leave more room to notice what is actually there.
-        </p>
+        <h2 id="qs-away-title">{copy.away.heading}</h2>
+        <p class="qs-away__lead">{copy.away.subheading}</p>
+        {copy.away.body.map((p) => <p>{p}</p>)}
         <p class="qs-go"><a href="/about/">More about me <span aria-hidden="true">→</span></a></p>
       </div>
 
@@ -328,11 +340,13 @@ const year = new Date().getFullYear();
   <section class="qs-section qs-work" id="qs-work" aria-labelledby="qs-work-title">
     <div class="qs-wrap">
       <header class="qs-work__head">
-        <div>
-          <h2 id="qs-work-title"><a href="/work/">Work</a></h2>
-          <p class="qs-work__through">{throughline.title}</p>
+        <div class="qs-work__title">
+          <h2 id="qs-work-title"><a href="/work/">{copy.work.heading}</a></h2>
+          <p class="qs-work__through">{copy.work.subheading}</p>
         </div>
-        {throughline.paragraphs.map((p) => <p class="qs-work__para">{p}</p>)}
+        <div class="qs-work__body">
+          {copy.work.body.map((p) => <p>{p}</p>)}
+        </div>
       </header>
 
       <div class="qs-work__grid">
@@ -434,13 +448,13 @@ const year = new Date().getFullYear();
   .qs-head nav a { display: inline-block; padding-block: .25rem; font-size: .9rem; font-weight: 580; color: var(--ink-soft); text-decoration: none; }
   .qs-head nav a:hover { color: var(--accent); }
 
-  /* 1 · Introduction — square framing of the 3:2 portrait (wider than 4:5) */
-  .qs-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(14rem, 20rem); gap: clamp(2rem, 7vw, 7rem); align-items: end; padding-top: clamp(3rem, 8vw, 6.5rem); padding-bottom: clamp(3rem, 7vw, 5.5rem); }
+  /* 1 · Introduction — the full landscape portrait beside the headline */
+  .qs-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, 28rem); gap: clamp(2rem, 6vw, 5.5rem); align-items: end; padding-top: clamp(3rem, 8vw, 6.5rem); padding-bottom: clamp(3rem, 7vw, 5.5rem); }
   .qs-intro h1 { max-width: 16ch; font-family: var(--font-sans); font-size: clamp(2.4rem, 4.6vw, 4.1rem); font-weight: 740; letter-spacing: -.05em; line-height: 1; }
   .qs-intro__statement { max-width: 32rem; margin: 1.5rem 0 0; font-family: var(--font-serif); font-size: clamp(1.25rem, 1.8vw, 1.55rem); line-height: 1.42; }
-  .qs-intro__body { max-width: 36rem; margin: 1rem 0 0; line-height: 1.65; color: var(--ink-soft); }
   .qs-intro__portrait { margin: 0; }
-  .qs-intro__portrait :global(img) { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: 46% 40%; filter: saturate(.85) contrast(1.03); border-radius: 2px; }
+  /* The whole 3:2 photograph at its native proportions: no crop, no cover. */
+  .qs-intro__portrait :global(img) { display: block; width: 100%; height: auto; filter: saturate(.85) contrast(1.03); border-radius: 2px; }
 
   /* Sections */
   .qs-section { padding-block: clamp(3.5rem, 7vw, 5.5rem); border-top: 1px solid var(--rule); }
@@ -456,6 +470,7 @@ const year = new Date().getFullYear();
   .qs-row--compact .qs-row__about { grid-column: 2 / -1; }
   .qs-row__name { margin: 0; font-size: 1.2rem; }
   .qs-row--compact .qs-row__name { font-size: 1.02rem; font-weight: 680; color: var(--ink-soft); }
+  .qs-row--compact .qs-row__subtitle { font-size: .92rem; }
   .qs-row__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
   .qs-row__desc { max-width: 34rem; margin: 0; font-family: var(--font-serif); font-size: 1.05rem; line-height: 1.5; color: var(--ink-soft); }
   .qs-row--compact .qs-row__desc { font-size: 1rem; }
@@ -507,9 +522,13 @@ const year = new Date().getFullYear();
   .qs-photo--lower figcaption { grid-row: 2; padding-top: var(--cap-gap); }
 
   /* 4 · Work */
-  .qs-work__head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1rem clamp(1.5rem, 3.5vw, 3rem); align-items: start; margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem); }
-  .qs-work__through { max-width: 22ch; margin: .9rem 0 0; font-family: var(--font-serif); font-size: clamp(1.3rem, 1.9vw, 1.6rem); line-height: 1.25; }
-  .qs-work__para { margin: 0; padding-top: .35rem; font-family: var(--font-serif); font-size: 1.04rem; line-height: 1.6; color: var(--ink-soft); }
+  /* Heading + subheading, then the three paragraphs as ONE continuous column
+     at a reading measure, aligned with the Desk introduction's column. */
+  .qs-work__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 1rem clamp(2rem, 6vw, 6rem); align-items: start; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .qs-work__through { max-width: 16ch; margin: .9rem 0 0; font-family: var(--font-serif); font-size: clamp(1.45rem, 2.2vw, 1.95rem); line-height: 1.22; }
+  .qs-work__body { max-width: 36rem; }
+  .qs-work__body p { margin: 0 0 1rem; font-family: var(--font-serif); font-size: clamp(1.05rem, 1.35vw, 1.15rem); line-height: 1.6; color: var(--ink-soft); }
+  .qs-work__body p:last-child { margin-bottom: 0; }
   .qs-work__grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem clamp(1.5rem, 3.5vw, 3rem); padding-top: 1.5rem; border-top: 2px solid var(--ink); }
   .qs-work__cat + .qs-work__cat { padding-left: clamp(1.5rem, 3.5vw, 3rem); margin-left: calc(-1 * clamp(.75rem, 1.75vw, 1.5rem)); border-left: 1px solid var(--rule); }
   .qs-work__cat h3 { font-size: 1.15rem; }
@@ -544,8 +563,6 @@ const year = new Date().getFullYear();
     .qs-row--featured .qs-feature { grid-column: 2; margin-top: 1.25rem; }
     .qs-away__grid { grid-template-columns: 1fr; }
     .qs-photos-wrap { max-width: 42rem; }
-    .qs-work__head { grid-template-columns: 1fr 1fr; }
-    .qs-work__head > div { grid-column: 1 / -1; }
     .qs-work__grid { grid-template-columns: 1fr 1fr; }
     .qs-work__cat--cases { grid-column: 1 / -1; }
     .qs-work__cat + .qs-work__cat { padding-left: 0; margin-left: 0; border-left: 0; }
@@ -553,13 +570,13 @@ const year = new Date().getFullYear();
   }
   @media (max-width: 52rem) {
     .qs-intro { grid-template-columns: 1fr; align-items: start; }
-    .qs-intro__portrait { width: min(100%, 17rem); grid-row: 1; }
+    .qs-intro__portrait { width: min(100%, 30rem); }
     .qs-section__head, .qs-closing__inner, .qs-work__head { grid-template-columns: 1fr; }
     .qs-foot__dir { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 36rem) {
     .qs-head ul { gap: .3rem 1.4rem; }
-    .qs-intro__portrait { width: 13rem; }
+    .qs-intro__portrait { width: 100%; }
     /* Rows stack; featured content only where it exists */
     .qs-row, .qs-row--compact { grid-template-columns: 1fr; gap: .4rem; }
     .qs-row--compact .qs-row__about, .qs-row--featured .qs-feature { grid-column: 1; }
