@@ -3,6 +3,8 @@
 // NOTES). The editorial subtitle lives here, on the collection landing — not
 // above every article. Listing stays understated: title and excerpt lead; any
 // status is a quiet text label, never a coloured badge.
+import DeskNav from './DeskNav.astro';
+
 interface ListItem {
   href: string;
   title: string;
@@ -18,6 +20,7 @@ interface Props {
   accent?: string; // CSS var name for the chapter chip background
   items: ListItem[];
   emptyText?: string;
+  showNav?: boolean; // render the DESK secondary nav between the intro and the listing
 }
 
 const {
@@ -28,6 +31,7 @@ const {
   accent = 'var(--yellow)',
   items,
   emptyText = 'Nothing here yet.',
+  showNav = false,
 } = Astro.props;
 ---
 
@@ -37,6 +41,12 @@ const {
   <p class="page-head__subtitle">{subtitle}</p>
   {intro && <p class="page-head__intro">{intro}</p>}
 </section>
+
+{showNav && (
+  <div class="wrap">
+    <DeskNav />
+  </div>
+)}
 
 <section class="wrap">
   {

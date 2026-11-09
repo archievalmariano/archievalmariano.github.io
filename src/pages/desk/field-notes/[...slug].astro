@@ -6,7 +6,6 @@
 import { getCollection } from 'astro:content';
 import { isPublished, collectionMeta } from '../../../data/desk';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import DeskNav from '../../../components/DeskNav.astro';
 import CollectionIndex from '../../../components/CollectionIndex.astro';
 import DeskArticleLayout from '../../../layouts/DeskArticleLayout.astro';
 
@@ -56,17 +55,15 @@ const items =
       title="Field Notes — Archieval Mariano"
       description="From the Margins — observations, travelogues, reflections, and photography-led writing."
     >
-      <div class="wrap">
-        <DeskNav />
-      </div>
       <CollectionIndex
         label={meta.label}
         subtitle={meta.subtitle}
         chapterNo="Desk"
         accent="var(--blue-soft)"
-        intro="Observations, travels, and writing from the margins."
+        intro="Thoughts that have managed to escape from my numerous draft folders."
         items={items}
         emptyText="No entries published yet."
+        showNav={true}
       />
     </BaseLayout>
   ) : (
