@@ -2,25 +2,31 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import imgIssue from '../../../assets/photos/dogear-01-issue-x4-x4pro.jpg';
-import imgEntryX4Pro from '../../../assets/photos/dogear-02-entry-x4pro.jpg';
-import imgEntryX4 from '../../../assets/photos/dogear-03-entry-x4.jpg';
+import imgOverview from '../../../assets/photos/dogear-07-issue-overview.jpg';
+import imgEntry from '../../../assets/photos/dogear-08-entry-tagore.jpg';
+import imgReadOnline from '../../../assets/photos/dogear-09-read-online.jpg';
 import imgScan from '../../../assets/photos/dogear-04-scan.jpg';
 import imgApps from '../../../assets/photos/dogear-05-apps-x4pro.jpg';
 import imgWeb from '../../../assets/photos/dogear-06-web-edition.jpg';
 
 const release = 'https://github.com/archievalmariano/crosspoint-reader/releases';
 
-// One issue, an entry on each device.
+// The weekly reading flow: the cover, then an entry of its own.
 const entries = [
   {
-    src: imgEntryX4Pro,
-    alt: 'A DOGEAR entry on an XTEINK X4 Pro: 14 October, born 1988, Ocean Vuong is born in Saigon, page 4 of 6.',
-    caption: 'One writer, book or anniversary per screen, here on the X4 Pro.',
+    src: imgOverview,
+    alt: 'The DOGEAR issue for 9 to 15 November 2026 on an XTEINK X4 Pro: the cover, with Fyodor Dostoevsky, born 1821, as the lead entry, and Teodoro Agoncillo, Paz Márquez-Benítez, Rabindranath Tagore, Treasure Island and Gabriela Mistral under Also this week; screen 1 of 8.',
+    caption: 'Each issue opens on its cover: the week, a lead entry, and the writers and anniversaries it gathers.',
   },
   {
-    src: imgEntryX4,
-    alt: 'A DOGEAR entry on an XTEINK X4: 17 October, born 1948, Robert Jordan is born in Charleston, page 5 of 6.',
-    caption: 'The same issue on the X4, laid out for its screen.',
+    src: imgEntry,
+    alt: 'A DOGEAR entry on an XTEINK X4 Pro: 13 November, Nobel Prize 1913, “Tagore learns he has won the Nobel Prize”, with a READ ONLINE link at the foot; screen 5 of 8.',
+    caption: 'Each entry gets a screen of its own. Where a book is free to read, the foot offers READ ONLINE.',
+  },
+  {
+    src: imgReadOnline,
+    alt: 'The DOGEAR READ ONLINE screen on an XTEINK X4 Pro for the 9 to 15 November 2026 issue: Gitanjali by Rabindranath Tagore, Song Offerings, his English versions (1912), a QR code, and Free on Project Gutenberg.',
+    caption: 'READ ONLINE then opens as a QR code to the book — here, Tagore’s Gitanjali on Project Gutenberg.',
   },
 ];
 
@@ -45,8 +51,8 @@ const packages = [
     device: 'XTEINK X4',
     method: 'microSD update',
     file: 'firmware-x4-gd.bin',
-    identity: '1.6.5-A1.2.0-GD',
-    sha256: '8d9b99806676925fc04d603ddb2b62a064c0be6acf1b17e042a4613b03321302',
+    identity: '2.0.0-A1.4.0-GD',
+    sha256: '12219e45ca9e559b4d0e3ddb16e9326bcb984e3cb7d415f2d3e619e3126d9f00',
     guide: { href: '/desk/goto/install/', label: 'Installation guide', via: 'microSD updater' },
   },
   {
@@ -54,8 +60,8 @@ const packages = [
     device: 'XTEINK X4 Pro',
     method: 'USB flashing',
     file: 'firmware-x4pro-gd.factory.bin',
-    identity: '1.6.5-A1.2.0-GD',
-    sha256: '34730b4808358daba3d1ccbcaaa0b8123ce5285d380911b84e7b80961c80dfe1',
+    identity: '2.0.0-A1.4.0-GD',
+    sha256: 'd9f8ea78044d7c541d809ba98affb27286fc99a792740970f5538faee57a68bd',
     guide: { href: '/desk/goto/install/x4-pro/', label: 'Installation guide', via: 'USB (esptool)' },
   },
   {
@@ -63,8 +69,8 @@ const packages = [
     device: 'XTEINK X4 Pro',
     method: 'USB flashing',
     file: 'firmware-x4pro-pd.factory.bin',
-    identity: '1.6.5-A1.2.0-PD',
-    sha256: 'b1e4d993b69628fc9dc03e4ced8411e2c1160609b6cbfc458b48f13690547074',
+    identity: '2.0.0-A1.4.0-PD',
+    sha256: '8154e1bd05490ab6132863e0bce6fe807c94a47b9d2b96946fb17d0b350f900a',
     guide: { href: '/desk/goto/install/x4-pro/', label: 'Installation guide', via: 'USB (esptool)' },
   },
   {
@@ -72,8 +78,8 @@ const packages = [
     device: 'XTEINK X4 Pro',
     method: 'USB flashing',
     file: 'firmware-x4pro-gpd.factory.bin',
-    identity: '1.6.5-A1.2.0-GPD',
-    sha256: '73a769c3e93881b686ecf48238b5b5b6de7fc286cf46b70202b0e7dc9e29a774',
+    identity: '2.0.0-A1.4.0-GPD',
+    sha256: 'fc5614ddbba9701f5c7729ad4b9c912f50612ad01ca713ed0d9a4509a2a64db9',
     guide: { href: '/desk/goto/install/x4-pro/', label: 'Installation guide', via: 'USB (esptool)' },
   },
 ];
@@ -208,11 +214,11 @@ const x4ProPackages = packages.filter((pkg) => pkg.device === 'XTEINK X4 Pro');
                 {pkg.name} <span class="dg__device-method">· {pkg.device} · {pkg.method}</span>
               </h3>
               <dl class="dg__meta">
-                <div><dt>Release</dt><dd>v1.2.0 · CrossPoint 1.6.5 + Apps 1.2.0</dd></div>
+                <div><dt>Release</dt><dd>v1.4.0 · CrossPoint 2.0.0 + Apps 1.4.0</dd></div>
                 <div><dt>On-device identity</dt><dd>{pkg.identity}</dd></div>
               </dl>
               <p class="dg__actions">
-                <a class="dg__download" href={`${release}/download/v1.2.0/${pkg.file}`}>
+                <a class="dg__download" href={`${release}/download/v1.4.0/${pkg.file}`}>
                   Download for {pkg.device}
                 </a>
               </p>
@@ -221,7 +227,7 @@ const x4ProPackages = packages.filter((pkg) => pkg.device === 'XTEINK X4 Pro');
                 <span aria-hidden="true">·</span>
                 <a href={pkg.guide.href}>{pkg.guide.label}</a> · {pkg.guide.via}
                 <span aria-hidden="true">·</span>
-                <a href={`${release}/tag/v1.2.0`} target="_blank" rel="noopener">Release notes</a>
+                <a href={`${release}/tag/v1.4.0`} target="_blank" rel="noopener">Release notes</a>
               </p>
               <p class="dg__sha">
                 <span class="dg__sha-label">SHA-256</span>

@@ -1,24 +1,52 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
+import imgTerminal from '../../../assets/photos/onpoint-05-terminal.jpg';
 import imgBoard from '../../../assets/photos/onpoint-01-board.jpg';
-import imgRoutes from '../../../assets/photos/onpoint-02-routes.jpg';
+import imgCountdown from '../../../assets/photos/onpoint-06-countdown.jpg';
 import imgCubao from '../../../assets/photos/onpoint-03-cubao-clark.jpg';
-import imgRoutes2 from '../../../assets/photos/onpoint-04-routes-page2.jpg';
 import imgApps from '../../../assets/photos/tools-06-apps-x4pro.jpg';
 
 const release = 'https://github.com/archievalmariano/crosspoint-reader/releases';
 
-// Bundled routes in the current release, in the order the device lists them.
-const routes = [
-  { route: 'Balagtas ↔ TriNoma', operator: 'Bulacan P2P', days: 'Daily' },
-  { route: 'Caypombo ↔ SM North EDSA', operator: 'Precious Grace', days: 'Daily' },
-  { route: 'Clark Airport ↔ Baguio', operator: 'Genesis', days: 'Daily' },
-  { route: 'Clark Airport ↔ NAIA T3', operator: 'Genesis', days: 'Daily' },
-  { route: 'Cubao ↔ Clark Airport', operator: 'Genesis', days: 'Daily' },
-  { route: 'NAIA T3 ↔ PITX', operator: 'UBE Express', days: 'Daily' },
-  { route: 'TriNoma ↔ Clark Airport', operator: 'Genesis', days: 'Daily' },
+// Bundled routes in the current release, grouped into the three collections the
+// device uses. Timetable is PUBLISHED where it follows the operator's own
+// schedule, PROVISIONAL where departures are estimated; a few Bulacan routes read
+// published leaving Bulacan and provisional on the return.
+const collections = [
+  {
+    name: 'BULACAN',
+    routes: [
+      { route: 'Balagtas ↔ TriNoma', operator: 'Bulacan P2P', timetable: 'Provisional' },
+      { route: 'Caypombo ↔ SM North EDSA', operator: 'Precious Grace', timetable: 'Mixed' },
+      { route: 'Pandi ↔ TriNoma', operator: 'Bulacan P2P', timetable: 'Provisional' },
+      { route: 'Plaridel ↔ TriNoma', operator: 'Bulacan P2P', timetable: 'Provisional' },
+      { route: 'Malolos ↔ TriNoma', operator: 'Precious Grace', timetable: 'Mixed' },
+      { route: 'Guiguinto ↔ TriNoma', operator: 'Bulacan P2P', timetable: 'Provisional' },
+    ],
+  },
+  {
+    name: 'NORTH LUZON',
+    routes: [
+      { route: 'Cubao ↔ Clark Airport', operator: 'Genesis', timetable: 'Published' },
+      { route: 'TriNoma ↔ Clark Airport', operator: 'Genesis', timetable: 'Published' },
+      { route: 'Clark Airport ↔ Baguio', operator: 'Genesis', timetable: 'Published' },
+    ],
+  },
+  {
+    name: 'AIRPORT TRANSFERS',
+    routes: [
+      { route: 'Clark Airport ↔ NAIA T3', operator: 'Genesis', timetable: 'Published' },
+      { route: 'NAIA T3 ↔ PITX', operator: 'UBE Express', timetable: 'Published' },
+    ],
+  },
 ];
+
+const timetableLabel = {
+  Published: 'PUBLISHED',
+  Provisional: 'PROVISIONAL',
+  Mixed: 'PUBLISHED / PROVISIONAL',
+};
 
 const gallery = [
   {
@@ -27,19 +55,14 @@ const gallery = [
     caption: 'The departure board: time left, the scheduled trip, the next one and the last.',
   },
   {
-    src: imgRoutes,
-    alt: 'The ON POINT route list with Balagtas to TriNoma as the main route, above Caypombo, Clark Airport to Baguio and Clark Airport to NAIA T3.',
-    caption: 'Your main route sits at the top of the route list.',
-  },
-  {
     src: imgCubao,
     alt: 'ON POINT showing 115 minutes until the 11:10 bus from Cubao to Clark Airport, with trips every 120 minutes.',
     caption: 'Less frequent routes show the gap between trips.',
   },
   {
-    src: imgRoutes2,
-    alt: 'The second page of the ON POINT route list: Cubao to Clark Airport, NAIA T3 to PITX and TriNoma to Clark Airport.',
-    caption: 'Hold a route to make it your main route.',
+    src: imgCountdown,
+    alt: 'A close view of the ON POINT board on an XTEINK X4 Pro: TriNoma to Balagtas, 15 minutes until the 13:30 departure, next at 14:00 and last at 22:30, marked PROVISIONAL and dated 4 November 2026.',
+    caption: 'The reverse direction, TriNoma → Balagtas. Left and Right switch direction.',
   },
 ];
 
@@ -50,21 +73,21 @@ const packages = [
   {
     name: 'ON POINT',
     file: 'firmware-x4pro-p.factory.bin',
-    identity: '1.6.5-A1.2.0-P',
-    sha256: '09fd55dff9efd0e4c905a2d5775d90f4f00a8ae2febbcd6dec56220b2ef4cc8e',
+    identity: '2.0.0-A1.4.0-P',
+    sha256: '76cf5a26a292e18c261353e24bb2956ae8f99639ee92e5080694d36cd67e0da1',
   },
   {
     name: 'GOTO + ON POINT',
     file: 'firmware-x4pro-gp.factory.bin',
-    identity: '1.6.5-A1.2.0-GP',
-    sha256: '3270a0481b5985c133a65cccab72a36ae870285c4fc2627cee4c9a26a4e992b7',
+    identity: '2.0.0-A1.4.0-GP',
+    sha256: 'b16e893ef06123fb9801c7d4c8e80ab6f4e3d0174bbaac9f67d9173fc40b91de',
   },
 ];
 ---
 
 <BaseLayout
   title="ON POINT — Archieval Mariano"
-  description="ON POINT is an offline departure board for the XTEINK X4 Pro. It carries seven local P2P and airport bus routes, each taken from its operator’s published schedule."
+  description="ON POINT is an offline departure board for the XTEINK X4 Pro. It carries eleven local P2P and airport bus routes in three collections, each timetable labelled as published or provisional."
 >
   <section class="wrap op">
     <p class="op__back"><a href="/desk/">&larr; Desk</a></p>
@@ -75,11 +98,24 @@ const packages = [
     </header>
 
     <p class="op__lede">
-      ON POINT keeps published timetables on the XTEINK X4 Pro and tells you what
-      leaves next, and how long you have, without a network connection. It currently
-      carries seven local P2P and airport bus routes, each taken from its
-      operator’s published schedule.
+      ON POINT keeps bus timetables on the XTEINK X4 Pro and tells you what leaves
+      next, and how long you have, without a network connection. It currently carries
+      eleven local P2P and airport routes, grouped into three collections — BULACAN,
+      NORTH LUZON and AIRPORT TRANSFERS. Each timetable is labelled PUBLISHED where it
+      follows the operator’s own schedule, or PROVISIONAL where departures are estimated.
     </p>
+
+    <figure class="op__hero">
+      <Image
+        src={imgTerminal}
+        alt="An XTEINK X4 Pro running ON POINT at a P2P terminal, held in front of a yellow Bulacan P2P bus: the Balagtas to TriNoma board, 14 minutes until the 13:30 departure, marked PROVISIONAL and dated 4 November 2026."
+        widths={[480, 720, 960]}
+        sizes="(max-width: 40rem) 92vw, 30rem"
+        format="webp"
+        quality={76}
+      />
+      <figcaption>ON POINT at the terminal, counting down to the next Balagtas → TriNoma bus. Photographed 4 November 2026.</figcaption>
+    </figure>
 
     <div class="op__gallery">
       {
@@ -115,40 +151,63 @@ const packages = [
           next scheduled trip.
         </li>
         <li>Both directions of each route. Left and Right switch direction.</li>
-        <li>A main route, selected at the top of the route list. Hold a route in the list to make it your main route.</li>
+        <li>
+          Routes grouped into collections — BULACAN, NORTH LUZON and AIRPORT TRANSFERS.
+          SELECT COLLECTION switches between them.
+        </li>
+        <li>
+          A main route in each collection, at the top of its route list. Hold a route to
+          make it the main route; ON POINT opens on the active collection’s main route.
+        </li>
       </ul>
       <p class="op__aside">
-        ON POINT never guesses the time. It reads the X4 Pro’s built-in clock, and if
-        the clock has not been set it says so instead of showing a countdown. Routes
-        from an operator’s own published schedule are labelled <strong>PUBLISHED</strong>
-        on screen.
+        ON POINT never guesses the time. It reads the X4 Pro’s built-in clock, and if the
+        clock has not been set it says so instead of showing a countdown. Each board is
+        labelled <strong>PUBLISHED</strong> when it follows the operator’s own schedule,
+        or <strong>PROVISIONAL</strong> when its departures are estimated.
       </p>
     </section>
 
     <hr class="rule" />
     <section class="op__section" id="routes">
       <h2>Routes</h2>
-      <p>The current release includes these routes.</p>
-      <table class="op__routes">
-        <thead>
-          <tr><th scope="col">Route</th><th scope="col">Operator</th><th scope="col">Timetable</th></tr>
-        </thead>
-        <tbody>
-          {
-            routes.map((r) => (
-              <tr>
-                <th scope="row">{r.route}</th>
-                <td>{r.operator}</td>
-                <td>{r.days}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+      <p>
+        The current release carries eleven routes, in three collections. A timetable reads
+        <strong>PUBLISHED</strong> where it follows the operator’s own schedule, or
+        <strong>PROVISIONAL</strong> where its departures are estimated.
+      </p>
+      {
+        collections.map((c) => (
+          <div class="op__collection">
+            <h3 class="op__collection-name">{c.name}</h3>
+            <table class="op__routes">
+              <thead>
+                <tr><th scope="col">Route</th><th scope="col">Operator</th><th scope="col">Timetable</th></tr>
+              </thead>
+              <tbody>
+                {c.routes.map((r) => (
+                  <tr>
+                    <th scope="row">{r.route}</th>
+                    <td>{r.operator}</td>
+                    <td>{timetableLabel[r.timetable]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))
+      }
       <p class="op__aside">
-        Public holidays in the Philippines for 2026 use a route’s holiday timetable
-        where it has one. Operators change schedules without notice, so check with them
-        before a trip that matters.
+        Caypombo and Malolos read PUBLISHED leaving Bulacan and PROVISIONAL on the return,
+        and Guiguinto ↔ TriNoma is an editorial reconstruction. Bulacan P2P routes follow a
+        separate Saturday, Sunday and holiday timetable; the others run daily. The
+        <a href={`${release}/tag/v1.3.0`} target="_blank" rel="noopener">v1.3.0 release notes</a>
+        set out each route’s sources and limits.
+      </p>
+      <p class="op__aside">
+        Public holidays in the Philippines for 2026 and 2027 use a route’s holiday
+        timetable where it has one. Operators change schedules without notice, so check
+        with them before a trip that matters.
       </p>
     </section>
 
@@ -191,18 +250,18 @@ const packages = [
                 {pkg.name} <span class="op__package-method">· XTEINK X4 Pro · USB flashing</span>
               </h3>
               <dl class="op__meta">
-                <div><dt>Release</dt><dd>v1.2.0 · CrossPoint 1.6.5 + Apps 1.2.0</dd></div>
+                <div><dt>Release</dt><dd>v1.4.0 · CrossPoint 2.0.0 + Apps 1.4.0</dd></div>
                 <div><dt>On-device identity</dt><dd>{pkg.identity}</dd></div>
               </dl>
               <p class="op__actions">
-                <a class="op__download" href={`${release}/download/v1.2.0/${pkg.file}`}>
+                <a class="op__download" href={`${release}/download/v1.4.0/${pkg.file}`}>
                   Download {pkg.name}
                 </a>
               </p>
               <p class="op__links">
                 <code>{pkg.file}</code>
                 <span aria-hidden="true">·</span>
-                <a href={`${release}/tag/v1.2.0`} target="_blank" rel="noopener">Release notes</a>
+                <a href={`${release}/tag/v1.4.0`} target="_blank" rel="noopener">Release notes</a>
               </p>
               <p class="op__sha">
                 <span class="op__sha-label">SHA-256</span>
@@ -293,15 +352,32 @@ const packages = [
     max-width: 42rem;
     margin-bottom: var(--space-lg);
   }
+  .op__hero {
+    margin: 0 0 var(--space-lg);
+    max-width: 30rem;
+  }
+  .op__collection {
+    margin-top: var(--space-md);
+  }
+  .op__collection-name {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: var(--space-md) 0 0;
+  }
   .op__gallery {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-sm);
     margin: 0 0 var(--space-lg);
   }
   .op__gallery figure {
     margin: 0;
   }
+  .op__hero img,
   .op__gallery img,
   .op__figure img {
     display: block;
@@ -309,6 +385,7 @@ const packages = [
     height: auto;
     border: 1px solid var(--rule);
   }
+  .op__hero figcaption,
   .op__gallery figcaption,
   .op__figure figcaption {
     margin-top: var(--space-xs);
