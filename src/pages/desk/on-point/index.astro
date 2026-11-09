@@ -5,14 +5,17 @@ import imgTerminal from '../../../assets/photos/onpoint-05-terminal.jpg';
 import imgBoard from '../../../assets/photos/onpoint-01-board.jpg';
 import imgCountdown from '../../../assets/photos/onpoint-06-countdown.jpg';
 import imgCubao from '../../../assets/photos/onpoint-03-cubao-clark.jpg';
+import imgNorthLuzon from '../../../assets/photos/onpoint-07-north-luzon.jpg';
+import imgAirport from '../../../assets/photos/onpoint-08-airport-transfers.jpg';
 import imgApps from '../../../assets/photos/tools-06-apps-x4pro.jpg';
 
 const release = 'https://github.com/archievalmariano/crosspoint-reader/releases';
 
 // Bundled routes in the current release, grouped into the three collections the
 // device uses. Timetable is PUBLISHED where it follows the operator's own
-// schedule, PROVISIONAL where departures are estimated; a few Bulacan routes read
-// published leaving Bulacan and provisional on the return.
+// schedule, PROVISIONAL where the source is secondary or the timetable has not
+// been confirmed with the operator; a few Bulacan routes read published leaving
+// Bulacan and provisional on the return.
 const collections = [
   {
     name: 'BULACAN',
@@ -31,13 +34,17 @@ const collections = [
       { route: 'Cubao ↔ Clark Airport', operator: 'Genesis', timetable: 'Published' },
       { route: 'TriNoma ↔ Clark Airport', operator: 'Genesis', timetable: 'Published' },
       { route: 'Clark Airport ↔ Baguio', operator: 'Genesis', timetable: 'Published' },
+      { route: 'Cubao ↔ Baguio', operator: 'Genesis', timetable: 'Published' },
+      { route: 'Pasay ↔ Baguio', operator: 'Genesis', timetable: 'Published' },
+      { route: 'Clark Airport ↔ Balanga', operator: 'Genesis', timetable: 'Published' },
     ],
   },
   {
     name: 'AIRPORT TRANSFERS',
     routes: [
       { route: 'Clark Airport ↔ NAIA T3', operator: 'Genesis', timetable: 'Published' },
-      { route: 'NAIA T3 ↔ PITX', operator: 'UBE Express', timetable: 'Published' },
+      { route: 'NAIA T3 ↔ PITX', operator: 'UBE Express', timetable: 'Provisional' },
+      { route: 'PITX ↔ Clark Airport', operator: 'Genesis', timetable: 'Published' },
     ],
   },
 ];
@@ -73,21 +80,21 @@ const packages = [
   {
     name: 'ON POINT',
     file: 'firmware-x4pro-p.factory.bin',
-    identity: '2.0.0-A1.4.0-P',
-    sha256: '76cf5a26a292e18c261353e24bb2956ae8f99639ee92e5080694d36cd67e0da1',
+    identity: '2.0.0-A1.5.0-P',
+    sha256: 'fd6cea5f1212c8fa83f5e3cbe89b301a706ac191cbef684894a39de94d162c20',
   },
   {
     name: 'GOTO + ON POINT',
     file: 'firmware-x4pro-gp.factory.bin',
-    identity: '2.0.0-A1.4.0-GP',
-    sha256: 'b16e893ef06123fb9801c7d4c8e80ab6f4e3d0174bbaac9f67d9173fc40b91de',
+    identity: '2.0.0-A1.5.0-GP',
+    sha256: '2977eca449e178a533f97c21c624518e80876dfe0d6cd8db9d4318e4bd4b95a8',
   },
 ];
 ---
 
 <BaseLayout
   title="ON POINT — Archieval Mariano"
-  description="ON POINT is an offline departure board for the XTEINK X4 Pro. It carries eleven local P2P and airport bus routes in three collections, each timetable labelled as published or provisional."
+  description="ON POINT is an offline departure board for the XTEINK X4 Pro. It carries fifteen local P2P and airport bus routes in three collections, each timetable labelled as published or provisional."
 >
   <section class="wrap op">
     <p class="op__back"><a href="/desk/">&larr; Desk</a></p>
@@ -100,9 +107,10 @@ const packages = [
     <p class="op__lede">
       ON POINT keeps bus timetables on the XTEINK X4 Pro and tells you what leaves
       next, and how long you have, without a network connection. It currently carries
-      eleven local P2P and airport routes, grouped into three collections — BULACAN,
+      fifteen local P2P and airport routes, grouped into three collections — BULACAN,
       NORTH LUZON and AIRPORT TRANSFERS. Each timetable is labelled PUBLISHED where it
-      follows the operator’s own schedule, or PROVISIONAL where departures are estimated.
+      follows the operator’s own schedule, or PROVISIONAL where the source is secondary or
+      the timetable has not been confirmed with the operator.
     </p>
 
     <figure class="op__hero">
@@ -164,7 +172,8 @@ const packages = [
         ON POINT never guesses the time. It reads the X4 Pro’s built-in clock, and if the
         clock has not been set it says so instead of showing a countdown. Each board is
         labelled <strong>PUBLISHED</strong> when it follows the operator’s own schedule,
-        or <strong>PROVISIONAL</strong> when its departures are estimated.
+        or <strong>PROVISIONAL</strong> where the source is secondary or the timetable has
+        not been confirmed with the operator.
       </p>
     </section>
 
@@ -172,9 +181,10 @@ const packages = [
     <section class="op__section" id="routes">
       <h2>Routes</h2>
       <p>
-        The current release carries eleven routes, in three collections. A timetable reads
+        The current release carries fifteen routes, in three collections. A timetable reads
         <strong>PUBLISHED</strong> where it follows the operator’s own schedule, or
-        <strong>PROVISIONAL</strong> where its departures are estimated.
+        <strong>PROVISIONAL</strong> where the source is secondary or the timetable has not
+        been confirmed with the operator.
       </p>
       {
         collections.map((c) => (
@@ -200,15 +210,30 @@ const packages = [
       <p class="op__aside">
         Caypombo and Malolos read PUBLISHED leaving Bulacan and PROVISIONAL on the return,
         and Guiguinto ↔ TriNoma is an editorial reconstruction. Bulacan P2P routes follow a
-        separate Saturday, Sunday and holiday timetable; the others run daily. The
-        <a href={`${release}/tag/v1.3.0`} target="_blank" rel="noopener">v1.3.0 release notes</a>
-        set out each route’s sources and limits.
+        separate Saturday, Sunday and holiday timetable, and the Cubao → Baguio and
+        Pasay → Baguio services run fewer trips on Tuesdays and Wednesdays than from Thursday
+        to Monday. The other routes run daily. The release notes
+        (<a href={`${release}/tag/v1.3.0`} target="_blank" rel="noopener">v1.3.0</a> for the
+        Bulacan and earlier routes,
+        <a href={`${release}/tag/v1.5.0`} target="_blank" rel="noopener">v1.5.0</a> for the
+        later Genesis additions) set out each route’s sources and limits.
       </p>
       <p class="op__aside">
-        Public holidays in the Philippines for 2026 and 2027 use a route’s holiday
-        timetable where it has one. Operators change schedules without notice, so check
-        with them before a trip that matters.
+        Public holidays in the Philippines for 2026 and 2027 use a route’s holiday timetable
+        where it has one; the Genesis routes have no separate holiday schedule, so they keep
+        their regular times. Operators change schedules without notice, so check with them
+        before a trip that matters.
       </p>
+      <div class="op__collection-photos">
+        <figure>
+          <Image src={imgNorthLuzon} alt="The ON POINT collection view on an XTEINK X4 Pro: the NORTH LUZON collection, main route TriNoma to Clark Airport, listing Clark Airport to Baguio, Clark Airport to Balanga and Cubao to Baguio, marked PUBLISHED." widths={galleryWidths} sizes="(max-width: 40rem) 45vw, 220px" format="webp" quality={74} loading="lazy" />
+          <figcaption>The NORTH LUZON collection, its routes marked PUBLISHED. SELECT COLLECTION moves between the three collections.</figcaption>
+        </figure>
+        <figure>
+          <Image src={imgAirport} alt="The ON POINT collection view on an XTEINK X4 Pro: the AIRPORT TRANSFERS collection, main route NAIA T3 to PITX marked PROVISIONAL, listing Clark Airport to NAIA T3 and PITX to Clark Airport." widths={galleryWidths} sizes="(max-width: 40rem) 45vw, 220px" format="webp" quality={74} loading="lazy" />
+          <figcaption>AIRPORT TRANSFERS, with NAIA T3 → PITX now marked PROVISIONAL.</figcaption>
+        </figure>
+      </div>
     </section>
 
     <hr class="rule" />
@@ -250,18 +275,18 @@ const packages = [
                 {pkg.name} <span class="op__package-method">· XTEINK X4 Pro · USB flashing</span>
               </h3>
               <dl class="op__meta">
-                <div><dt>Release</dt><dd>v1.4.0 · CrossPoint 2.0.0 + Apps 1.4.0</dd></div>
+                <div><dt>Release</dt><dd>v1.5.0 · CrossPoint 2.0.0 + Apps 1.5.0</dd></div>
                 <div><dt>On-device identity</dt><dd>{pkg.identity}</dd></div>
               </dl>
               <p class="op__actions">
-                <a class="op__download" href={`${release}/download/v1.4.0/${pkg.file}`}>
+                <a class="op__download" href={`${release}/download/v1.5.0/${pkg.file}`}>
                   Download {pkg.name}
                 </a>
               </p>
               <p class="op__links">
                 <code>{pkg.file}</code>
                 <span aria-hidden="true">·</span>
-                <a href={`${release}/tag/v1.4.0`} target="_blank" rel="noopener">Release notes</a>
+                <a href={`${release}/tag/v1.5.0`} target="_blank" rel="noopener">Release notes</a>
               </p>
               <p class="op__sha">
                 <span class="op__sha-label">SHA-256</span>
@@ -379,14 +404,26 @@ const packages = [
   }
   .op__hero img,
   .op__gallery img,
+  .op__collection-photos img,
   .op__figure img {
     display: block;
     width: 100%;
     height: auto;
     border: 1px solid var(--rule);
   }
+  .op__collection-photos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+    max-width: 42rem;
+    margin: var(--space-lg) 0 0;
+  }
+  .op__collection-photos figure {
+    margin: 0;
+  }
   .op__hero figcaption,
   .op__gallery figcaption,
+  .op__collection-photos figcaption,
   .op__figure figcaption {
     margin-top: var(--space-xs);
     font-size: var(--step--1);

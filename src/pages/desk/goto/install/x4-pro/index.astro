@@ -1,16 +1,16 @@
 ---
 import BaseLayout from '../../../../../layouts/BaseLayout.astro';
 
-const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.4.0';
-const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.4.0';
+const releaseUrl = 'https://github.com/archievalmariano/crosspoint-reader/releases/tag/v1.5.0';
+const sourceUrl = 'https://github.com/archievalmariano/crosspoint-reader/tree/v1.5.0';
 const fileName = 'firmware-x4pro-g.factory.bin';
-const downloadUrl = `https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.4.0/${fileName}`;
-const sha256 = 'a4137d0209f83f458cd6a384f23addb45bc42a4e8413faea2944df4383149d2d';
+const downloadUrl = `https://github.com/archievalmariano/crosspoint-reader/releases/download/v1.5.0/${fileName}`;
+const sha256 = '68daf50cb3dae748e68e3c6aab358b64fd2c4187e9750785b87d71ce89d9596d';
 ---
 
 <BaseLayout
   title="Install Project GOTO on the XTEINK X4 Pro — Archieval Mariano"
-  description="A guide to installing Project GOTO (release v1.4.0) on the XTEINK X4 Pro over USB using esptool."
+  description="A guide to installing Project GOTO (release v1.5.0) on the XTEINK X4 Pro over USB using esptool."
 >
   <section class="wrap install">
     <p class="install__back"><a href="/desk/goto/">&larr; Project GOTO</a></p>
@@ -21,7 +21,7 @@ const sha256 = 'a4137d0209f83f458cd6a384f23addb45bc42a4e8413faea2944df4383149d2d
     </header>
 
     <p class="install__lede">
-      The current release is v1.4.0 (CrossPoint 2.0.0 + Apps 1.4.0). The X4 Pro
+      The current release is v1.5.0 (CrossPoint 2.0.0 + Apps 1.5.0). The X4 Pro
       installs over <strong>USB</strong> (direct flashing with <code>esptool</code>),
       not the microSD updater the original X4 uses. After that first install, later
       releases arrive over Wi-Fi.
@@ -36,7 +36,7 @@ const sha256 = 'a4137d0209f83f458cd6a384f23addb45bc42a4e8413faea2944df4383149d2d
       <div><dt>Firmware</dt><dd><code>{fileName}</code> (factory image)</dd></div>
       <div><dt>Flash at</dt><dd><code>0x0</code></dd></div>
       <div><dt>SHA-256</dt><dd><code class="install__sha">{sha256}</code></dd></div>
-      <div><dt>On-device identity</dt><dd><code>2.0.0-A1.4.0-G</code></dd></div>
+      <div><dt>On-device identity</dt><dd><code>2.0.0-A1.5.0-G</code></dd></div>
     </dl>
 
     <p class="install__actions">
@@ -63,7 +63,7 @@ const sha256 = 'a4137d0209f83f458cd6a384f23addb45bc42a4e8413faea2944df4383149d2d
         Want ON POINT, a P2P bus departure board, as well? Use
         <code>firmware-x4pro-gp.factory.bin</code> (GOTO + ON POINT) from the
         <a href={releaseUrl} target="_blank" rel="noopener">same release</a> instead,
-        and check it against <code>SHA256SUMS.txt</code> there. Everything below works
+        and check it against <code>SHA256SUMS-X4PRO-SHIPPED.txt</code> there. Everything below works
         the same way with that file name.
       </p>
       <p>
@@ -122,7 +122,7 @@ const sha256 = 'a4137d0209f83f458cd6a384f23addb45bc42a4e8413faea2944df4383149d2d
       <p>
         The X4 Pro restarts into CrossPoint. Open <strong>Apps</strong> on the home
         screen, then <strong>GOTO</strong> (it reads TOGO in the evening). In Settings,
-        the version reads <code>2.0.0-A1.4.0-G</code>, or <code>2.0.0-A1.4.0-GP</code>
+        the version reads <code>2.0.0-A1.5.0-G</code>, or <code>2.0.0-A1.5.0-GP</code>
         with ON POINT.
       </p>
       <p>
@@ -170,8 +170,9 @@ const sha256 = 'a4137d0209f83f458cd6a384f23addb45bc42a4e8413faea2944df4383149d2d
     </p>
 
     <p class="install__note">
-      Release v1.4.0 · XTEINK X4 Pro (ESP32-S3). The original XTEINK X4 installs the
-      same release from microSD.
+      Release v1.5.0 · XTEINK X4 Pro (ESP32-S3). v1.5.0 is for the X4 Pro only; the
+      original XTEINK X4 stays on v1.4.0, installed from microSD with its own
+      <a href="/desk/goto/install/">guide</a>.
     </p>
   </section>
 </BaseLayout>

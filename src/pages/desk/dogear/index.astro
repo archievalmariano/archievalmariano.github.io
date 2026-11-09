@@ -51,6 +51,7 @@ const packages = [
     device: 'XTEINK X4',
     method: 'microSD update',
     file: 'firmware-x4-gd.bin',
+    version: 'v1.4.0',
     identity: '2.0.0-A1.4.0-GD',
     sha256: '12219e45ca9e559b4d0e3ddb16e9326bcb984e3cb7d415f2d3e619e3126d9f00',
     guide: { href: '/desk/goto/install/', label: 'Installation guide', via: 'microSD updater' },
@@ -60,8 +61,9 @@ const packages = [
     device: 'XTEINK X4 Pro',
     method: 'USB flashing',
     file: 'firmware-x4pro-gd.factory.bin',
-    identity: '2.0.0-A1.4.0-GD',
-    sha256: 'd9f8ea78044d7c541d809ba98affb27286fc99a792740970f5538faee57a68bd',
+    version: 'v1.5.0',
+    identity: '2.0.0-A1.5.0-GD',
+    sha256: 'ae68381551e31901d467fbe585ff797698c1ba3911c573c35a9cc0c406dcddac',
     guide: { href: '/desk/goto/install/x4-pro/', label: 'Installation guide', via: 'USB (esptool)' },
   },
   {
@@ -69,8 +71,9 @@ const packages = [
     device: 'XTEINK X4 Pro',
     method: 'USB flashing',
     file: 'firmware-x4pro-pd.factory.bin',
-    identity: '2.0.0-A1.4.0-PD',
-    sha256: '8154e1bd05490ab6132863e0bce6fe807c94a47b9d2b96946fb17d0b350f900a',
+    version: 'v1.5.0',
+    identity: '2.0.0-A1.5.0-PD',
+    sha256: 'b0768b1116fa1123f4097d025f530bc710651184a4adea84544aa6a92a8bbca6',
     guide: { href: '/desk/goto/install/x4-pro/', label: 'Installation guide', via: 'USB (esptool)' },
   },
   {
@@ -78,8 +81,9 @@ const packages = [
     device: 'XTEINK X4 Pro',
     method: 'USB flashing',
     file: 'firmware-x4pro-gpd.factory.bin',
-    identity: '2.0.0-A1.4.0-GPD',
-    sha256: 'fc5614ddbba9701f5c7729ad4b9c912f50612ad01ca713ed0d9a4509a2a64db9',
+    version: 'v1.5.0',
+    identity: '2.0.0-A1.5.0-GPD',
+    sha256: 'b5d9ce1cb641ff59d16e45a1e6a8009b591b90ec77cf1fe4a1ea3c02627ad10d',
     guide: { href: '/desk/goto/install/x4-pro/', label: 'Installation guide', via: 'USB (esptool)' },
   },
 ];
@@ -198,8 +202,8 @@ const x4ProPackages = packages.filter((pkg) => pkg.device === 'XTEINK X4 Pro');
       <p>
         DOGEAR comes in the packages that name it, together with
         <a href="/desk/goto/">GOTO</a>, <a href="/desk/on-point/">ON POINT</a> or both.
-        On the X4 that is GOTO + DOGEAR, installed from a microSD card; on the X4 Pro,
-        choose any of the three, installed over USB. After installing, DOGEAR lives in
+        On the X4 that is GOTO + DOGEAR, installed from a microSD card on v1.4.0; on the
+        X4 Pro, choose any of the three, installed over USB on v1.5.0. After installing, DOGEAR lives in
         the <strong>Apps</strong> menu on the CrossPoint home screen, and later releases
         install over Wi-Fi from Settings → System → Check for updates, keeping the
         package you chose. If you already run GOTO or ON POINT, install a DOGEAR package
@@ -214,11 +218,11 @@ const x4ProPackages = packages.filter((pkg) => pkg.device === 'XTEINK X4 Pro');
                 {pkg.name} <span class="dg__device-method">· {pkg.device} · {pkg.method}</span>
               </h3>
               <dl class="dg__meta">
-                <div><dt>Release</dt><dd>v1.4.0 · CrossPoint 2.0.0 + Apps 1.4.0</dd></div>
+                <div><dt>Release</dt><dd>{pkg.version} · CrossPoint 2.0.0 + Apps {pkg.version.slice(1)}</dd></div>
                 <div><dt>On-device identity</dt><dd>{pkg.identity}</dd></div>
               </dl>
               <p class="dg__actions">
-                <a class="dg__download" href={`${release}/download/v1.4.0/${pkg.file}`}>
+                <a class="dg__download" href={`${release}/download/${pkg.version}/${pkg.file}`}>
                   Download for {pkg.device}
                 </a>
               </p>
@@ -227,7 +231,7 @@ const x4ProPackages = packages.filter((pkg) => pkg.device === 'XTEINK X4 Pro');
                 <span aria-hidden="true">·</span>
                 <a href={pkg.guide.href}>{pkg.guide.label}</a> · {pkg.guide.via}
                 <span aria-hidden="true">·</span>
-                <a href={`${release}/tag/v1.4.0`} target="_blank" rel="noopener">Release notes</a>
+                <a href={`${release}/tag/${pkg.version}`} target="_blank" rel="noopener">Release notes</a>
               </p>
               <p class="dg__sha">
                 <span class="dg__sha-label">SHA-256</span>
