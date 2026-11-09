@@ -34,6 +34,10 @@ if (props.kind === 'article') {
   Content = rendered.Content;
 }
 
+// Month + year is enough on a chronological listing, and reads sensibly while a
+// publication date is still provisional.
+const listDate = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' });
+
 const items =
   props.kind === 'index'
     ? props.entries.map((e) => ({
@@ -41,6 +45,7 @@ const items =
         title: e.data.title,
         description: e.data.description,
         kicker: e.data.format,
+        note: listDate.format(e.data.pubDate),
       }))
     : [];
 ---

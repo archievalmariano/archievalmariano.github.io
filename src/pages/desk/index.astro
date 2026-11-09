@@ -16,7 +16,12 @@ type Entry = {
   description: string;
   image?: ImageMetadata;
   imageAlt: string;
+  date?: string; // formatted publication date, shown on text-only editorial rows
 };
+
+// Month + year for listing rows — understated, and comfortable with a
+// provisional date until an essay's publication date is finalised.
+const listDate = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' });
 
 // Shared homepage-selection rule for every collection:
 //   • at most HOMEPAGE_MAX entries;
@@ -72,7 +77,13 @@ const projectItems: Entry[] = selectHomepage(
 // Ordered homepage sections. PROJECTS always shows. Editorial collections appear
 // ONLY once launched (publish flag on) AND they contain published, non-draft
 // entries — so ARTIFACTS / FIELD NOTES are entirely absent until then.
-type Section = { label: string; subtitle: string; allHref: string; items: Entry[] };
+type Section = {
+  label: string;
+  subtitle: string;
+  allHref: string;
+  items: Entry[];
+  textOnly?: boolean; // editorial collections list as text-only rows (no thumbnail column)
+};
 
 const sections: Section[] = [
   { label: 'Projects', subtitle: 'Works in Progress', allHref: '/desk/projects/', items: projectItems },
@@ -91,14 +102,16 @@ for (const c of deskCollections) {
         href: `/desk/${c.slug}/${e.slug}/`,
         title: e.data.title,
         description: e.data.description,
-        image: e.data.heroImage,
-        imageAlt: e.data.heroAlt ?? '',
+        // Editorial rows are text-only; the subhead/description leads and the
+        // publication date trails. No thumbnail is shown, so none is required.
+        date: listDate.format(e.data.pubDate),
+        imageAlt: '',
       } as Entry,
     })
   );
   const items: Entry[] = selectHomepage(candidates, (a, b) => b.pub - a.pub).map((x) => x.item);
   if (items.length === 0) continue; // launched but nothing published yet → omit
-  sections.push({ label: c.label, subtitle: c.subtitle, allHref: `/desk/${c.slug}/`, items });
+  sections.push({ label: c.label, subtitle: c.subtitle, allHref: `/desk/${c.slug}/`, items, textOnly: true });
 }
 ---
 
@@ -130,26 +143,29 @@ for (const c of deskCollections) {
 
           <ul class="desk-entries">
             {section.items.map((item) => (
-              <li class="desk-entry">
+              <li class={section.textOnly ? 'desk-entry desk-entry--text' : 'desk-entry'}>
                 <a class="desk-entry__link" href={item.href}>
-                  <div class="desk-entry__thumb">
-                    {item.image ? (
-                      <Image
-                        src={item.image}
-                        alt={item.imageAlt}
-                        widths={[120, 200, 280]}
-                        sizes="(max-width: 40rem) 24vw, 120px"
-                        format="webp"
-                        quality={72}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <MediaPlaceholder label={item.title} orientation="landscape" />
-                    )}
-                  </div>
+                  {!section.textOnly && (
+                    <div class="desk-entry__thumb">
+                      {item.image ? (
+                        <Image
+                          src={item.image}
+                          alt={item.imageAlt}
+                          widths={[120, 200, 280]}
+                          sizes="(max-width: 40rem) 24vw, 120px"
+                          format="webp"
+                          quality={72}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <MediaPlaceholder label={item.title} orientation="landscape" />
+                      )}
+                    </div>
+                  )}
                   <div class="desk-entry__body">
                     <h3 class="desk-entry__title">{item.title}</h3>
                     <p class="desk-entry__desc">{item.description}</p>
+                    {item.date && <p class="desk-entry__date">{item.date}</p>}
                   </div>
                 </a>
               </li>
@@ -304,6 +320,22 @@ for (const c of deskCollections) {
 
   .desk-entry__link:hover .desk-entry__title {
     color: var(--accent);
+  }
+
+  /* Text-only editorial rows (FIELD NOTES): no thumbnail column is reserved;
+     the title and subhead lead, with a quiet publication date beneath. */
+  .desk-entry--text .desk-entry__link {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .desk-entry__date {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
   /* Understated "see all" link into the collection index. */

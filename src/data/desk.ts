@@ -30,7 +30,7 @@ export const deskCollections: DeskCollectionMeta[] = [
 // PRODUCTION TRUTH. Do not flip to true except to launch a collection.
 const PUBLISHED: Record<DeskCollectionKey, boolean> = {
   artifacts: false,
-  fieldNotes: false,
+  fieldNotes: true,
 };
 
 // DESK_PREVIEW tokens (URL-style) → collection key.
