@@ -166,12 +166,12 @@ const copy = {
   desk: {
     intro:
       'Things from my digital desk that I’ve decided to share. Some can be useful, definitely specific, and occasionally unnecessary.',
-    projects: { subtitle: 'Works in Progress', description: 'Independent applications, utilities, and experiments.' },
+    projects: { subtitle: 'Works in progress', description: 'Independent applications, utilities, and experiments.' },
     artifacts: {
-      subtitle: 'As Things Stand',
+      subtitle: 'As things stand',
       description: 'Notes on objects I’ve lived with as they turn from purchases into artifacts (and sometimes back).',
     },
-    fieldNotes: { subtitle: 'From the Margins', description: 'Thoughts that have managed to escape from my numerous draft folders.' },
+    fieldNotes: { subtitle: 'Dispatches from the margins', description: 'Thoughts that have managed to escape from my numerous draft folders.' },
   },
   away: {
     heading: 'Away from the dashboards',
@@ -297,7 +297,9 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
                   <div class="qs-feature__text">
                     <h4>{r.featured.title}</h4>
                     {r.featured.subtitle && <p class="qs-feature__subtitle">{r.featured.subtitle}</p>}
-                    <p class="qs-feature__desc">{r.featured.description}</p>
+                    {r.featured.description && r.featured.description !== r.featured.subtitle && (
+                      <p class="qs-feature__desc">{r.featured.description}</p>
+                    )}
                     {r.featured.meta && <p class="qs-meta">{r.featured.meta}</p>}
                     <p class="qs-go">
                       <a href={r.featured.href}>
@@ -485,7 +487,6 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
   .qs-row--compact .qs-row__about { grid-column: 2 / -1; }
   .qs-row__name { margin: 0; font-size: 1.2rem; }
   .qs-row--compact .qs-row__name { font-size: 1.02rem; font-weight: 680; color: var(--ink-soft); }
-  .qs-row--compact .qs-row__subtitle { font-size: .92rem; }
   .qs-row__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
   .qs-row__desc { max-width: 34rem; margin: 0; font-family: var(--font-serif); font-size: 1.05rem; line-height: 1.5; color: var(--ink-soft); }
   .qs-row--compact .qs-row__desc { font-size: 1rem; }
@@ -496,7 +497,7 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
   .qs-feature__figure { margin: 0; }
   .qs-feature__figure :global(img) { display: block; width: 100%; height: auto; border-radius: 2px; }
   .qs-feature h4 { font-size: clamp(1.4rem, 2vw, 1.75rem); }
-  .qs-feature__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); font-style: italic; color: var(--ink-soft); }
+  .qs-feature__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); color: var(--ink-soft); }
   .qs-feature__desc { max-width: 32rem; margin: .55rem 0 .5rem; font-family: var(--font-serif); font-size: 1.12rem; line-height: 1.45; }
   /* AA contrast on the darker Desk band: --ink-faint is only 4.15:1 here */
   .qs-desk .qs-meta { color: var(--ink-soft); }

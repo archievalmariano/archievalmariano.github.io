@@ -101,7 +101,7 @@ const correction = z.object({
 });
 
 /**
- * Artifacts — "As Things Stand". Long-term ownership essays. The schema is
+ * Artifacts — "As things stand". Long-term ownership essays. The schema is
  * deliberately restrained: only title, description and pubDate are required.
  * The ownership record (object, acquisition, updates) is optional and
  * supplements the essay rather than competing with it. `draft` defaults to true
@@ -135,7 +135,7 @@ const artifacts = defineCollection({
 });
 
 /**
- * Field Notes — "From the Margins". Literary nonfiction, travelogues,
+ * Field Notes — "Dispatches from the margins". Literary nonfiction, travelogues,
  * reflections, poetry, photography-led writing. Minimal required fields; no
  * rigid template. `draft` defaults to true.
  */

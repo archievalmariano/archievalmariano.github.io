@@ -23,8 +23,8 @@ export interface DeskCollectionMeta {
 
 // Order here is the order collections appear in DESK-local navigation.
 export const deskCollections: DeskCollectionMeta[] = [
-  { key: 'artifacts', label: 'Artifacts', subtitle: 'As Things Stand', slug: 'artifacts' },
-  { key: 'fieldNotes', label: 'Field Notes', subtitle: 'From the Margins', slug: 'field-notes' },
+  { key: 'artifacts', label: 'Artifacts', subtitle: 'As things stand', slug: 'artifacts' },
+  { key: 'fieldNotes', label: 'Field Notes', subtitle: 'Dispatches from the margins', slug: 'field-notes' },
 ];
 
 // PRODUCTION TRUTH. Do not flip to true except to launch a collection.

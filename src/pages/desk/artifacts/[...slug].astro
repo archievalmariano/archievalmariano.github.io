@@ -7,7 +7,6 @@
 import { getCollection } from 'astro:content';
 import { isPublished, collectionMeta } from '../../../data/desk';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import DeskNav from '../../../components/DeskNav.astro';
 import CollectionIndex from '../../../components/CollectionIndex.astro';
 import DeskArticleLayout from '../../../layouts/DeskArticleLayout.astro';
 
@@ -58,11 +57,8 @@ const items =
   props.kind === 'index' ? (
     <BaseLayout
       title="Artifacts — Archieval Mariano"
-      description="As Things Stand — long-term ownership essays about the objects I live with."
+      description="As things stand — long-term ownership essays about the objects I live with."
     >
-      <div class="wrap">
-        <DeskNav />
-      </div>
       <CollectionIndex
         label={meta.label}
         subtitle={meta.subtitle}
@@ -71,6 +67,7 @@ const items =
         intro="Essays about living with objects over time — what changes, what breaks, and what stays."
         items={items}
         emptyText="No essays published yet."
+        showNav={true}
       />
     </BaseLayout>
   ) : (

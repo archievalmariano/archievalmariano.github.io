@@ -1,6 +1,6 @@
 # Artifacts — manuscript privacy
 
-This directory holds the **Artifacts** content collection ("As Things Stand").
+This directory holds the **Artifacts** content collection ("As things stand").
 Files whose names start with `_` (like this one) are ignored by Astro's content
 collections, so this note never becomes a page.
 
