@@ -1,7 +1,7 @@
 # Field Notes — manuscript privacy
 
-This directory holds the **Field Notes** content collection ("From the
-Margins"). Files whose names start with `_` (like this one) are ignored by
+This directory holds the **Field Notes** content collection ("Dispatches from
+the margins"). Files whose names start with `_` (like this one) are ignored by
 Astro's content collections, so this note never becomes a page.
 
 **Unpublished manuscripts must NOT be committed to this repository.**
