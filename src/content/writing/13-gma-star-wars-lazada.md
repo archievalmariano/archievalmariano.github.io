@@ -1,6 +1,6 @@
 ---
 title: "#PINNED: Get your hands on these Star Wars merchandise this Lazada 5.5"
-displayTitle: Get your hands on this Star Wars merchandise for Lazada 5.5
+displayTitle: Get your hands on these Star Wars merchandise for Lazada 5.5
 classification: commissioned
 publisher: GMA News Online
 clientOrCampaign: Lazada
