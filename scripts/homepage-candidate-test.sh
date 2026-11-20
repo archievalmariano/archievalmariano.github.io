@@ -6,13 +6,10 @@
 # Uses only astro + shell + node — no new dependency.
 #
 # States:
-#   P     production default     → approved homepage; Projects expanded,
-#                                  Artifacts/Field Notes compact and unlinked
-#   CI    CI + every preview flag + synthetic DESK fixtures staged
-#                                → still nothing gated in dist/
-#   S2    local DESK preview of Artifacts only (fixtures)
-#                                → Artifacts row expands; Field Notes compact
-#   S3    local DESK preview of both (fixtures) → all three rows expand
+#   P     production default     → Projects and Field Notes expanded, Artifacts compact
+#   CI    CI + every preview flag + fixtures → Artifacts absent and drafts excluded
+#   S2    local DESK preview of Artifacts only (fixtures) → all three rows expand
+#   S3    local DESK preview of both (fixtures) → same published content as S2
 #   FINAL production default, fixtures removed → no fixture leak
 #
 # Synthetic fixtures are the existing test/fixtures/desk files; they are
@@ -26,6 +23,7 @@ FAIL=0
 LOG="${TMPDIR:-/tmp}/homepage_candidate_build.log"
 AF="src/content/artifacts"; FN="src/content/fieldNotes"; FIX="test/fixtures/desk"
 H=dist/index.html
+FN_ROUTE="/desk/field-notes/make-no-mistakes-adds-the-monkey/"
 
 ok()  { PASS=$((PASS+1)); printf '   \033[32mPASS\033[0m %s\n' "$1"; }
 bad() { FAIL=$((FAIL+1)); printf '   \033[31mFAIL\033[0m %s\n' "$1"; }
@@ -36,11 +34,10 @@ assert_nogrep() { if grep -rqF -- "$2" "$1" 2>/dev/null; then bad "SHOULD NOT co
 assert_count()  { local n; n=$(grep -oF -- "$2" "$1" 2>/dev/null | wc -l | tr -d ' ')
   if [ "$n" = "$3" ]; then ok "count('$2') = $3: $1"; else bad "count('$2') = $n, expected $3: $1"; fi; }
 
-unstage() { rm -f "$AF/gate-published.mdx" "$AF/gate-draft.mdx" "$FN/gate-published.mdx" "$FN/gate-draft.mdx"; }
+unstage() { rm -f "$AF/gate-published.mdx" "$AF/gate-draft.mdx" "$FN/gate-draft.mdx"; }
 stage() {
   cp "$FIX/artifacts-published.mdx" "$AF/gate-published.mdx"
   cp "$FIX/artifacts-draft.mdx" "$AF/gate-draft.mdx"
-  cp "$FIX/field-note-published.mdx" "$FN/gate-published.mdx"
   cp "$FIX/field-note-draft.mdx" "$FN/gate-draft.mdx"
 }
 trap unstage EXIT
@@ -56,19 +53,26 @@ build() { # $1 = label, rest = env assignments
   fi
 }
 
-assert_no_gated() {
+assert_field_notes() {
+  assert_exist "dist${FN_ROUTE}index.html"
+  assert_exist dist/desk/field-notes/index.html
+  assert_exist dist/desk/rss.xml
+  assert_grep "$H" "href=\"$FN_ROUTE\""
+  assert_nogrep dist/desk/field-notes "Draft Field Note Fixture"
+  assert_absent dist/desk/field-notes/gate-draft
+}
+
+assert_production() {
+  assert_field_notes
   assert_absent dist/desk/artifacts
-  assert_absent dist/desk/field-notes
-  assert_absent dist/desk/rss.xml
   assert_nogrep dist "/desk/artifacts"
-  assert_nogrep dist "/desk/field-notes"
   assert_nogrep dist "SYNTHETIC"
 }
 
 # ── P: production default ───────────────────────────────────────────────────
 build "P production-default"
 assert_exist "$H"
-assert_no_gated
+assert_production
 
 # Approved copy, reproduced exactly (apostrophes are ’, U+2019).
 for line in \
@@ -87,11 +91,21 @@ for line in \
 done
 assert_nogrep "$H" "Across strategy, content, analytics"   # superseded hero paragraph
 
-# Desk state 1: Projects expanded (DOGEAR), Artifacts/Field Notes compact.
-assert_count  "$H" 'qs-row--featured' 1
-assert_count  "$H" 'qs-row--compact' 2
-assert_grep   "$H" 'href="/desk/dogear/"'
-for p in on-point goto tools; do assert_nogrep "$H" "href=\"/desk/$p/\""; done
+# Projects: DOGEAR comes first and both entries use the same feature class.
+assert_count "$H" 'qs-row--featured' 2
+assert_count "$H" 'qs-row--compact' 1
+for p in goto tools; do assert_nogrep "$H" "href=\"/desk/$p/\""; done
+if node -e '
+  const html = require("fs").readFileSync(process.argv[1], "utf8");
+  const projects = html.match(/<section[^>]+aria-label="Projects"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "";
+  const features = [...projects.matchAll(/<article class="([^"]*)"[^>]*>([\s\S]*?)<\/article>/g)];
+  process.exit(features.length === 2 &&
+    features[0][1] === "qs-feature" &&
+    features[0][2].includes(`href="/desk/dogear/"`) &&
+    features[1][1] === features[0][1] &&
+    features[1][2].includes(`href="/desk/on-point/"`) &&
+    features[1][2].includes("onpoint-06-countdown") ? 0 : 1);
+' "$H"; then ok "Projects shows DOGEAR then ON POINT with matching feature markup"; else bad "Projects feature order, image, or hierarchy incorrect"; fi
 
 # Work: two case studies, link after them; prototypes in Work, same tab.
 assert_grep   "$H" 'href="/work/digital-intelligence-dashboard"'
@@ -125,21 +139,21 @@ done
 # The /goto/ redirect pages are untouched by the shared chrome.
 for f in dist/goto/index.html dist/goto/install/index.html dist/goto/install/x4-pro/index.html; do assert_exist "$f"; done
 
-# ── CI: every flag + fixtures under CI → nothing gated ──────────────────────
+# ── CI: every preview flag + fixtures still yields the production baseline ───
 stage
 build "CI [all flags + fixtures]" CI=true GITHUB_ACTIONS=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
-assert_no_gated
-assert_count "$H" 'qs-row--compact' 2
+assert_production
+assert_count "$H" 'qs-row--compact' 1
 unstage
 
 # ── S2: Artifacts launched locally (fixtures) ────────────────────────────────
 stage
 build "S2 artifacts only" DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts
-assert_count  "$H" 'qs-row--featured' 2
-assert_count  "$H" 'qs-row--compact' 1
+assert_field_notes
+assert_count  "$H" 'qs-row--featured' 3
+assert_count  "$H" 'qs-row--compact' 0
 assert_grep   "$H" 'href="/desk/artifacts/gate-published/"'
 assert_nogrep "$H" "gate-draft"
-assert_nogrep "$H" "/desk/field-notes"
 assert_grep   dist/about/index.html 'href="/desk/artifacts/"'   # footer directory follows the gate
 unstage
 
@@ -148,13 +162,14 @@ stage
 build "S3 artifacts + field notes" DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
 assert_count  "$H" 'qs-row--featured' 3
 assert_count  "$H" 'qs-row--compact' 0
-assert_grep   "$H" 'href="/desk/field-notes/gate-published/"'
+assert_field_notes
+assert_grep   "$H" 'href="/desk/artifacts/gate-published/"'
 assert_nogrep "$H" "gate-draft"
 unstage
 
 # ── FINAL: production default, fixtures removed ─────────────────────────────
 build "FINAL production"
-assert_no_gated
+assert_production
 
 echo ""
 echo "════════════════════════════════════════════"

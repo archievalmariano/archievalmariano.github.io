@@ -5,17 +5,20 @@ import imgTerminal from '../../../assets/photos/onpoint-05-terminal.jpg';
 import imgBoard from '../../../assets/photos/onpoint-01-board.jpg';
 import imgCountdown from '../../../assets/photos/onpoint-06-countdown.jpg';
 import imgCubao from '../../../assets/photos/onpoint-03-cubao-clark.jpg';
-import imgNorthLuzon from '../../../assets/photos/onpoint-07-north-luzon.jpg';
-import imgAirport from '../../../assets/photos/onpoint-08-airport-transfers.jpg';
+import imgNuvali from '../../../assets/photos/onpoint-09-nuvali.jpg';
+import imgCollectionsFirst from '../../../assets/photos/onpoint-10-collections-page-1.jpg';
+import imgCollectionsSecond from '../../../assets/photos/onpoint-11-collections-page-2.jpg';
 import imgApps from '../../../assets/photos/tools-06-apps-x4pro.jpg';
 
 const release = 'https://github.com/archievalmariano/crosspoint-reader/releases';
 
-// Bundled routes in the current release, grouped into the three collections the
-// device uses. Timetable is PUBLISHED where it follows the operator's own
-// schedule, PROVISIONAL where the source is secondary or the timetable has not
-// been confirmed with the operator; a few Bulacan routes read published leaving
-// Bulacan and provisional on the return.
+const version = 'v1.6.0';
+const releaseNotes = `${release}/tag/${version}`;
+const downloads = `${release}/download/${version}`;
+const routeNotes = 'https://github.com/archievalmariano/crosspoint-reader/blob/v1.6.0/docs/releases/v1.6.0.md';
+
+// Route pairs in the order of the v1.6.0 collection picker. Timetables are
+// provisional when sourced secondhand or not currently confirmed by the operator.
 const collections = [
   {
     name: 'BULACAN',
@@ -47,19 +50,48 @@ const collections = [
       { route: 'PITX ↔ Clark Airport', operator: 'Genesis', timetable: 'Published' },
     ],
   },
+  {
+    name: 'METRO MANILA',
+    routes: [
+      { route: 'ATC Alabang ↔ Greenbelt', operator: 'RRCG', timetable: 'Provisional' },
+      { route: 'VTX Alabang ↔ Starmall Shaw', operator: 'RRCG', timetable: 'Provisional' },
+      { route: 'ATC Alabang ↔ SM Megamall', operator: 'RRCG', timetable: 'Provisional' },
+    ],
+  },
+  {
+    name: 'LAGUNA',
+    routes: [
+      { route: 'Nuvali ↔ One Ayala', operator: 'TAS Trans', timetable: 'Provisional' },
+      { route: 'WM Cabuyao ↔ Makati', operator: 'Calamba P2P', timetable: 'Provisional' },
+      { route: 'WM Cabuyao ↔ Market Market', operator: 'Calamba P2P', timetable: 'Provisional' },
+    ],
+  },
+  {
+    name: 'SOUTH LUZON',
+    routes: [
+      { route: 'Batangas ↔ Newport', operator: 'RRCG', timetable: 'Provisional' },
+      { route: 'SM Lipa ↔ Newport', operator: 'RRCG', timetable: 'Provisional' },
+      { route: 'SM Masinag ↔ One Ayala', operator: 'RRCG', timetable: 'Provisional' },
+      { route: 'Sierra Valley ↔ One Ayala', operator: 'RRCG', timetable: 'Provisional' },
+    ],
+  },
 ];
 
 const timetableLabel = {
   Published: 'PUBLISHED',
   Provisional: 'PROVISIONAL',
-  Mixed: 'PUBLISHED / PROVISIONAL',
 };
 
 const gallery = [
   {
+    src: imgNuvali,
+    alt: 'The Nuvali to One Ayala board showing 51 minutes until the noon departure and the PROVISIONAL label at the bottom.',
+    caption: 'Nuvali → One Ayala in the Laguna collection, with its timetable marked PROVISIONAL.',
+  },
+  {
     src: imgBoard,
     alt: 'ON POINT showing 15 minutes until the 09:30 bus from Balagtas to TriNoma, with the next trip at 10:00 and the last at 20:00.',
-    caption: 'The departure board: time left, the scheduled trip, the next one and the last.',
+    caption: 'An earlier Balagtas → TriNoma board showing the scheduled, next and last trips. See the route table for its current timetable status.',
   },
   {
     src: imgCubao,
@@ -73,28 +105,28 @@ const gallery = [
   },
 ];
 
-const galleryWidths = [240, 360, 520];
-const gallerySizes = '(max-width: 40rem) 45vw, 170px';
+const galleryWidths = [240, 360, 520, 720];
+const gallerySizes = '(max-width: 40rem) 45vw, 20rem';
 
 const packages = [
   {
     name: 'ON POINT',
     file: 'firmware-x4pro-p.factory.bin',
-    identity: '2.0.0-A1.5.0-P',
-    sha256: 'fd6cea5f1212c8fa83f5e3cbe89b301a706ac191cbef684894a39de94d162c20',
+    identity: '2.0.0-A1.6.0-P',
+    sha256: 'f4d1f451ae8c8067a4f7076394da4e5a7816f7e5ef45c129cff5e1f340b3142a',
   },
   {
     name: 'GOTO + ON POINT',
     file: 'firmware-x4pro-gp.factory.bin',
-    identity: '2.0.0-A1.5.0-GP',
-    sha256: '2977eca449e178a533f97c21c624518e80876dfe0d6cd8db9d4318e4bd4b95a8',
+    identity: '2.0.0-A1.6.0-GP',
+    sha256: 'fa5ac92527feb5258327719fe848c771ea5c85654f0487f6cea2be37180be047',
   },
 ];
 ---
 
 <BaseLayout
   title="ON POINT — Archieval Mariano"
-  description="ON POINT is an offline departure board for the XTEINK X4 Pro. It carries fifteen local P2P and airport bus routes in three collections, each timetable labelled as published or provisional."
+  description="ON POINT is an offline departure board for the XTEINK X4 Pro. Version 1.6.0 covers 25 bus route pairs and 50 directions in six collections, with published and provisional timetables."
 >
   <section class="wrap op">
     <p class="op__back"><a href="/desk/">&larr; Desk</a></p>
@@ -106,11 +138,10 @@ const packages = [
 
     <p class="op__lede">
       ON POINT keeps bus timetables on the XTEINK X4 Pro and tells you what leaves
-      next, and how long you have, without a network connection. It currently carries
-      fifteen local P2P and airport routes, grouped into three collections — BULACAN,
-      NORTH LUZON and AIRPORT TRANSFERS. Each timetable is labelled PUBLISHED where it
-      follows the operator’s own schedule, or PROVISIONAL where the source is secondary or
-      the timetable has not been confirmed with the operator.
+      next and how long you have, without a network connection. Version 1.6.0 covers
+      25 route pairs (50 directions) in six collections, from local P2P routes to airport
+      transfers. Each direction shows a PUBLISHED or PROVISIONAL label so you can see
+      how much confidence to place in the timetable.
     </p>
 
     <figure class="op__hero">
@@ -160,8 +191,8 @@ const packages = [
         </li>
         <li>Both directions of each route. Left and Right switch direction.</li>
         <li>
-          Routes grouped into collections — BULACAN, NORTH LUZON and AIRPORT TRANSFERS.
-          SELECT COLLECTION switches between them.
+          Six route collections. Open SELECT COLLECTION to switch between them using
+          the two-page picker.
         </li>
         <li>
           A main route in each collection, at the top of its route list. Hold a route to
@@ -181,16 +212,28 @@ const packages = [
     <section class="op__section" id="routes">
       <h2>Routes</h2>
       <p>
-        The current release carries fifteen routes, in three collections. A timetable reads
-        <strong>PUBLISHED</strong> where it follows the operator’s own schedule, or
-        <strong>PROVISIONAL</strong> where the source is secondary or the timetable has not
-        been confirmed with the operator.
+        Version 1.6.0 carries 25 route pairs across six collections. A direction is
+        <strong>PUBLISHED</strong> when it follows the operator’s own schedule and
+        <strong>PROVISIONAL</strong> when it relies on a secondary source or lacks current
+        operator confirmation. Of the 50 directions, 18 are published and 32 are
+        provisional. All 20 new directions are provisional: they draw on operator listings
+        whose current times have not been confirmed. Check with the operator before travelling.
       </p>
+      <div class="op__collection-photos">
+        <figure>
+          <Image src={imgCollectionsFirst} alt="ON POINT collections page 1 of 2: Bulacan, North Luzon, Airport Transfers and Metro Manila." widths={galleryWidths} sizes={gallerySizes} format="webp" quality={80} loading="lazy" />
+          <figcaption>Page 1 of 2: Bulacan, North Luzon, Airport Transfers and Metro Manila.</figcaption>
+        </figure>
+        <figure>
+          <Image src={imgCollectionsSecond} alt="ON POINT collections page 2 of 2: Laguna and South Luzon." widths={galleryWidths} sizes={gallerySizes} format="webp" quality={80} loading="lazy" />
+          <figcaption>Page 2 of 2: Laguna and South Luzon.</figcaption>
+        </figure>
+      </div>
       {
         collections.map((c) => (
           <div class="op__collection">
             <h3 class="op__collection-name">{c.name}</h3>
-            <table class="op__routes">
+            <table class="op__routes" aria-label={`${c.name} route pairs`}>
               <thead>
                 <tr><th scope="col">Route</th><th scope="col">Operator</th><th scope="col">Timetable</th></tr>
               </thead>
@@ -199,7 +242,9 @@ const packages = [
                   <tr>
                     <th scope="row">{r.route}</th>
                     <td>{r.operator}</td>
-                    <td>{timetableLabel[r.timetable]}</td>
+                    <td>{r.timetable === 'Mixed' ? (
+                      <><span class="op__direction">PUBLISHED →</span><span class="op__direction">← PROVISIONAL</span></>
+                    ) : timetableLabel[r.timetable]}</td>
                   </tr>
                 ))}
               </tbody>
@@ -208,32 +253,32 @@ const packages = [
         ))
       }
       <p class="op__aside">
+        Each timetable label applies to both directions unless arrows show otherwise.
         Caypombo and Malolos read PUBLISHED leaving Bulacan and PROVISIONAL on the return,
         and Guiguinto ↔ TriNoma is an editorial reconstruction. Bulacan P2P routes follow a
         separate Saturday, Sunday and holiday timetable, and the Cubao → Baguio and
         Pasay → Baguio services run fewer trips on Tuesdays and Wednesdays than from Thursday
-        to Monday. The other routes run daily. The release notes
+        to Monday. The other routes in those three collections run daily. The release notes
         (<a href={`${release}/tag/v1.3.0`} target="_blank" rel="noopener">v1.3.0</a> for the
         Bulacan and earlier routes,
         <a href={`${release}/tag/v1.5.0`} target="_blank" rel="noopener">v1.5.0</a> for the
         later Genesis additions) set out each route’s sources and limits.
       </p>
+      <h3 class="op__schedule-heading">Service days and holidays</h3>
+      <ul class="op__list op__schedule-notes">
+        <li>ATC Alabang ↔ SM Megamall has no Sunday service. Both WM Cabuyao routes, SM Masinag ↔ One Ayala and Sierra Valley ↔ One Ayala run Monday to Friday only.</li>
+        <li>For Sierra Valley ↔ One Ayala, evening departures from One Ayala follow one schedule on Monday and Friday and a different one from Tuesday to Thursday.</li>
+        <li>Batangas ↔ Newport and SM Lipa ↔ Newport use RRCG’s posted daily boards. Its website lists fewer trips at different times, so both routes remain provisional.</li>
+        <li>Nuvali ↔ One Ayala shows no service on nationwide regular holidays and special non-working days in 2026 and 2027. Including special non-working days is an interpretation of the operator’s holiday notice. This release does not include Eid’l Fitr or Eid’l Adha in those rules, and shows the ordinary schedule for that day on Metro Manila-only special days.</li>
+        <li>RRCG and both WM Cabuyao routes use their normal day-of-week timetables on holidays, as do the Genesis routes. Actual holiday service may differ. Bulacan P2P uses its separate holiday timetable where applicable.</li>
+      </ul>
       <p class="op__aside">
-        Public holidays in the Philippines for 2026 and 2027 use a route’s holiday timetable
-        where it has one; the Genesis routes have no separate holiday schedule, so they keep
-        their regular times. Operators change schedules without notice, so check with them
-        before a trip that matters.
+        Device labels use VTX Alabang for Starmall Alabang, WM Cabuyao for WalterMart
+        Cabuyao, Makati for One Ayala / Landmark, Market Market for BGC Taguig,
+        Batangas for Batangas Grand Terminal, and Newport for Newport World Resorts
+        (NAIA Terminal 3). See the <a href={routeNotes}>v1.6.0 route notes</a> for
+        timetable sources and limitations.
       </p>
-      <div class="op__collection-photos">
-        <figure>
-          <Image src={imgNorthLuzon} alt="The ON POINT collection view on an XTEINK X4 Pro: the NORTH LUZON collection, main route TriNoma to Clark Airport, listing Clark Airport to Baguio, Clark Airport to Balanga and Cubao to Baguio, marked PUBLISHED." widths={galleryWidths} sizes="(max-width: 40rem) 45vw, 220px" format="webp" quality={74} loading="lazy" />
-          <figcaption>The NORTH LUZON collection, its routes marked PUBLISHED. SELECT COLLECTION moves between the three collections.</figcaption>
-        </figure>
-        <figure>
-          <Image src={imgAirport} alt="The ON POINT collection view on an XTEINK X4 Pro: the AIRPORT TRANSFERS collection, main route NAIA T3 to PITX marked PROVISIONAL, listing Clark Airport to NAIA T3 and PITX to Clark Airport." widths={galleryWidths} sizes="(max-width: 40rem) 45vw, 220px" format="webp" quality={74} loading="lazy" />
-          <figcaption>AIRPORT TRANSFERS, with NAIA T3 → PITX now marked PROVISIONAL.</figcaption>
-        </figure>
-      </div>
     </section>
 
     <hr class="rule" />
@@ -248,7 +293,7 @@ const packages = [
     <section class="op__section">
       <h2>Supported hardware</h2>
       <p>
-        Runs on the <strong>XTEINK X4 Pro</strong> running CrossPoint Reader. ON POINT
+        Version 1.6.0 is for the <strong>XTEINK X4 Pro only</strong>. ON POINT
         needs a real-time clock to count down to departures, and the original XTEINK X4
         does not have one, so it is not offered for the X4.
       </p>
@@ -262,9 +307,9 @@ const packages = [
     <section class="op__section" id="download">
       <h2>Download</h2>
       <p>
-        ON POINT installs on the X4 Pro over USB. Choose ON POINT on its own, or together
-        with <a href="/desk/goto/">GOTO</a>. Either way, it lives in the
-        <strong>Apps</strong> menu on the CrossPoint home screen.
+        For a new installation, choose ON POINT on its own or together with
+        <a href="/desk/goto/">GOTO</a>. Both factory images install over USB on the
+        X4 Pro. ON POINT appears in <strong>Apps</strong> on the CrossPoint home screen.
       </p>
 
       <div class="op__packages">
@@ -275,18 +320,18 @@ const packages = [
                 {pkg.name} <span class="op__package-method">· XTEINK X4 Pro · USB flashing</span>
               </h3>
               <dl class="op__meta">
-                <div><dt>Release</dt><dd>v1.5.0 · CrossPoint 2.0.0 + Apps 1.5.0</dd></div>
+                <div><dt>Release</dt><dd>{version} · CrossPoint 2.0.0 + Apps 1.6.0</dd></div>
                 <div><dt>On-device identity</dt><dd>{pkg.identity}</dd></div>
               </dl>
               <p class="op__actions">
-                <a class="op__download" href={`${release}/download/v1.5.0/${pkg.file}`}>
+                <a class="op__download" href={`${downloads}/${pkg.file}`}>
                   Download {pkg.name}
                 </a>
               </p>
               <p class="op__links">
                 <code>{pkg.file}</code>
                 <span aria-hidden="true">·</span>
-                <a href={`${release}/tag/v1.5.0`} target="_blank" rel="noopener">Release notes</a>
+                <a href={releaseNotes} target="_blank" rel="noopener">Release notes</a>
               </p>
               <p class="op__sha">
                 <span class="op__sha-label">SHA-256</span>
@@ -296,11 +341,27 @@ const packages = [
           ))
         }
       </div>
+      <p class="op__install-more">
+        Verify these downloads against the
+        <a href={`${downloads}/SHA256SUMS-X4PRO-SHIPPED.txt`}>shipped X4 Pro checksum manifest</a>.
+      </p>
+    </section>
+
+    <hr class="rule" />
+    <section class="op__section" id="update">
+      <h2>Updating an existing X4 Pro</h2>
+      <p>
+        If you already run v1.5.0 on an X4 Pro, connect to Wi-Fi and open
+        <strong>Settings → System → Check for Updates</strong> to install v1.6.0.
+        The update keeps your installed package. If it already includes ON POINT,
+        your collection and main route selections carry over. To add ON POINT to
+        a package that lacks it, install one of the factory images over USB.
+      </p>
     </section>
 
     <hr class="rule" />
     <section class="op__section">
-      <h2>Installing on the XTEINK X4 Pro</h2>
+      <h2>Installing over USB on the X4 Pro</h2>
       <ol class="op__steps">
         <li>Download the factory image for the package you want.</li>
         <li>
@@ -329,8 +390,7 @@ const packages = [
       </p>
       <p class="op__limitation">
         Flashing a factory image replaces the internal firmware and may reset settings
-        and saved Wi-Fi. Your microSD card is not affected. Later releases install over
-        Wi-Fi from Settings → System → Check for updates and keep the package you chose.
+        and saved Wi-Fi. Your microSD card is not affected.
       </p>
     </section>
 
@@ -395,7 +455,7 @@ const packages = [
   }
   .op__gallery {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-sm);
     margin: 0 0 var(--space-lg);
   }
@@ -466,6 +526,11 @@ const packages = [
     padding-left: 1.25rem;
     line-height: 1.7;
   }
+  .op__schedule-heading {
+    font-size: var(--step-0);
+    margin: var(--space-md) 0 var(--space-xs);
+  }
+  .op__schedule-notes li + li { margin-top: var(--space-xs); }
   .op__aside {
     font-size: var(--step--1);
     line-height: 1.6;
@@ -502,6 +567,8 @@ const packages = [
   .op__routes td {
     color: var(--ink-soft);
   }
+
+  .op__direction { display: block; }
 
   /* Download */
   .op__packages {
@@ -614,7 +681,6 @@ const packages = [
 
   @media (max-width: 40rem) {
     .op__gallery {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-md) var(--space-sm);
     }
     .op__meta dt {

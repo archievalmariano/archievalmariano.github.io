@@ -12,7 +12,7 @@
 //            Commissioned writing  /writing/
 //            Services       /services/
 //
-// DESK rows: a row EXPANDS (identity, description, link, one featured item)
+// DESK rows: a row EXPANDS (identity, description, link, and selected features)
 // only when its subsection has published content; otherwise it stays COMPACT
 // (name, subtitle, description — no link, URL, notice, or empty media area).
 // Artifacts / Field Notes use the existing gate (isPublished, read-only) and
@@ -28,7 +28,6 @@ import portrait from '../assets/photos/archieval-portrait.jpg';
 import taipeiStreet from '../assets/photos/about-taipei-street.jpg';
 import baywalkCat from '../assets/photos/about-baywalk-cat.jpg';
 import esplanadeBridge from '../assets/photos/about-esplanade-bridge.jpg';
-import onPointBoard from '../assets/photos/onpoint-01-board.jpg';
 import gotoStory from '../assets/photos/goto-edition-01-story.jpg';
 // Screenshots of the Pinned prototypes (provenance: docs/redesign/production-candidate/).
 import pinnedShopShot from '../assets/prototypes/pinned-shop-mobile.jpg';
@@ -115,21 +114,18 @@ type Row = {
   href?: string; // only for published destinations
   linkLabel?: string;
   featured?: Featured;
+  additional?: Featured;
 };
 
 // Projects: data-driven featured project.
 const eligibleProjects = projects.filter((p) => p.data.homepage && p.data.heroImage); // sorted by `order`
 const featuredProject = eligibleProjects.find((p) => p.data.featured) ?? eligibleProjects[0];
+const onPointProject = eligibleProjects.find((p) => p.data.slug === 'on-point' && p !== featuredProject);
 
 // Optional presentation hints, used only if one of these projects becomes the
 // featured one: frame an existing, unmodified photograph to its screen (crop
 // box in source pixels) so the image shows what the project does.
 const framing: Record<string, { src: ImageMetadata; alt: string; box: [number, number, number, number] }> = {
-  'on-point': {
-    src: onPointBoard,
-    alt: 'ON POINT showing 15 minutes until the 09:30 bus from Balagtas to TriNoma, with the next trip at 10:00 and the last at 20:00.',
-    box: [262, 178, 846, 1075],
-  },
   goto: {
     src: gotoStory,
     alt: 'The top story of a GOTO morning edition: Carlos Yulo shows support for Alex Eala, EJ Obiena ahead of Asian Games campaigns.',
@@ -137,9 +133,9 @@ const framing: Record<string, { src: ImageMetadata; alt: string; box: [number, n
   },
 };
 
-function projectFeature(): Featured | undefined {
-  if (!featuredProject) return undefined;
-  const d = featuredProject.data;
+function projectFeature(project: (typeof eligibleProjects)[number] | undefined): Featured | undefined {
+  if (!project) return undefined;
+  const d = project.data;
   const f = framing[d.slug];
   return {
     title: d.name,
@@ -215,7 +211,8 @@ const rows: Row[] = [
     description: copy.desk.projects.description,
     href: '/desk/projects/',
     linkLabel: 'All projects',
-    featured: projectFeature(),
+    featured: projectFeature(featuredProject),
+    additional: projectFeature(onPointProject),
   },
 ];
 for (const c of deskCollections) {
@@ -288,28 +285,32 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
                 )}
               </div>
               {r.featured && (
-                <article class:list={['qs-feature', { 'qs-feature--text': !r.featured.image }]}>
-                  {r.featured.image && (
-                    <figure class:list={['qs-feature__figure', { 'qs-frame': r.featured.frame }]} style={r.featured.frame}>
-                      <Image src={r.featured.image.src} alt={r.featured.image.alt} widths={[240, 360, 480, 720]} sizes="(max-width: 36rem) 40vw, 11rem" format="webp" quality={76} />
-                    </figure>
-                  )}
-                  <div class="qs-feature__text">
-                    <h4>{r.featured.title}</h4>
-                    {r.featured.subtitle && <p class="qs-feature__subtitle">{r.featured.subtitle}</p>}
-                    {r.featured.description && r.featured.description !== r.featured.subtitle && (
-                      <p class="qs-feature__desc">{r.featured.description}</p>
-                    )}
-                    {r.featured.meta && <p class="qs-meta">{r.featured.meta}</p>}
-                    <p class="qs-go">
-                      <a href={r.featured.href}>
-                        {r.featured.linkLabel}
-                        {r.featured.linkLabel === 'Read' && <span class="visually-hidden"> {r.featured.title}</span>}
-                        <span aria-hidden="true"> →</span>
-                      </a>
-                    </p>
-                  </div>
-                </article>
+                <div class="qs-row__features">
+                  {[r.featured, r.additional].map((feature) => feature && (
+                    <article class:list={['qs-feature', { 'qs-feature--text': !feature.image }]}>
+                      {feature.image && (
+                        <figure class:list={['qs-feature__figure', { 'qs-frame': feature.frame }]} style={feature.frame}>
+                          <Image src={feature.image.src} alt={feature.image.alt} widths={[240, 360, 480, 720]} sizes="(max-width: 36rem) 8.5rem, 11rem" format="webp" quality={76} />
+                        </figure>
+                      )}
+                      <div class="qs-feature__text">
+                        <h4>{feature.title}</h4>
+                        {feature.subtitle && <p class="qs-feature__subtitle">{feature.subtitle}</p>}
+                        {feature.description && feature.description !== feature.subtitle && (
+                          <p class="qs-feature__desc">{feature.description}</p>
+                        )}
+                        {feature.meta && <p class="qs-meta">{feature.meta}</p>}
+                        <p class="qs-go">
+                          <a href={feature.href}>
+                            {feature.linkLabel}
+                            {feature.linkLabel === 'Read' && <span class="visually-hidden"> {feature.title}</span>}
+                            <span aria-hidden="true"> →</span>
+                          </a>
+                        </p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               )}
             </section>
           ))
@@ -499,6 +500,11 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
   .qs-feature h4 { font-size: clamp(1.4rem, 2vw, 1.75rem); }
   .qs-feature__subtitle { margin: .2rem 0 0; font-family: var(--font-serif); color: var(--ink-soft); }
   .qs-feature__desc { max-width: 32rem; margin: .55rem 0 .5rem; font-family: var(--font-serif); font-size: 1.12rem; line-height: 1.45; }
+  .qs-feature + .qs-feature {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--rule);
+  }
   /* AA contrast on the darker Desk band: --ink-faint is only 4.15:1 here */
   .qs-desk .qs-meta { color: var(--ink-soft); }
 
@@ -575,7 +581,7 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
 
   @media (max-width: 64rem) {
     .qs-row { grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); }
-    .qs-row--featured .qs-feature { grid-column: 2; margin-top: 1.25rem; }
+    .qs-row__features { grid-column: 2; margin-top: 1.25rem; }
     .qs-away__grid { grid-template-columns: 1fr; }
     .qs-photos-wrap { max-width: 42rem; }
     .qs-group__head { grid-template-columns: 1fr; }
@@ -592,8 +598,8 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
     .qs-intro__portrait { width: 100%; }
     /* Rows stack; featured content only where it exists */
     .qs-row, .qs-row--compact { grid-template-columns: 1fr; gap: .4rem; }
-    .qs-row--compact .qs-row__about, .qs-row--featured .qs-feature { grid-column: 1; }
-    .qs-row--featured .qs-feature { margin-top: 1rem; }
+    .qs-row--compact .qs-row__about, .qs-row__features { grid-column: 1; }
+    .qs-row__features { margin-top: 1rem; }
     .qs-feature { grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr); gap: 1rem; }
     .qs-feature h4 { font-size: 1.3rem; }
     .qs-feature__desc { font-size: 1.04rem; }

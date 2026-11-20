@@ -150,7 +150,7 @@ for (const c of deskCollections) {
               <li class={section.textOnly ? 'desk-entry desk-entry--text' : 'desk-entry'}>
                 <a class="desk-entry__link" href={item.href}>
                   {!section.textOnly && (
-                    <div class="desk-entry__thumb">
+                    <div class:list={['desk-entry__thumb', { 'desk-entry__thumb--natural': item.href === '/desk/on-point/' }]}>
                       {item.image ? (
                         <Image
                           src={item.image}
@@ -307,6 +307,11 @@ for (const c of deskCollections) {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border: 1px solid var(--rule);
+  }
+
+  .desk-entry__thumb--natural :global(img) {
+    height: auto;
+    aspect-ratio: auto;
   }
 
   .desk-entry__title {
