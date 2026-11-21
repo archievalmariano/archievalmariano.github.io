@@ -32,6 +32,7 @@ export interface ServiceGroup {
   title: string;
   need: string;
   approach: string;
+  approachExample?: { lead: string; label: string; href: string };
   outcome: string;
 }
 
@@ -43,6 +44,11 @@ export const services: ServiceGroup[] = [
       'You have plenty of audience and performance data, but it lives across different platforms, reports, and teams. It is difficult to tell which information matters or what should happen next.',
     approach:
       'I identify the useful signals, define the right audiences and metrics, and turn them into reporting systems, dashboards, or audience frameworks people can actually understand.',
+    approachExample: {
+      lead: 'One example of this approach is my',
+      label: 'internal digital intelligence dashboard pilot',
+      href: '/work/digital-intelligence-dashboard/',
+    },
     outcome:
       'A clearer view of your audience and a practical way to use data in editorial, commercial, campaign, or product decisions.',
   },
