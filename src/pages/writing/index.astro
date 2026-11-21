@@ -9,11 +9,11 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
 ---
 
 <BaseLayout
-  title="Writing — Archieval Mariano"
+  title="Commissioned writing — Archieval Mariano"
   description="Selected commissioned work across finance, technology, travel, lifestyle, and consumer content."
 >
   <section class="wrap page-head">
-    <p class="page-head__chapter"><span>03</span> Field notes</p>
+    <p class="page-head__chapter">Commissioned writing</p>
     <h1>Writing was the beginning of everything else.</h1>
     <p class="page-head__intro">
       Selected commissioned work across finance, technology, travel, lifestyle,
@@ -42,7 +42,6 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
                 {d.format && <p class="meta entry-list__type">{d.format}</p>}
                 <div class="entry-list__title">
                   {d.displayTitle ?? d.title}
-                  {isExternal && <span class="ext" aria-hidden="true"> ↗</span>}
                   {isExternal && <span class="visually-hidden"> (opens in new tab)</span>}
                 </div>
                 <p class="entry-list__summary">{d.description}</p>
@@ -90,7 +89,6 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
   }
 
   .page-head__chapter { grid-row: 1 / span 2; margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
-  .page-head__chapter span { display: block; width: fit-content; margin-bottom: .65rem; padding: .35rem .5rem; background: var(--blue-soft); border: 1px solid var(--ink); color: var(--ink); }
 
   .entry-list {
     list-style: none;
@@ -130,16 +128,6 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
     color: var(--accent);
   }
 
-  .ext {
-    font-family: var(--font-sans);
-    font-size: 0.7em;
-    color: var(--ink-faint);
-  }
-
-  .entry-list__link:hover .ext {
-    color: var(--accent);
-  }
-
   .entry-list__summary {
     margin: var(--space-sm) 0 0;
     max-width: var(--measure);
@@ -161,5 +149,12 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft)).sort
     .page-head { grid-template-columns: 1fr; }
     .page-head h1, .page-head__intro, .page-head__chapter { grid-column: 1; grid-row: auto; }
     .entry-list__link { grid-template-columns: 2rem minmax(0, 1fr) 1rem; }
+  }
+
+  @media (max-width: 24rem) {
+    .entry-list__link {
+      grid-template-columns: 1.5rem minmax(0, 1fr) .75rem;
+      column-gap: .5rem;
+    }
   }
 </style>

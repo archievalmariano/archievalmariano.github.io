@@ -14,9 +14,10 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
 }
 
-const { title, description, type, ogImage, ogImageAlt, publishedTime, modifiedTime, jsonLd } =
+const { title, description, type, ogImage, ogImageAlt, publishedTime, modifiedTime, jsonLd, noindex } =
   Astro.props;
 ---
 
@@ -32,6 +33,7 @@ const { title, description, type, ogImage, ogImageAlt, publishedTime, modifiedTi
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}
       jsonLd={jsonLd}
+      noindex={noindex}
     />
   </head>
   <body>

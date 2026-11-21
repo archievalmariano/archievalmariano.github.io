@@ -8,7 +8,7 @@ format: Financial Education / E-book Chapter
 contribution: Writing
 externalURL: https://www.metrobank.com.ph/articles/financial-education-with-moneybility
 byline: uncredited
-description: A long-form financial education chapter that helps readers assess their financial health, identify areas for improvement, and decide on practical next steps.
+description: A long-form financial education chapter that helps readers assess their financial health, identify areas for improvement, and decide on practical next steps. The link opens Metrobank’s announcement about the e-book.
 featured: false
 draft: false
 ---

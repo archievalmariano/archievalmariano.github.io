@@ -1,242 +1,327 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import baywalkCat from '../assets/photos/about-baywalk-cat.jpg';
-import esplanadeBridge from '../assets/photos/about-esplanade-bridge.jpg';
-import taipeiStreet from '../assets/photos/about-taipei-street.jpg';
-import { siteLinks } from '../data/site';
+import whiteMosque from '../assets/photos/about-white-mosque.jpg';
+import watArun from '../assets/photos/about-wat-arun.jpg';
+import boracay from '../assets/photos/about-boracay.jpg';
+import iraya from '../assets/photos/about-iraya.jpg';
+import itbayat from '../assets/photos/about-itbayat.jpg';
+import sagada from '../assets/photos/about-sagada.jpg';
 
-const workOn = [
-  'Audience intelligence and segmentation',
-  'Digital audits and strategy',
-  'Analytics and reporting systems',
-  'Content strategy and editorial direction',
-  'E-commerce acquisition and retention',
-  'Automation, prototypes, and operational design',
+// Split the available width by the native 1800×1439 and 1800×1350 aspect ratios.
+const mosqueShare = 1350 / (1439 + 1350);
+const firstPairShares = [mosqueShare, 1 - mosqueShare];
+const photographSizes = (share: number) =>
+  `(max-width: 36rem) calc(100vw - clamp(2.5rem, 10vw, 7rem)), calc((min(100vw, 78rem) - clamp(2.5rem, 10vw, 7rem) - clamp(1rem, 2.6vw, 2.5rem)) * ${share})`;
+const photographWidths = [320, 360, 480, 560, 640, 720, 960, 1120, 1280, 1440, 1680];
+
+const photographs = [
+  {
+    src: whiteMosque,
+    alt: 'A white mosque with turquoise doors and arched windows beside the sea, framed by palms.',
+    place: 'Tawi-Tawi',
+    year: 2016,
+  },
+  {
+    src: watArun,
+    alt: 'Gold-lit temple spires and a roof with rain streaking across the night sky.',
+    place: 'Bangkok',
+    year: 2018,
+    widths: [...photographWidths, 1720],
+  },
+  {
+    src: boracay,
+    alt: 'Two paddleboarders silhouetted against the setting sun, with sailboats on the horizon.',
+    place: 'Boracay',
+    year: 2017,
+  },
+  {
+    src: iraya,
+    alt: 'Mount Iraya across blue water, seen from a grassy headland.',
+    place: 'Basco',
+    year: 2016,
+  },
+  {
+    src: itbayat,
+    alt: 'People carrying bags on a red-roofed faluwa beside a rocky landing.',
+    place: 'Itbayat',
+    year: 2015,
+  },
+  {
+    src: sagada,
+    alt: 'A wooden café with a green awning among pines, with mountains in the distance.',
+    place: 'Sagada',
+    year: 2015,
+  },
 ];
+const photoPairs = [photographs.slice(0, 2), photographs.slice(2, 4), photographs.slice(4, 6)];
 ---
 
 <BaseLayout
   title="About — Archieval Mariano"
   description="Archieval Mariano is a digital strategy and audience growth professional based in the Philippines, working across content, analytics, e-commerce, and digital operations."
 >
-  <header class="about-cover wrap">
-    <p class="about-cover__chapter"><span>05</span> About</p>
-    <div>
-      <p class="about-cover__kicker">A working introduction</p>
-      <h1>Archieval<br />Mariano</h1>
-      <p class="about-cover__lede">
-        I used to call myself the bored storyteller. The name still fits. I remain
-        restless, curious, and interested in the stories people, places, and seemingly
-        ordinary things have to tell.
-      </p>
-    </div>
-  </header>
+  <article class="wrap about">
+    <header class="about-cover">
+      <h1>Archieval Mariano</h1>
+    </header>
 
-  <section class="origin wrap" aria-labelledby="origin-title">
-    <p class="section-number">01</p>
-    <h2 id="origin-title">The heart of it</h2>
-    <div class="origin__body">
-      <p class="origin__lead">
-        The heart of it has always been writing.
-      </p>
-      <p>
-        I was drawn to the way a word can change meaning through context, placement,
-        or tone. I still enjoy taking a familiar fact, trope, or saying and turning it
-        on its head. For me, writing has always been part expression and part puzzle.
-      </p>
-      <p>
-        That instinct eventually led me beyond copy. Data is another way of finding a
-        narrative. Strategy is deciding which patterns matter and what to do with them.
-        Operations turn that conclusion into something people can repeat. They are
-        different materials, but I approach them with the same desire to make something
-        complicated clearer.
-      </p>
-      <p>
-        The path has taken me through editorial, branded content, e-commerce, analytics,
-        audience development, digital strategy, and the systems that connect them.
-      </p>
-    </div>
-  </section>
-
-  <aside class="experience-band">
-    <div class="wrap experience-band__inner">
-      <p>Selected experience</p>
-      <ul>
-        <li>GMA New Media Inc.</li>
-        <li>SM Investments Corporation</li>
-        <li>Summit Media</li>
-        <li>Independent consulting</li>
-      </ul>
-      <strong>More than a decade across digital work.</strong>
-    </div>
-  </aside>
-
-  <section class="work-map wrap" aria-labelledby="work-map-title">
-    <p class="section-number">02</p>
-    <h2 id="work-map-title">What I work on</h2>
-    <ol>
-      {workOn.map((item, index) => <li><span>0{index + 1}</span>{item}</li>)}
-    </ol>
-  </section>
-
-  <section class="philosophy wrap" aria-labelledby="philosophy-title">
-    <p class="section-number section-number--light">03</p>
-    <h2 id="philosophy-title">How I work</h2>
-    <blockquote>
-      I usually see the ending first.
-    </blockquote>
-    <div class="philosophy__body">
-      <p>
-        When I was writing, I often knew the final line, the kicker, or the quote I wanted
-        to end on before I had written the opening. The difficult and interesting part was
-        finding the right way there.
-      </p>
-      <p>
-        I work similarly now. I begin with a clear outcome and work backward through the
-        decisions needed to reach it. The difficult and interesting part is finding the
-        right way there.
-      </p>
-      <p>
-        The result still has to survive contact with actual work. It should make sense to
-        the people using it, respect the limits they work within, and remain useful after
-        the presentation ends.
-      </p>
-    </div>
-  </section>
-
-  <section class="outside wrap" aria-labelledby="outside-title">
-    <p class="section-number">04</p>
-    <h2 id="outside-title">Away<br />from the<br />dashboards</h2>
-    <div class="outside__body">
-      <p class="outside__lead">Pretends to be a photographer and a good writer.</p>
-      <p>
-        That is how I describe myself on Instagram, where I post photographs and the
-        occasional poem or piece of prose. It captures my discomfort with calling myself
-        a photographer, or even a good writer, despite spending years taking photographs
-        and writing.
-      </p>
-      <p>
-        In my twenties, I built trips around hostels and long journeys over land, saving
-        on comfort so I could spend more on experience. I still travel, but I no longer
-        treat discomfort as proof that a trip mattered. I move more slowly now, chase
-        fewer attractions, and leave more room to notice what is actually there.
-      </p>
-      <p>
-        I am told I am an amazing conversationalist. I choose to interpret that as being
-        an acquired taste.
-      </p>
-      <div class="outside__links">
-        <a class="button" href="/contact">Find out for yourself</a>
-        <a href={siteLinks.linkedin} target="_blank" rel="noopener" data-ga-event="linkedin_click">View my full record on LinkedIn<span class="visually-hidden"> (opens in new tab)</span></a>
+    <section class="about-section" aria-labelledby="storyteller">
+      <h2 id="storyteller">The bored storyteller</h2>
+      <div class="about-prose">
+        <p>I actually remember the first time I used that name. The storyteller part, at least.</p>
+        <p>I was in El Nido with my college friends, and we were talking to some tourists from Québec. The conversation eventually turned to what we all did for a living. At the time, I wasn't really getting paid to write, and "writer" just felt flat.</p>
+        <p class="about-aside">Also, we wanted to impress some particularly pretty people.</p>
+        <blockquote class="about-dialogue">
+          <p>"Are you an artist, too?" one of them asked, referring to what my friend had said.</p>
+          <p>"No, not at all. I'm a storyteller."</p>
+        </blockquote>
+        <p>Polite nods. I think a lot was lost in translation. What was the French equivalent of what I was trying to convey, anyway? My friends exchanged knowing smiles, and the conversation eventually drifted to teaching one another useful swear words.</p>
+        <p>The moniker stuck, so I continued using it.</p>
+        <p>"Bored" came later. Why not?</p>
+        <p>Perhaps there's a better word for a storyteller who's always looking for interesting stories to make, share, or laugh about over beer. Or, these days, my drink of choice: non-alcoholic anything.</p>
+        <p>But I kept <em>bored</em> because, in a strange way, it describes an aspiration. You can't really be bored when there's still so much to do, so much to discover, and so many stories left to write. Boredom, I suppose, is what happens when you've finally run out of them.</p>
+        <p class="about-aside">I haven't. Not even close.</p>
+        <p class="about-aside">Or I'm not making sense. You tell me.</p>
       </div>
-    </div>
+    </section>
 
-    <div class="outside__gallery" aria-label="Selected photographs from my personal archive" oncontextmenu="return false">
-      <figure class="outside__photo outside__photo--taipei">
-        <Image
-          src={taipeiStreet}
-          alt="A vertical view along Chang'an West Road in Taipei, framed by buildings and road markings"
-          widths={[444, 666, 888]}
-          sizes="(max-width: 832px) 100vw, 34vw"
-          format="webp"
-          quality={74}
-          loading="lazy"
-          draggable="false"
-        />
-        <figcaption>
-          <span class="outside__caption-copy">
-            A very<br />
-            vertical panorama<br />
-            somewhere in Taipei
-          </span>
-          <span class="outside__credit">Personal archive</span>
-        </figcaption>
-      </figure>
-      <figure class="outside__photo outside__photo--cat">
-        <Image
-          src={baywalkCat}
-          alt="A black-and-white cat walking beside Manila Bay on a bright Sunday morning"
-          widths={[720, 1100, 1600]}
-          sizes="(max-width: 832px) 100vw, 58vw"
-          format="webp"
-          quality={74}
-          loading="lazy"
-          draggable="false"
-        />
-        <figcaption><span class="outside__caption-copy">Sunday morning along the Pasay Baywalk</span><span class="outside__credit">Personal archive</span></figcaption>
-      </figure>
-      <figure class="outside__photo outside__photo--bridge">
-        <Image
-          src={esplanadeBridge}
-          alt="A brightly lit convenience store framed by the dark underside of Esplanade Bridge in Singapore"
-          widths={[720, 1100, 1600]}
-          sizes="(max-width: 832px) 100vw, 58vw"
-          format="webp"
-          quality={74}
-          loading="lazy"
-          draggable="false"
-        />
-        <figcaption><span class="outside__caption-copy">Beneath Esplanade Bridge in Singapore</span><span class="outside__credit">Personal archive</span></figcaption>
-      </figure>
-    </div>
-  </section>
+    <section class="about-section" aria-labelledby="expression">
+      <h2 id="expression">Part expression, part puzzle</h2>
+      <div class="about-prose">
+        <p>I've always been drawn to the way a word can change meaning through context, placement, or tone. I still enjoy taking a familiar fact, trope, or saying and turning it on its head. For me, writing has always been part expression and part puzzle.</p>
+        <p>That instinct eventually led me beyond copy. Data is another way of finding a narrative. Strategy is deciding which patterns matter and what to do with them. Operations turn that conclusion into something people can repeat.</p>
+        <p>They're different materials, but I approach them with the same desire to make something complicated clearer.</p>
+        <p>The path has taken me through editorial, branded content, e-commerce, analytics, audience development, digital strategy, and the systems that connect them. I still find myself moving between these disciplines, often borrowing something from one to solve a problem in another.</p>
+        <aside class="about-experience" aria-labelledby="experience">
+          <h3 id="experience">Selected experience</h3>
+          <p>GMA New Media Inc. · SM Investments Corporation · Summit Media · Independent consulting</p>
+          <p><em>More than a decade across digital work.</em></p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="away">
+      <h2 id="away">Away from the dashboards</h2>
+      <div class="about-prose">
+        <p>From the ugly chicken-scratch handwriting of my younger years to the loud (and absolutely satisfying) clacking of my keyboard nowadays, it seems I've been writing my whole life.</p>
+        <p>After a couple of drinks, I might even admit that I'm good at it. Among other things.</p>
+        <p>Photography came a little later. I remember getting through our photojournalism class with just my phone, using captions as a crutch to coast to a good grade.</p>
+        <p>Then, in my twenties, I bought my first "serious" Micro Four Thirds camera. I fell in love with a Panasonic pancake lens, swore off zoom lenses, and eventually decided that cameras were tedious. Editing, even more so.</p>
+        <p>So I swore off cameras in favor of phones. Then I circled back to serious cameras. Or two. Or three.</p>
+        <p>These days, I've settled on a Fujifilm X100VI. I'm not quite brave enough to shoot JPEG only, but I do like not having to adjust much afterward.</p>
+        <p>I like liminal photography. Or perhaps I just really dislike having people in my frame.</p>
+        <p>I write poetry, although no amount of alcohol in the world will make me call myself a poet. I like technology, too, and I might have an unhealthy obsession with e-ink.</p>
+        <p>I also travel. In my twenties, I built trips around hostels and long journeys over land, saving on comfort so I could spend more on experience. I still travel, but I no longer treat discomfort as proof that a trip mattered. I move more slowly now, chase fewer attractions, and leave more room to notice what's actually there.</p>
+        <p>My friends and family will vouch for my skills as a conversationalist. Or a know-it-all, depending on whom you ask.</p>
+      </div>
+    </section>
+
+    <section class="about-photographs" aria-labelledby="photographs">
+      <h2 id="photographs">Selected photographs</h2>
+      <div class="about-photos" oncontextmenu="return false">
+        {photoPairs.map((pair, row) => (
+          <div
+            class="about-photos__pair"
+            style={row === 0 ? { '--left-share': `${firstPairShares[0]}fr`, '--right-share': `${firstPairShares[1]}fr` } : undefined}
+          >
+            {pair.map((photo, column) => (
+              <figure>
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  width={1120}
+                  widths={photo.widths ?? photographWidths}
+                  sizes={photographSizes(row === 0 ? firstPairShares[column] : 0.5)}
+                  format="webp"
+                  quality={89}
+                  loading="lazy"
+                  draggable="false"
+                />
+                <figcaption>{photo.place}, <span>{photo.year}</span></figcaption>
+              </figure>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <nav class="about-links" aria-label="Continue exploring">
+      <a href="/work/">Work</a>
+      <span aria-hidden="true">·</span>
+      <a href="/desk/">Desk</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Get in touch</a>
+    </nav>
+  </article>
 </BaseLayout>
 
 <style>
+  .about {
+    padding-bottom: var(--space-xl);
+  }
+
   .about-cover {
+    padding-block: clamp(3.25rem, 7vw, 6.5rem) clamp(1.75rem, 3.5vw, 3.25rem);
+  }
+
+  .about-cover h1 {
+    max-width: 11ch;
+    font-family: var(--font-sans);
+    font-size: clamp(4.2rem, 9vw, 8.5rem);
+    font-weight: 780;
+    letter-spacing: -.035em;
+    line-height: .9;
+  }
+
+  .about-section {
     display: grid;
-    grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
-    gap: 2rem clamp(2rem, 8vw, 9rem);
-    padding-top: clamp(4rem, 9vw, 9rem);
-    padding-bottom: clamp(4rem, 9vw, 9rem);
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+    gap: var(--space-md) clamp(2rem, 6vw, 6rem);
+    align-items: start;
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+    border-top: 1px solid var(--rule);
   }
-  .about-cover__chapter, .section-number { margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
-  .about-cover__chapter span { display: block; width: fit-content; margin-bottom: .65rem; padding: .35rem .5rem; background: var(--coral); border: 1px solid var(--ink); color: var(--ink); }
-  .about-cover__kicker { margin: 0 0 var(--space-sm); font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); }
-  .about-cover h1 { max-width: 9ch; font-family: var(--font-sans); font-size: clamp(4.2rem, 11vw, 11rem); font-weight: 780; letter-spacing: -.025em; line-height: .8; }
-  .about-cover__lede { max-width: 48rem; margin: clamp(2.5rem, 6vw, 6rem) 0 0; font-family: var(--font-serif); font-size: clamp(1.4rem, 2.4vw, 2.3rem); line-height: 1.42; }
-  .origin, .work-map, .philosophy, .outside { display: grid; grid-template-columns: 4rem minmax(15rem, .45fr) minmax(0, 1fr); gap: clamp(1.2rem, 4vw, 4rem); padding-top: clamp(4rem, 8vw, 8rem); padding-bottom: clamp(4rem, 8vw, 8rem); border-top: var(--heavy-rule); }
-  .origin h2, .work-map h2, .philosophy h2, .outside h2 { max-width: 12ch; font-family: var(--font-sans); font-size: clamp(2.4rem, 4vw, 4.8rem); font-weight: 750; letter-spacing: -.05em; line-height: .95; }
-  .origin__body, .philosophy__body, .outside__body { max-width: 46rem; font-family: var(--font-serif); font-size: clamp(1.15rem, 1.7vw, 1.5rem); line-height: 1.58; }
-  .origin__lead { font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.15; color: var(--ink); }
-  .experience-band { background: var(--yellow); border-block: var(--heavy-rule); }
-  .experience-band__inner { display: grid; grid-template-columns: 11rem minmax(0, 1fr) 15rem; gap: clamp(1.5rem, 5vw, 5rem); align-items: start; padding-top: clamp(2rem, 4vw, 4rem); padding-bottom: clamp(2rem, 4vw, 4rem); }
-  .experience-band p { margin: 0; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-  .experience-band ul { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem 2rem; margin: 0; padding: 0; list-style: none; font-family: var(--font-serif); font-size: var(--step-1); }
-  .experience-band li { padding-bottom: .55rem; border-bottom: 1px solid var(--ink); }
-  .experience-band strong { font-size: .85rem; line-height: 1.4; text-transform: uppercase; }
-  .work-map ol { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0; padding: 0; border-top: var(--heavy-rule); border-left: var(--heavy-rule); list-style: none; }
-  .work-map li { min-height: 10rem; padding: 1.25rem; border-right: var(--heavy-rule); border-bottom: var(--heavy-rule); font-family: var(--font-serif); font-size: var(--step-1); }
-  .work-map li span { display: block; margin-bottom: 2.5rem; font-family: var(--font-sans); font-size: .7rem; font-weight: 800; }
-  .philosophy { color: var(--paper); background: var(--blue-dark); box-shadow: 0 0 0 100vmax var(--blue-dark); clip-path: inset(0 -100vmax); border: 0; }
-  .section-number--light { color: color-mix(in srgb, var(--paper) 65%, transparent); }
-  .philosophy blockquote { max-width: 15ch; margin: 0; font-family: var(--font-sans); font-size: clamp(2.2rem, 3.2vw, 3.8rem); font-weight: 750; letter-spacing: -.045em; line-height: 1; }
-  .philosophy__body { grid-column: 3; color: color-mix(in srgb, var(--paper) 82%, transparent); }
-  .philosophy a { color: var(--paper); text-decoration-color: var(--yellow); }
-  .outside h2 { font-size: clamp(2.2rem, 3.25vw, 4rem); letter-spacing: -.04em; }
-  .outside__lead { margin-top: 0; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.15; color: var(--ink); }
-  .outside__links { display: flex; flex-wrap: wrap; gap: 1.5rem 2rem; align-items: center; margin-top: var(--space-lg); font-family: var(--font-sans); font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
-  .outside__links .button { padding: .8rem 1rem; color: var(--paper); background: var(--ink); text-decoration: none; border: 2px solid var(--ink); box-shadow: .3rem .3rem 0 var(--coral); }
-  .outside__gallery { grid-column: 2 / 4; display: grid; grid-template-columns: minmax(16rem, .52fr) minmax(0, 1fr); grid-template-rows: 1fr 1fr; gap: clamp(1rem, 2vw, 2rem); margin-top: clamp(2rem, 5vw, 5rem); user-select: none; }
-  .outside__photo { position: relative; min-width: 0; margin: 0; overflow: hidden; background: var(--ink); border: var(--heavy-rule); }
-  .outside__photo--taipei { grid-row: 1 / 3; }
-  .outside__photo--cat, .outside__photo--bridge { aspect-ratio: 3 / 2; }
-  .outside__photo :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-  .outside__photo--taipei :global(img) { object-position: 50% 50%; }
-  .outside__photo figcaption { position: absolute; inset: auto 0 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 1rem; padding: .7rem .9rem; background: color-mix(in srgb, var(--ink) 92%, transparent); color: var(--paper); font-family: var(--font-sans); font-size: .66rem; font-weight: 750; line-height: 1.35; letter-spacing: .06em; text-transform: uppercase; }
-  .outside__caption-copy { min-width: 0; }
-  .outside__credit { flex: 0 0 auto; color: color-mix(in srgb, var(--paper) 65%, transparent); }
-  @media (max-width: 52rem) {
-    .about-cover { grid-template-columns: 1fr; }
-    .origin, .work-map, .philosophy, .outside { grid-template-columns: 2rem 1fr; }
-    .origin__body, .work-map ol, .philosophy blockquote, .philosophy__body, .outside__body, .outside__gallery { grid-column: 2; }
-    .outside__gallery { grid-template-columns: 1fr; grid-template-rows: auto; }
-    .outside__photo--taipei { grid-row: auto; aspect-ratio: 2 / 3; }
-    .experience-band__inner { grid-template-columns: 1fr; }
+
+  .about-section:first-of-type {
+    padding-top: clamp(2rem, 4vw, 3.75rem);
   }
+
+  .about-section h2,
+  .about-photographs h2 {
+    font-family: var(--font-sans);
+    font-size: var(--step-2);
+    font-weight: 740;
+    letter-spacing: -.035em;
+  }
+
+  .about-prose {
+    max-width: 62ch;
+    font-family: var(--font-serif);
+    font-size: clamp(1.16rem, 1.45vw, 1.36rem);
+    line-height: 1.56;
+  }
+
+  .about-prose p { margin: 0; }
+  .about-prose > p + p { margin-top: .9em; }
+  .about-prose > .about-aside { margin-block: 1.1em; }
+
+  .about-dialogue {
+    margin: 1.3em 0;
+    border-left: 2px solid var(--coral);
+    padding-inline-start: var(--space-sm);
+  }
+
+  .about-dialogue p + p { margin-top: .55em; }
+
+  .about-experience {
+    margin: clamp(1.75rem, 4vw, 2.75rem) 0 0;
+    padding: clamp(1rem, 2.4vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+    background-color: var(--yellow);
+    color: var(--ink);
+  }
+
+  .about-experience h3 {
+    margin-bottom: var(--space-xs);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 730;
+    letter-spacing: .02em;
+  }
+
+  .about-experience p + p {
+    margin-top: var(--space-xs);
+    color: var(--ink-soft);
+  }
+
+  .about-photographs {
+    border-top: 1px solid var(--rule);
+    padding-block: var(--space-lg) var(--space-xl);
+  }
+
+  .about-photographs h2 { position: relative; }
+
+  .about-photographs h2::before {
+    content: '';
+    position: absolute;
+    inset-block-start: .16em;
+    inset-inline-start: -.45em;
+    width: 2px;
+    height: .72em;
+    background: var(--coral);
+  }
+
+  .about-photos {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.25rem);
+    margin-top: var(--space-md);
+  }
+
+  .about-photos__pair {
+    display: grid;
+    grid-template-columns: minmax(0, var(--left-share, 1fr)) minmax(0, var(--right-share, 1fr));
+    gap: clamp(1rem, 2.6vw, 2.5rem);
+    align-items: start;
+  }
+
+  .about-photos__pair:first-child { align-items: stretch; }
+
+  .about-photos__pair:first-child figure {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .about-photos figure { min-width: 0; margin: 0; }
+  .about-photos img { display: block; width: 100%; height: auto; }
+
+  .about-photos figcaption {
+    margin-top: .65rem;
+    color: var(--ink-soft);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 550;
+    line-height: 1.4;
+  }
+
+  .about-photos figcaption span {
+    color: var(--ink-faint);
+    font-weight: 400;
+  }
+
+  .about-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem .85rem;
+    align-items: baseline;
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-md);
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 680;
+  }
+
+  .about-links a {
+    display: inline-block;
+    padding-block: .3rem;
+  }
+
+  .about-links a:hover,
+  .about-links a:focus-visible {
+    color: var(--accent-ink);
+    text-decoration-color: currentColor;
+  }
+
+  .about-links span { color: var(--ink-faint); }
+
+  @media (max-width: 48rem) {
+    .about-section { grid-template-columns: 1fr; gap: var(--space-sm); }
+  }
+
   @media (max-width: 36rem) {
-    .work-map ol, .experience-band ul { grid-template-columns: 1fr; }
-    .outside__photo figcaption { grid-template-columns: 1fr; gap: .2rem; }
+    .about-cover h1 { font-size: min(4.2rem, 18vw); }
+    .about-photos,
+    .about-photos__pair { gap: var(--space-lg); }
+    .about-photos__pair { grid-template-columns: minmax(0, 1fr); }
   }
 </style>

@@ -80,8 +80,19 @@ const Wrapper = clickable ? 'a' : 'div';
     line-height: 1;
   }
 
-  a.work-card__link:hover .work-card__title {
-    color: var(--accent);
+  a.work-card__link:is(:hover, :focus-visible) {
+    color: var(--ink);
+  }
+
+  a.work-card__link:is(:hover, :focus-visible) .work-card__title {
+    text-decoration: underline;
+    text-decoration-thickness: .06em;
+    text-underline-offset: .12em;
+  }
+
+  a.work-card__link:focus-visible {
+    outline-color: var(--ink);
+    outline-offset: -3px;
   }
 
   /* Static (listing-only) cards give no clickable affordance. */
