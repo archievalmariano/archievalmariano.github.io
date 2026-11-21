@@ -52,7 +52,29 @@ const workLinks = (html) => [...html.matchAll(/href="\/work\/([^"/]+)\/?"/g)].ma
 
 const listing = read('dist/work/index.html');
 assert.match(listing, /Private narrative regression listing/);
-assert.deepEqual(workLinks(listing), publicSlugs, 'Public Work links and order');
+const cards = listing.matchAll(/<li\b[^>]*\sclass="work-card(?:\s[^"]*)?"[^>]*>([\s\S]*?)<\/li>/g);
+const publicCardSlugs = [];
+for (const [, card] of cards) {
+  const slug = card.match(/<h3\b[^>]*\sid="work-([^"]+)"/)?.[1];
+  assert.ok(slug, 'Work card has a case-study identifier');
+  const row = card.match(/^\s*<a\b[^>]*>/)?.[0];
+  if (privateSlugs.includes(slug)) {
+    assert.equal(row, undefined, `Private Work card is unlinked: ${slug}`);
+    continue;
+  }
+  const href = row?.match(/\shref="([^"]+)"/)?.[1];
+  assert.ok(href === `/work/${slug}` || href === `/work/${slug}/`, `Public Work card destination: ${slug}`);
+  publicCardSlugs.push(slug);
+}
+assert.deepEqual(publicCardSlugs, publicSlugs, 'Public Work cards appear once each and in order');
+
+const namingNote = listing.match(/<p\b[^>]*\sclass="experiments__note"[^>]*>([\s\S]*?)<\/p>/);
+assert.ok(namingNote, 'Product experiments naming note');
+assert.match(
+  namingNote[1],
+  /<a\b[^>]*\shref="\/work\/evergreen-seo-pilot\/"[^>]*>an evergreen SEO project at GMA<\/a>/,
+  'Naming note links to the canonical Evergreen SEO case study with the approved anchor text',
+);
 
 for (const slug of privateSlugs) {
   assert.ok(!existsSync(`dist/work/${slug}`), `Private route generated: ${slug}`);
@@ -78,5 +100,5 @@ for (const file of readdirSync('dist', { recursive: true }).filter((name) => /\.
   }
 }
 
-console.log('PASS: private narrative stays unpublished, six public cases and adjacent links remain in order.');
+console.log('PASS: six public Work cards, Evergreen SEO note, adjacent links, and private publication safeguards.');
 JS
