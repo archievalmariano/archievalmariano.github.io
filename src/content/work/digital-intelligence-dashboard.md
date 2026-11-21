@@ -5,7 +5,7 @@ category: Audience intelligence and digital product
 companyOrClient: GMA New Media Inc.
 anonymized: false
 shortDescription: At GMA New Media Inc., I turned a digital command center idea first discussed in 2019 into a working, source-labeled intelligence dashboard through an AI-assisted development workflow.
-overview: At GMA New Media Inc., I built a working internal pilot that brings intelligence from GA4, Similarweb, Semrush, Chartbeat, and Google Trends into one source-labeled interface. It is designed to help editorial and digital teams find relevant signals without opening every platform separately or negotiating with more data than they need.
+overview: Colleagues and I first discussed a digital command center at GMA New Media Inc. In 2026, I independently built a working internal pilot that brings signals from GA4, Similarweb, Semrush, Chartbeat, and Google Trends into one interface, with each source clearly labeled. I designed it so editorial and digital teams could find relevant signals without opening each platform separately.
 role: The original command center concept was collaborative. The current dashboard pilot was an independent project. I made the product, information architecture, source strategy, interface, and operational decisions. I determined which metrics were most relevant, how the different platforms should be presented, and where unlike measurements needed to remain clearly separated. I also built and tested the application through an AI-assisted development workflow with Claude Code and Codex. Management became aware of the project when I needed access to the API credentials required to connect the available platforms.
 context:
   - The idea was first discussed in late 2019 and early 2020 with colleagues from GMA New Media's audience development and analytics teams. At the time, I was part of digital advertising, although I was already working on projects beyond my formal role.
@@ -39,7 +39,7 @@ tags:
   - Audience Intelligence
   - Analytics
   - Internal Product
-confidentialityNote: Internal screens, data, account details, vendor usage details, and proprietary configuration are withheld. Sanitized visuals will be added separately.
+confidentialityNote: Internal screens, data, account details, vendor usage details, and proprietary configuration are withheld.
 featured: true
 order: 1
 draft: false

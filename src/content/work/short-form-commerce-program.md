@@ -19,7 +19,7 @@ approach:
   - Wrote 70 completed scripts across the growing topic range
   - Designed the material for use across TikTok, Instagram Reels, and YouTube Shorts
   - Kept the editorial material distinct from direct product promotion while making it suitable for channels built around commerce
-outcome: The project left the affiliate team with a reusable editorial framework and 70 completed scripts that could support production and guide future content development. The work grew from an initial batch of 20 to 50 additional scripts, exceeding the follow-up request and leaving a larger bank of material before my departure.
+outcome: The project left the affiliate team with a reusable editorial framework and 70 completed scripts that could support production and guide future content development.
 tools:
   - Content Strategy
   - Editorial Planning

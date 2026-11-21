@@ -33,7 +33,7 @@ const experiments = [
   description="Selected projects across digital strategy, audience growth, content, analytics, e-commerce, and operations."
 >
   <section class="wrap page-head">
-    <p class="page-head__chapter"><span>01</span> Work</p>
+    <p class="page-head__label">Work</p>
     <h1>Stories about audiences, systems and digital work.</h1>
     <p class="page-head__intro">
       The projects are different on the surface. Underneath, most begin with the
@@ -44,15 +44,15 @@ const experiments = [
   <div class="wrap work-groups">
     <section class="work-group" aria-labelledby="selected-work-heading">
       <h2 class="work-group__heading" id="selected-work-heading">Selected case studies</h2>
-      <ul class="work-list">
-        {selectedWork.map((entry, index) => <WorkCard entry={entry} variant="selected" number={index + 1} />)}
+      <ul class="work-list" role="list">
+        {selectedWork.map((entry) => <WorkCard entry={entry} variant="selected" />)}
       </ul>
     </section>
 
     <section class="work-group work-group--archive" aria-labelledby="archive-heading">
       <h2 class="work-group__heading" id="archive-heading">More from the archive</h2>
-      <ul class="work-list">
-        {archiveWork.map((entry, index) => <WorkCard entry={entry} variant="archive" number={selectedWork.length + index + 1} />)}
+      <ul class="work-list" role="list">
+        {archiveWork.map((entry) => <WorkCard entry={entry} variant="archive" />)}
       </ul>
     </section>
 
@@ -65,24 +65,31 @@ const experiments = [
         </p>
       </div>
 
-      <div class="experiments__list">
+      <ul class="experiments__list" role="list">
         {
           experiments.map((experiment, index) => (
-            <a class="experiment" href={experiment.href} target="_blank" rel="noopener">
-              <span class="experiment__number">P{String(index + 1).padStart(2, '0')}</span>
-              <div>
-                <p class="experiment__label">{experiment.label}</p>
-                <h3>{experiment.title}</h3>
-                <p class="experiment__description">{experiment.description}</p>
-              </div>
-              <span class="experiment__link">
-                Open prototype <span aria-hidden="true">↗</span>
-                <span class="visually-hidden"> (opens in a new tab)</span>
-              </span>
-            </a>
+            <li>
+              <a
+                class="experiment"
+                href={experiment.href}
+                target="_blank"
+                rel="noopener"
+                aria-labelledby={`experiment-${index}-title experiment-${index}-action`}
+              >
+                <div>
+                  <p class="experiment__label">{experiment.label}</p>
+                  <h3 id={`experiment-${index}-title`}>{experiment.title}</h3>
+                  <p class="experiment__description">{experiment.description}</p>
+                </div>
+                <span class="experiment__link" id={`experiment-${index}-action`}>
+                  Open prototype <span aria-hidden="true">↗</span>
+                  <span class="visually-hidden"> (opens in a new tab)</span>
+                </span>
+              </a>
+            </li>
           ))
         }
-      </div>
+      </ul>
 
       <p class="experiments__note">
         The name is a callback to #Pinned, a label a colleague and I conceived and
@@ -97,17 +104,15 @@ const experiments = [
   .page-head {
     display: grid;
     grid-template-columns: minmax(9rem, .3fr) minmax(0, 1fr);
-    gap: 1.5rem clamp(2rem, 7vw, 8rem);
-    padding-top: clamp(4rem, 9vw, 9rem);
-    padding-bottom: clamp(3rem, 7vw, 7rem);
-    max-width: var(--wrap);
+    gap: var(--space-md) clamp(2rem, 7vw, 8rem);
+    padding-block: clamp(2.75rem, 5.5vw, 5.5rem) clamp(2.5rem, 5vw, 4.5rem);
   }
 
   .page-head h1 {
     grid-column: 2;
-    max-width: 14ch;
+    max-width: 17ch;
     font-family: var(--font-sans);
-    font-size: clamp(3.3rem, 7vw, 7.8rem);
+    font-size: clamp(2.6rem, 5vw, 5.6rem);
     font-weight: 760;
     letter-spacing: -.065em;
     line-height: .9;
@@ -116,14 +121,14 @@ const experiments = [
   .page-head__intro {
     grid-column: 2;
     max-width: 44rem;
-    margin: var(--space-md) 0 0;
+    margin: 0;
     font-family: var(--font-serif);
-    font-size: clamp(1.3rem, 2vw, 1.85rem);
+    font-size: var(--step-2);
     line-height: 1.4;
     color: var(--ink-soft);
   }
 
-  .page-head__chapter {
+  .page-head__label {
     grid-row: 1 / span 2;
     margin: 0;
     font-size: .72rem;
@@ -133,116 +138,107 @@ const experiments = [
     color: var(--ink-faint);
   }
 
-  .page-head__chapter span {
-    display: block;
-    width: fit-content;
-    margin-bottom: .65rem;
-    padding: .35rem .5rem;
-    background: var(--yellow);
-    border: 1px solid var(--ink);
-    color: var(--ink);
-  }
-
-  .work-group--archive {
-    padding-top: clamp(5rem, 10vw, 10rem);
+  .work-group--archive,
+  .experiments {
+    margin-top: clamp(2.75rem, 5vw, 5rem);
   }
 
   .experiments {
-    margin-top: clamp(5rem, 10vw, 10rem);
-    padding: clamp(2rem, 5vw, 5rem);
+    --experiment-rule: color-mix(in srgb, var(--paper) 36%, var(--blue-dark));
+    --experiment-prose: color-mix(in srgb, var(--paper) 86%, var(--blue-dark));
+    --experiment-muted: color-mix(in srgb, var(--paper) 72%, var(--blue-dark));
+    margin-bottom: clamp(2.25rem, 5vw, 4.75rem);
+    padding: clamp(1.25rem, 4vw, 3.25rem);
     background: var(--blue-dark);
-    border: var(--heavy-rule);
     color: var(--paper);
   }
 
   .experiments__head {
-    display: grid;
-    grid-template-columns: minmax(12rem, .55fr) minmax(0, 1fr);
-    gap: 1.5rem clamp(2rem, 7vw, 8rem);
-    padding-bottom: clamp(2rem, 5vw, 5rem);
+    padding-bottom: clamp(1.35rem, 3vw, 2rem);
   }
 
   .experiments__head h2 {
-    max-width: 10ch;
     font-family: var(--font-sans);
-    font-size: clamp(2.3rem, 4vw, 4.4rem);
+    font-size: var(--step-3);
     font-weight: 740;
-    letter-spacing: -.05em;
-    line-height: .96;
+    letter-spacing: -.04em;
   }
 
   .experiments__intro {
     max-width: 38rem;
-    margin: 0;
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    line-height: 1.5;
-    color: color-mix(in srgb, var(--paper) 76%, transparent);
-  }
-
-  .experiments__list {
-    border-top: 1px solid color-mix(in srgb, var(--paper) 45%, transparent);
-  }
-
-  .experiments__note {
-    width: 100%;
-    margin: 0;
-    padding-top: clamp(2.5rem, 4vw, 3.5rem);
-    font-family: var(--font-serif);
-    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
-    font-style: italic;
-    line-height: 1.5;
-    color: color-mix(in srgb, var(--paper) 68%, transparent);
-  }
-
-  .experiment {
-    display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr) auto;
-    gap: var(--space-lg);
-    align-items: start;
-    padding-block: clamp(2rem, 4vw, 3.5rem);
-    border-bottom: 1px solid color-mix(in srgb, var(--paper) 45%, transparent);
-    color: var(--paper);
-    text-decoration: none;
-  }
-
-  .experiment:hover {
-    color: var(--yellow);
-  }
-
-  .experiment__number,
-  .experiment__label,
-  .experiment__link {
-    font-size: .72rem;
-    font-weight: 800;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-  }
-
-  .experiment__number,
-  .experiment__label {
-    color: color-mix(in srgb, var(--paper) 62%, transparent);
-  }
-
-  .experiment__label {
-    margin: 0 0 var(--space-xs);
-  }
-
-  .experiment h3 {
-    font-family: var(--font-sans);
-    font-size: clamp(1.9rem, 3vw, 3.2rem);
-    font-weight: 740;
-    letter-spacing: -.045em;
-    line-height: 1;
-  }
-
-  .experiment__description {
-    max-width: 42rem;
     margin: var(--space-sm) 0 0;
     font-family: var(--font-serif);
     font-size: var(--step-1);
     line-height: 1.5;
-    color: color-mix(in srgb, var(--paper) 76%, transparent);
+    color: var(--experiment-prose);
+  }
+
+  .experiments__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--experiment-rule);
+  }
+
+  .experiments__note {
+    max-width: var(--measure);
+    margin: 0;
+    padding-top: clamp(1.1rem, 2.5vw, 1.75rem);
+    font-family: var(--font-serif);
+    font-size: var(--step--1);
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--experiment-muted);
+  }
+
+  .experiment {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-sm) var(--space-lg);
+    align-items: start;
+    padding-block: clamp(1.25rem, 2.8vw, 2.25rem);
+    border-bottom: 1px solid var(--experiment-rule);
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .experiment:is(:hover, :focus-visible) h3 {
+    text-decoration: underline;
+    text-decoration-thickness: .06em;
+    text-underline-offset: .14em;
+  }
+
+  .experiment:focus-visible {
+    outline-color: var(--paper);
+  }
+
+  .experiment__label,
+  .experiment__link {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 720;
+  }
+
+  .experiment__label {
+    margin: 0 0 var(--space-xs);
+    color: var(--experiment-muted);
+  }
+
+  .experiment h3 {
+    font-family: var(--font-sans);
+    font-size: var(--step-2);
+    font-weight: 740;
+    letter-spacing: -.045em;
+    line-height: 1.08;
+  }
+
+  .experiment__description {
+    max-width: 42rem;
+    margin: .65rem 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.5;
+    color: var(--experiment-prose);
   }
 
   .experiment__link {
@@ -259,22 +255,25 @@ const experiments = [
     line-height: 1;
   }
 
+  #selected-work-heading::before {
+    content: '';
+    display: block;
+    width: 1.8rem;
+    height: .22rem;
+    margin-bottom: var(--space-xs);
+    background: var(--yellow);
+  }
+
   .work-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: var(--heavy-rule);
-    border-left: var(--heavy-rule);
+    border-top: 1px solid var(--rule);
   }
 
   @media (max-width: 44rem) {
     .page-head { grid-template-columns: 1fr; }
-    .page-head h1, .page-head__intro, .page-head__chapter { grid-column: 1; grid-row: auto; }
-    .work-list { grid-template-columns: 1fr; border-right: var(--heavy-rule); }
-    .experiments__head { grid-template-columns: 1fr; }
-    .experiment { grid-template-columns: 2.5rem minmax(0, 1fr); }
-    .experiment__link { grid-column: 2; }
+    .page-head h1, .page-head__intro, .page-head__label { grid-column: 1; grid-row: auto; }
+    .experiment { grid-template-columns: minmax(0, 1fr); }
   }
 </style>

@@ -5,193 +5,111 @@ import { hasCaseStudy } from '../utils/work';
 interface Props {
   entry: CollectionEntry<'work'>;
   variant?: 'selected' | 'archive';
-  number?: number;
 }
 
-const { entry, variant = 'selected', number } = Astro.props;
+const { entry, variant = 'selected' } = Astro.props;
 const d = entry.data;
+const organization = d.anonymized ? 'Confidential' : d.companyOrClient;
+const metadata = [d.year, d.category].filter(Boolean).join(' · ');
 
-const org = d.anonymized ? 'Confidential' : d.companyOrClient;
-const metaTop = [d.year, d.category].filter(Boolean).join(' · ');
-
-// Listing-only projects render as static content, not links.
+// Private and listing-only entries remain visible without a detail link.
 const clickable = hasCaseStudy(entry) && !d.privateCaseStudy;
 const Wrapper = clickable ? 'a' : 'div';
+const titleId = `work-${entry.slug}`;
+const actionId = `${titleId}-action`;
 ---
 
-<li class:list={['work-card', `work-card--${variant}`]} data-number={number ? String(number).padStart(2, '0') : undefined}>
+<li class:list={['work-card', `work-card--${variant}`]}>
   <Wrapper
-    class:list={['work-card__link', { 'work-card__link--static': !clickable }]}
-    {...(clickable ? { href: `/work/${entry.slug}` } : {})}
+    class="work-card__row"
+    {...(clickable ? { href: `/work/${entry.slug}`, 'aria-labelledby': `${titleId} ${actionId}` } : {})}
   >
-    {metaTop && <p class="meta work-card__meta">{metaTop}</p>}
-    <h3 class="work-card__title">{d.title}</h3>
-    <p class="work-card__desc">{d.shortDescription}</p>
-    {org && <p class="meta work-card__org">{org}</p>}
-    {
-      d.tags.length > 0 && (
-        <ul class="tags">
-          {d.tags.map((tag) => (
-            <li>{tag}</li>
-          ))}
-        </ul>
-      )
-    }
-    {clickable && <span class="work-card__arrow" aria-hidden="true">Read the story →</span>}
-    {d.privateCaseStudy && <span class="work-card__status">Private case study</span>}
+    <div class="work-card__body">
+      <h3 class="work-card__title" id={titleId}>{d.title}</h3>
+      <p class="work-card__desc">{d.shortDescription}</p>
+    </div>
+    <div class="work-card__details">
+      {metadata && <p class="meta">{metadata}</p>}
+      {organization && <p class="meta">{organization}</p>}
+      {clickable && <span class="work-card__action" id={actionId}>Read the story <span aria-hidden="true">→</span></span>}
+      {d.privateCaseStudy && <span class="work-card__status">Private case study</span>}
+    </div>
   </Wrapper>
 </li>
 
 <style>
   .work-card {
-    position: relative;
-    display: flex;
-    border-right: var(--heavy-rule);
-    border-bottom: var(--heavy-rule);
+    border-bottom: 1px solid var(--rule);
   }
 
-  .work-card::before {
-    content: attr(data-number);
-    position: absolute;
-    padding: 1.1rem;
-    font-size: .7rem;
-    font-weight: 800;
-  }
-
-  .work-card__link {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-height: 31rem;
-    padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3.5rem);
+  .work-card__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(10rem, .3fr);
+    align-items: start;
+    gap: var(--space-sm) clamp(1.5rem, 4vw, 3.5rem);
+    padding: clamp(1.15rem, 2.4vw, 1.85rem) var(--space-sm);
+    color: var(--ink);
     text-decoration: none;
   }
 
-  .work-card__meta {
-    margin-bottom: var(--space-xs);
+  .work-card--selected .work-card__row {
+    border-inline-start: 2px solid var(--coral);
+    padding-inline-start: var(--space-md);
   }
 
   .work-card__title {
-    max-width: 15ch;
+    max-width: 36ch;
     font-family: var(--font-sans);
-    font-size: clamp(2rem, 3vw, 3.3rem);
+    font-size: var(--step-2);
     font-weight: 740;
-    letter-spacing: -.045em;
-    line-height: 1;
+    letter-spacing: -.04em;
+    line-height: 1.08;
   }
 
-  a.work-card__link:is(:hover, :focus-visible) {
-    color: var(--ink);
+  .work-card__desc {
+    max-width: 64ch;
+    margin: var(--space-xs) 0 0;
+    color: var(--ink-soft);
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.5;
   }
 
-  a.work-card__link:is(:hover, :focus-visible) .work-card__title {
+  .work-card__details {
+    display: grid;
+    gap: .35rem;
+  }
+
+  .work-card__details p { margin: 0; }
+
+  .work-card__action,
+  .work-card__status {
+    margin-top: .3rem;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 720;
+  }
+
+  .work-card__status { color: var(--ink-soft); }
+
+  a.work-card__row:is(:hover, :focus-visible) .work-card__title {
     text-decoration: underline;
     text-decoration-thickness: .06em;
-    text-underline-offset: .12em;
+    text-underline-offset: .14em;
   }
 
-  a.work-card__link:focus-visible {
+  a.work-card__row:focus-visible {
     outline-color: var(--ink);
     outline-offset: -3px;
   }
 
-  /* Static (listing-only) cards give no clickable affordance. */
-  .work-card__link--static {
-    cursor: default;
-  }
-
-  .work-card__desc {
-    margin: var(--space-sm) 0;
-    max-width: var(--measure);
-    color: var(--ink-soft);
-    font-family: var(--font-serif);
-    font-size: var(--step-1);
-    line-height: 1.46;
-  }
-
-  .work-card__org {
-    margin-top: var(--space-xs);
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    list-style: none;
-    margin: var(--space-sm) 0 0;
-    padding: 0;
-  }
-
-  .tags li {
-    font-family: var(--font-sans);
-    font-size: var(--step--1);
-    letter-spacing: 0.04em;
-    color: var(--ink-faint);
-    border: 1px solid var(--ink);
-    padding: 0.15em 0.75em;
-  }
-
-  .work-card__arrow {
-    display: block;
-    width: fit-content;
-    margin-top: auto;
-    padding-top: var(--space-lg);
-    font-size: .72rem;
-    font-weight: 800;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-  }
-
-  .work-card__status {
-    display: block;
-    width: fit-content;
-    margin-top: auto;
-    padding-top: var(--space-lg);
-    font-size: .72rem;
-    font-weight: 800;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-  }
-
-  .work-card:nth-child(4n + 1) { background: var(--blue-soft); }
-  .work-card:nth-child(4n + 2) { background: var(--yellow); }
-  .work-card:nth-child(4n + 3) { background: var(--coral); }
-  .work-card:nth-child(4n) { background: color-mix(in srgb, var(--coral) 76%, var(--paper)); }
-
-  .work-card--selected .work-card__meta,
-  .work-card--selected .work-card__desc,
-  .work-card--selected .work-card__org,
-  .work-card--selected .tags li {
-    color: var(--ink-soft);
-  }
-
-  .work-card--selected:nth-child(4n + 3) .work-card__meta,
-  .work-card--selected:nth-child(4n + 3) .work-card__desc,
-  .work-card--selected:nth-child(4n + 3) .work-card__org,
-  .work-card--selected:nth-child(4n + 3) .tags li {
-    color: var(--ink);
-  }
-
-  .work-card.work-card--archive {
-    background: var(--paper);
-  }
-
-  .work-card--archive .work-card__link {
-    min-height: 25rem;
-  }
-
-  .work-card--archive .work-card__title {
-    font-size: clamp(1.75rem, 2.6vw, 2.8rem);
-  }
-
   @media (max-width: 44rem) {
-    .work-card {
-      border-right: 0;
+    .work-card__row {
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .work-card__link {
-      min-height: 27rem;
+    .work-card--selected .work-card__row {
+      padding-inline-start: var(--space-sm);
     }
   }
 </style>

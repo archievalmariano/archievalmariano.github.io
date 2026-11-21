@@ -5,7 +5,7 @@ category: Digital growth and e-commerce
 companyOrClient: Confidential consumer brand
 anonymized: true
 shortDescription: Developed a content and paid-media system that connected social discovery, marketplace acquisition, direct-site conversion, and repeat purchase for a confidential consumer brand.
-overview: A consumer brand initially brought us in to improve its social media presence. As the engagement developed, it became clear that social was only one part of the problem. Social media was already the brand's main source of traffic to its e-commerce channels, but increasing that traffic would have limited value if the path from discovery to purchase, and eventually repeat purchase, remained disconnected.
+overview: A consumer brand initially brought us in to improve its social media presence. But social was already its main source of e-commerce traffic, and bringing in more visitors wasn't necessarily translating into more purchases. As the engagement developed, we began looking beyond social content, recommending ways to connect discovery, acquisition, and eventual repeat purchase.
 role: The engagement involved me and a former colleague. I handled the words and the strategy, including copy, content planning, paid-media recommendations, and the broader commercial thinking behind how social connected with the brand's sales channels. My collaborator handled the visual expression, producing graphics, infographics, images, and video.
 context:
   - The client had become dissatisfied with its previous agency arrangement. According to the client, the agency had focused heavily on e-commerce operations because those activities translated more directly into sales, while the brand's social media accounts received less attention.
@@ -22,7 +22,7 @@ approach:
   - Recommended a dedicated discount code as a customer incentive and a way to attribute direct-site orders to the insert. The discount could use part of what the brand would otherwise have paid in marketplace fees while preserving value from the direct transaction.
 outcome:
   - The client implemented the package insert and dedicated discount-code recommendation.
-  - Customers subsequently completed purchases through the owned website using those codes. Because the codes were created specifically for the insert, their redemption provided direct evidence that customers had followed the proposed route to the brand's store.
+  - Customers made purchases on the brand’s own website using codes created specifically for the package insert. Those redemptions provided a way to track direct-site orders tied to the insert.
   - As the content and media mix was refined, Meta reporting showed more link clicks, engagement, and video views even as paid spend decreased.
   - The engagement began as a request for better social media management and developed into a more connected acquisition and retention system spanning content, paid media, marketplaces, and the brand's owned store.
 limitations:

@@ -5,7 +5,7 @@ category: Audience strategy and analytics
 companyOrClient: GMA New Media Inc.
 anonymized: false
 shortDescription: Rebuilt nine legacy audiences in GA4, expanded them into roughly 40 targetable segments, and automated the monthly reporting process used across Sales, product, and editorial teams.
-overview: I joined GMA New Media Inc. for an audience development role and inherited nine legacy audience segments, an entirely manual monthly reporting process, and a measurement ecosystem in transition. I first reconstructed the existing audiences in GA4, then expanded them into a library of roughly 40 targetable segments while making the recurring reporting workflow easier to maintain.
+overview: When I joined GMA New Media Inc. in audience development, I inherited nine segments built in Universal Analytics and a monthly report the team maintained by hand. With Universal Analytics being retired, I rebuilt the nine segments in GA4 before expanding the library to roughly 40 targetable segments. I also automated the monthly report updates.
 role: I owned the migration and expansion of the audience library, from designing and validating segment logic to creating the audiences in GA4 and making them available through Google Ad Manager. I also automated the monthly reporting process and coordinated the handoff to Ad Operations for the internal audience bulletin. Sales helped surface client demand, while Kasatria reviewed the proposed audience logic before implementation.
 context:
   - I joined the audience development role after the position had been vacant for some time. The team had nine legacy audience segments built in Universal Analytics, which was being retired in favor of GA4.

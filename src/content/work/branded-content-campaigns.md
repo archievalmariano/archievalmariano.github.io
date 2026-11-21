@@ -4,7 +4,7 @@ year: '2019–21'
 category: Branded content and performance
 companyOrClient: GMA New Media Inc.
 anonymized: false
-shortDescription: Managed a steady stream of native articles, social posts, and video campaigns, using editorial adaptation, audience targeting, paid media, and on-site discovery to deliver guaranteed targets within campaign budgets.
+shortDescription: Managed a steady stream of native articles, social posts, and video campaigns, using editorial adaptation, audience targeting, paid media, and on-site discovery to help campaigns meet their guaranteed targets within budget.
 overview: At GMA, online branded content was often sold as an extension of a client’s broader broadcast campaign. The flow averaged at least three assignments a week across native articles, social posts, and video. Publication was only the beginning. Each format carried its own guaranteed metric, and I was responsible for helping the work reach it without exhausting the available media budget.
 role: I adapted client-approved material to fit GMA’s native-content standards, determined where articles should appear, and managed their performance after publication. I owned the distribution strategy and personally set up and optimized paid campaigns, with execution support from a teammate. Client communication remained primarily with the account teams.
 context:

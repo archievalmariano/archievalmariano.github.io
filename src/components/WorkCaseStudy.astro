@@ -1,0 +1,130 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCaseStudySections } from '../utils/work';
+import '../styles/work-case-study.css';
+
+type Adjacent = { slug: string; title: string } | null;
+
+interface Props {
+  data: CollectionEntry<'work'>['data'];
+  prev: Adjacent;
+  next: Adjacent;
+}
+
+const { data, prev, next } = Astro.props;
+const organization = data.anonymized ? 'Confidential' : data.companyOrClient;
+const metadata = [data.year, data.category, organization].filter(Boolean).join(' · ');
+const links = [
+  { label: 'Previous', entry: prev },
+  { label: 'Next', entry: next },
+];
+const story = [
+  ...getCaseStudySections(data),
+  ...(data.metrics?.length ? [{ id: 'evidence', heading: 'Selected evidence', value: data.metrics }] : []),
+];
+const paragraphBreak = /\r?\n[ \t]*\r?\n/;
+---
+
+<BaseLayout title={`${data.title} — Archieval Mariano`} description={data.shortDescription} type="article">
+  <article class="wrap work-study">
+    <header class="work-study__head">
+      <p class="eyebrow work-study__label">Case study</p>
+      <h1>{data.title}</h1>
+      {metadata && <p class="meta work-study__meta">{metadata}</p>}
+    </header>
+
+    <div class="work-study__opening">
+      <div>
+        <p class="work-study__kicker">In brief</p>
+        <p class="work-study__lede">{data.overview ?? data.shortDescription}</p>
+      </div>
+      {
+        data.tools.length > 0 && (
+          <dl class="work-study__tools">
+            <dt class="work-study__kicker">Tools</dt>
+            <dd>{data.tools.join(', ')}</dd>
+          </dl>
+        )
+      }
+    </div>
+
+    {
+      data.heroImage && (
+        <figure class="work-study__cover">
+          <Image src={data.heroImage} alt="" widths={[480, 800, 1200]} />
+        </figure>
+      )
+    }
+
+    {
+      story.length > 0 && (
+        <nav class="work-study__contents" aria-labelledby="work-study-contents-heading">
+          <p id="work-study-contents-heading" class="work-study__kicker">Inside this story</p>
+          <ul role="list">
+            {story.map(({ id, heading }) => <li><a href={`#${id}`}>{heading}</a></li>)}
+          </ul>
+        </nav>
+      )
+    }
+
+    {
+      story.map(({ id, heading, value }, index) => (
+        <section id={id} class="work-study__section" tabindex="-1">
+          <h2>
+            <span class="work-study__section-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <span>{heading}</span>
+          </h2>
+          <div class="work-study__prose">
+            {
+              Array.isArray(value) ? (
+                <ul>{value.map((item) => <li>{item}</li>)}</ul>
+              ) : (
+                value?.split(paragraphBreak).map((paragraph) => <p>{paragraph}</p>)
+              )
+            }
+          </div>
+        </section>
+      ))
+    }
+
+    {
+      data.images && data.images.length > 0 && (
+        <div class="work-study__gallery">
+          {data.images.map((img) => (
+            <figure>
+              <Image src={img} alt="" widths={[480, 800]} />
+            </figure>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      data.confidentialityNote && (
+        <p class="work-study__confidentiality">
+          <strong>Confidentiality:</strong> {data.confidentialityNote}
+        </p>
+      )
+    }
+
+    <slot />
+
+    <footer class="work-study__footer">
+      {
+        (prev || next) && (
+          <nav aria-label="More work" class="work-study__adjacent">
+            {links.map(({ label, entry }) => entry && (
+              <a href={`/work/${entry.slug}`}>
+                <span class="work-study__kicker">{label}</span>
+                {entry.title}
+              </a>
+            ))}
+          </nav>
+        )
+      }
+      <a class="work-study__back" href="/work">← All work</a>
+    </footer>
+  </article>
+</BaseLayout>
