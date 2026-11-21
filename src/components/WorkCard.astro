@@ -22,7 +22,7 @@ const actionId = `${titleId}-action`;
 <li class:list={['work-card', `work-card--${variant}`]}>
   <Wrapper
     class="work-card__row"
-    {...(clickable ? { href: `/work/${entry.slug}`, 'aria-labelledby': `${titleId} ${actionId}` } : {})}
+    {...(clickable ? { href: `/work/${entry.slug}/`, 'aria-labelledby': `${titleId} ${actionId}` } : {})}
   >
     <div class="work-card__body">
       <h3 class="work-card__title" id={titleId}>{d.title}</h3>

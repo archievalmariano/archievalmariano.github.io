@@ -4,16 +4,16 @@
 // so an unpublished collection is absent from the markup, not merely hidden.
 import { publishedCollections } from '../data/desk';
 
-const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const pathname = Astro.url.pathname.replace(/\/?$/, '/');
 
 const links = [
-  { href: '/desk', label: 'Desk' },
-  { href: '/desk/projects', label: 'Projects' },
-  ...publishedCollections().map((c) => ({ href: `/desk/${c.slug}`, label: c.label })),
+  { href: '/desk/', label: 'Desk' },
+  { href: '/desk/projects/', label: 'Projects' },
+  ...publishedCollections().map((c) => ({ href: `/desk/${c.slug}/`, label: c.label })),
 ];
 
 const isActive = (href: string) =>
-  href === '/desk' ? pathname === '/desk' : pathname === href || pathname.startsWith(href + '/');
+  href === '/desk/' ? pathname === href : pathname.startsWith(href);
 ---
 
 <nav class="desk-nav" aria-label="Desk sections">

@@ -116,7 +116,7 @@ const paragraphBreak = /\r?\n[ \t]*\r?\n/;
         (prev || next) && (
           <nav aria-label="More work" class="work-study__adjacent">
             {links.map(({ label, entry }) => entry && (
-              <a href={`/work/${entry.slug}`}>
+              <a href={`/work/${entry.slug}/`}>
                 <span class="work-study__kicker">{label}</span>
                 {entry.title}
               </a>
@@ -124,7 +124,7 @@ const paragraphBreak = /\r?\n[ \t]*\r?\n/;
           </nav>
         )
       }
-      <a class="work-study__back" href="/work">← All work</a>
+      <a class="work-study__back" href="/work/">← All work</a>
     </footer>
   </article>
 </BaseLayout>
