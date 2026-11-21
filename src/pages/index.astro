@@ -373,7 +373,7 @@ const photoVars = `--inv-stack:${invStack};--solve:${1 / (invTall + invStack)}`;
             caseStudies.map((e) => (
               <li>
                 <p class="qs-meta">{[e.data.year, e.data.category].filter(Boolean).join(' · ')}</p>
-                <h4>{hasCaseStudy(e) && !e.data.privateCaseStudy ? <a href={`/work/${e.slug}`}>{e.data.title}</a> : e.data.title}</h4>
+                <h4>{hasCaseStudy(e) && !e.data.privateCaseStudy ? <a href={`/work/${e.slug}/`}>{e.data.title}</a> : e.data.title}</h4>
                 <p>{e.data.shortDescription}</p>
                 <p class="qs-meta">{e.data.anonymized ? 'Confidential' : e.data.companyOrClient}</p>
               </li>

@@ -108,8 +108,8 @@ if node -e '
 ' "$H"; then ok "Projects shows DOGEAR then ON POINT with matching feature markup"; else bad "Projects feature order, image, or hierarchy incorrect"; fi
 
 # Work: two case studies, link after them; prototypes in Work, same tab.
-assert_grep   "$H" 'href="/work/digital-intelligence-dashboard"'
-assert_grep   "$H" 'href="/work/audience-intelligence-system"'
+assert_grep   "$H" 'href="/work/digital-intelligence-dashboard/"'
+assert_grep   "$H" 'href="/work/audience-intelligence-system/"'
 assert_nogrep "$H" 'href="/work/social-acquisition-retention"'
 assert_grep   "$H" 'href="/pinned-shop/"'
 assert_grep   "$H" 'href="/pinned-travel/"'
