@@ -47,21 +47,15 @@ if (props.kind === 'article') {
 
 const items =
   props.kind === 'index'
-    ? props.entries.map(({ data, slug }) => {
-        const latest = data.ownershipUpdates
-          ?.slice()
-          .sort((a, b) => b.date.valueOf() - a.date.valueOf())[0];
-        return {
-          href: `/desk/${meta.slug}/${slug}/`,
-          number: String(data.publicationNumber).padStart(2, '0'),
-          title: data.title,
-          subtitle: data.subtitle ?? data.description,
-          thumbnail: data.thumbnail,
-          date: data.pubDate,
-          kicker: data.object?.name,
-          note: latest ? `Updated ${monthFmt.format(latest.date)}` : undefined,
-        };
-      })
+    ? props.entries.map(({ data, slug }) => ({
+        href: `/desk/${meta.slug}/${slug}/`,
+        number: String(data.publicationNumber).padStart(2, '0'),
+        title: data.title,
+        subtitle: data.subtitle ?? data.description,
+        thumbnail: data.thumbnail,
+        date: data.pubDate,
+        kicker: data.object?.name,
+      }))
     : [];
 ---
 
@@ -104,7 +98,6 @@ const items =
                       <p class="artifact-feature__subtitle">{item.subtitle}</p>
                       <p class="meta artifact-feature__date">
                         <time datetime={item.date.toISOString().slice(0, 10)}>{monthFmt.format(item.date)}</time>
-                        {item.note && <> · {item.note}</>}
                       </p>
                       <p class="artifact-feature__read">
                         <a href={item.href} aria-label={`Read ${item.title}`}>
@@ -126,6 +119,8 @@ const items =
     <DeskArticleLayout
       title={props.entry.data.title}
       description={props.entry.data.description}
+      seoTitle={props.entry.data.seoTitle}
+      seoDescription={props.entry.data.seoDescription}
       subtitle={props.entry.data.subtitle}
       collectionLabel={meta.label}
       collectionHref={`/desk/${meta.slug}/`}

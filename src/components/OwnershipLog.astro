@@ -24,7 +24,8 @@ interface Props {
 
 const { updates = [], corrections = [] } = Astro.props;
 
-const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const monthFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', timeZone: 'UTC' });
+const correctionFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const byDateDesc = <T extends { date: Date }>(a: T, b: T) => b.date.valueOf() - a.date.valueOf();
 const sortedUpdates = [...updates].sort(byDateDesc);
 const sortedCorrections = [...corrections].sort(byDateDesc);
@@ -34,15 +35,15 @@ const hasAny = sortedUpdates.length > 0 || sortedCorrections.length > 0;
 
 {
   hasAny && (
-    <section class="ownership" aria-label="Ownership record">
+    <div class="ownership">
       {sortedUpdates.length > 0 && (
         <div class="ownership__updates">
-          <h2 class="ownership__heading">Updates</h2>
+          <h2 class="ownership__heading">As things stand</h2>
           <ol class="ownership__list">
             {sortedUpdates.map((u) => (
               <li class="ownership__item">
                 <p class="ownership__meta">
-                  <time datetime={u.date.toISOString()}>{fmt.format(u.date)}</time>
+                  <time datetime={u.date.toISOString().slice(0, 7)}>{monthFmt.format(u.date)}</time>
                   {u.status && <span class="ownership__status">{u.status}</span>}
                 </p>
                 <p class="ownership__summary">{u.summary}</p>
@@ -59,22 +60,24 @@ const hasAny = sortedUpdates.length > 0 || sortedCorrections.length > 0;
           <ul class="ownership__corr-list">
             {sortedCorrections.map((c) => (
               <li>
-                <time datetime={c.date.toISOString()}>{fmt.format(c.date)}</time> — {c.note}
+                <time datetime={c.date.toISOString()}>{correctionFmt.format(c.date)}</time> — {c.note}
               </li>
             ))}
           </ul>
         </div>
       )}
-    </section>
+    </div>
   )
 }
 
 <style>
   .ownership {
-    max-width: var(--measure);
-    margin-top: var(--space-xl);
-    padding-top: var(--space-md);
-    border-top: var(--heavy-rule);
+    margin-bottom: var(--space-lg);
+  }
+
+  .ownership__updates {
+    padding-inline-start: var(--space-md);
+    border-inline-start: 2px solid var(--rule);
   }
 
   .ownership__heading {
@@ -88,17 +91,14 @@ const hasAny = sortedUpdates.length > 0 || sortedCorrections.length > 0;
 
   .ownership__list {
     list-style: none;
-    margin: var(--space-md) 0 0;
+    margin: var(--space-sm) 0 0;
     padding: 0;
   }
 
-  .ownership__item {
-    padding: var(--space-md) 0;
+  .ownership__item + .ownership__item {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
     border-top: 1px solid var(--rule);
-  }
-
-  .ownership__item:first-child {
-    border-top: none;
   }
 
   .ownership__meta {
@@ -133,7 +133,7 @@ const hasAny = sortedUpdates.length > 0 || sortedCorrections.length > 0;
   }
 
   /* Corrections sit quietly beneath the updates — deliberately understated. */
-  .ownership__corrections {
+  .ownership__updates + .ownership__corrections {
     margin-top: var(--space-lg);
   }
 

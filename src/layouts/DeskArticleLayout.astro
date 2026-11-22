@@ -22,6 +22,8 @@ interface Correction {
 interface Props {
   title: string;
   description: string;
+  seoTitle?: string;
+  seoDescription?: string;
   subtitle?: string;
   collectionLabel: string;
   collectionHref: string;
@@ -38,6 +40,8 @@ interface Props {
 const {
   title,
   description,
+  seoTitle = `${title} — Archieval Mariano`,
+  seoDescription = description,
   subtitle,
   collectionLabel,
   collectionHref,
@@ -60,7 +64,7 @@ const jsonLd: Record<string, unknown> = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: title,
-  description,
+  description: seoDescription,
   datePublished: pubDate.toISOString(),
   ...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
   author: { '@type': 'Person', name: 'Archieval Mariano' },
@@ -70,11 +74,11 @@ const jsonLd: Record<string, unknown> = {
 ---
 
 <BaseLayout
-  title={`${title} — Archieval Mariano`}
-  description={description}
+  title={seoTitle}
+  description={seoDescription}
   type="article"
   ogImage={ogImage}
-  ogImageAlt={heroAlt}
+  ogImageAlt={heroAlt ?? description}
   publishedTime={pubDate.toISOString()}
   modifiedTime={updatedDate?.toISOString()}
   jsonLd={jsonLd}
@@ -108,9 +112,8 @@ const jsonLd: Record<string, unknown> = {
       <slot />
     </div>
 
-    <OwnershipLog updates={updates} corrections={corrections} />
-
     <footer class="desk-article__foot">
+      <OwnershipLog updates={updates} corrections={corrections} />
       <a href={collectionHref} class="back-link">← {collectionLabel}</a>
     </footer>
   </article>

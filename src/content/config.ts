@@ -114,6 +114,8 @@ const artifacts = defineCollection({
       title: z.string(),
       subtitle: z.string().optional(),
       description: z.string(),
+      seoTitle: z.string().optional(),
+      seoDescription: z.string().optional(),
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(), // → dateModified
       draft: z.boolean().default(true),
