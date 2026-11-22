@@ -14,10 +14,10 @@ type Entry = {
   href: string;
   title: string;
   description: string;
-  subtitle?: string; // editorial lead for text-only rows (italic); falls back to description
+  subtitle?: string; // editorial lead; falls back to description
   image?: ImageMetadata;
   imageAlt: string;
-  date?: string; // formatted publication date, shown on text-only editorial rows
+  date?: string; // formatted publication date for editorial entries
 };
 
 // Month + year for listing rows — understated, and comfortable with a
@@ -83,7 +83,7 @@ type Section = {
   subtitle: string;
   allHref: string;
   items: Entry[];
-  textOnly?: boolean; // editorial collections list as text-only rows (no thumbnail column)
+  editorial?: boolean;
 };
 
 const sections: Section[] = [
@@ -96,26 +96,26 @@ for (const c of deskCollections) {
   // means most recently PUBLISHED (pubDate), never updatedDate — a dated
   // ownership update must not promote an older essay into the latest slots.
   const candidates = (await getCollection(c.key as any, ({ data }: any) => !data.draft)).map(
-    (e: any) => ({
-      featured: Boolean(e.data.featured),
-      pub: e.data.pubDate.valueOf(),
-      item: {
-        href: `/desk/${c.slug}/${e.slug}/`,
-        title: e.data.title,
-        description: e.data.description,
-        // Editorial rows are text-only; the article's subtitle leads (in italic
-        // editorial treatment) and the publication date trails. `description`
-        // stays for SEO/metadata and is not rendered here, so the subtitle is
-        // never shown twice. Falls back to description if an entry has no subtitle.
-        subtitle: e.data.subtitle ?? e.data.description,
-        date: listDate.format(e.data.pubDate),
-        imageAlt: '',
-      } as Entry,
-    })
+    (e: any) => {
+      const thumbnail = c.key === 'artifacts' ? e.data.thumbnail : undefined;
+      return {
+        featured: Boolean(e.data.featured),
+        pub: e.data.pubDate.valueOf(),
+        item: {
+          href: `/desk/${c.slug}/${e.slug}/`,
+          title: e.data.title,
+          description: e.data.description,
+          subtitle: e.data.subtitle ?? e.data.description,
+          date: listDate.format(e.data.pubDate),
+          image: thumbnail?.src,
+          imageAlt: thumbnail?.alt ?? '',
+        } as Entry,
+      };
+    }
   );
   const items: Entry[] = selectHomepage(candidates, (a, b) => b.pub - a.pub).map((x) => x.item);
   if (items.length === 0) continue; // launched but nothing published yet → omit
-  sections.push({ label: c.label, subtitle: c.subtitle, allHref: `/desk/${c.slug}/`, items, textOnly: true });
+  sections.push({ label: c.label, subtitle: c.subtitle, allHref: `/desk/${c.slug}/`, items, editorial: true });
 }
 ---
 
@@ -147,10 +147,10 @@ for (const c of deskCollections) {
 
           <ul class="desk-entries">
             {section.items.map((item) => (
-              <li class={section.textOnly ? 'desk-entry desk-entry--text' : 'desk-entry'}>
+              <li class={section.editorial && !item.image ? 'desk-entry desk-entry--text' : 'desk-entry'}>
                 <a class="desk-entry__link" href={item.href}>
-                  {!section.textOnly && (
-                    <div class:list={['desk-entry__thumb', { 'desk-entry__thumb--natural': item.href === '/desk/on-point/' }]}>
+                  {(!section.editorial || item.image) && (
+                    <div class:list={['desk-entry__thumb', { 'desk-entry__thumb--natural': section.editorial || item.href === '/desk/on-point/' }]}>
                       {item.image ? (
                         <Image
                           src={item.image}
@@ -168,7 +168,7 @@ for (const c of deskCollections) {
                   )}
                   <div class="desk-entry__body">
                     <h3 class="desk-entry__title">{item.title}</h3>
-                    {section.textOnly ? (
+                    {section.editorial ? (
                       item.subtitle && <p class="desk-entry__subtitle">{item.subtitle}</p>
                     ) : (
                       <p class="desk-entry__desc">{item.description}</p>
@@ -341,7 +341,7 @@ for (const c of deskCollections) {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Editorial lead on text-only rows: the article subtitle, rendered as a plain
+  /* Editorial lead: the article subtitle, rendered as a plain
      descriptor (regular) to match project-row descriptions. Italic is reserved
      for collection subtitles and the article's own subhead on its page. */
   .desk-entry__subtitle {

@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 #
 # Production-candidate checks for the "Quiet Personal Site" homepage and the
-# shared navigation/footer. Complements scripts/desk-gate-test.sh (which is
-# unchanged). Builds the site in several states and inspects dist/ directly.
+# shared navigation/footer. Complements scripts/desk-gate-test.sh, which tests
+# the closed Artifacts gate separately. Inspects the generated dist/ directly.
 # Uses only astro + shell + node — no new dependency.
 #
 # States:
-#   P     production default     → Projects and Field Notes expanded, Artifacts compact
-#   CI    CI + every preview flag + fixtures → Artifacts absent and drafts excluded
-#   S2    local DESK preview of Artifacts only (fixtures) → all three rows expand
-#   S3    local DESK preview of both (fixtures) → same published content as S2
+#   P     production default → Projects, Artifacts and Field Notes expanded
+#   CI    CI + every preview flag + draft fixtures → same public content as P
 #   FINAL production default, fixtures removed → no fixture leak
 #
 # Synthetic fixtures are the existing test/fixtures/desk files; they are
@@ -24,6 +22,7 @@ LOG="${TMPDIR:-/tmp}/homepage_candidate_build.log"
 AF="src/content/artifacts"; FN="src/content/fieldNotes"; FIX="test/fixtures/desk"
 H=dist/index.html
 FN_ROUTE="/desk/field-notes/make-no-mistakes-adds-the-monkey/"
+ARTIFACT_ROUTE="/desk/artifacts/my-otp-camera/"
 
 ok()  { PASS=$((PASS+1)); printf '   \033[32mPASS\033[0m %s\n' "$1"; }
 bad() { FAIL=$((FAIL+1)); printf '   \033[31mFAIL\033[0m %s\n' "$1"; }
@@ -34,9 +33,8 @@ assert_nogrep() { if grep -rqF -- "$2" "$1" 2>/dev/null; then bad "SHOULD NOT co
 assert_count()  { local n; n=$(grep -oF -- "$2" "$1" 2>/dev/null | wc -l | tr -d ' ')
   if [ "$n" = "$3" ]; then ok "count('$2') = $3: $1"; else bad "count('$2') = $n, expected $3: $1"; fi; }
 
-unstage() { rm -f "$AF/gate-published.mdx" "$AF/gate-draft.mdx" "$FN/gate-draft.mdx"; }
+unstage() { rm -f "$AF/gate-draft.mdx" "$FN/gate-draft.mdx"; }
 stage() {
-  cp "$FIX/artifacts-published.mdx" "$AF/gate-published.mdx"
   cp "$FIX/artifacts-draft.mdx" "$AF/gate-draft.mdx"
   cp "$FIX/field-note-draft.mdx" "$FN/gate-draft.mdx"
 }
@@ -64,8 +62,25 @@ assert_field_notes() {
 
 assert_production() {
   assert_field_notes
-  assert_absent dist/desk/artifacts
-  assert_nogrep dist "/desk/artifacts"
+  assert_exist "dist${ARTIFACT_ROUTE}index.html"
+  assert_exist dist/desk/artifacts/index.html
+  assert_grep "$H" "href=\"$ARTIFACT_ROUTE\""
+  assert_grep "$H" "IMG_0716."
+  if grep -Eq '<a href="/desk/artifacts/"[^>]*>All Artifacts' "$H"; then
+    ok 'Homepage All Artifacts links to the collection index'
+  else
+    bad 'Homepage All Artifacts link missing or incorrect'
+  fi
+  assert_grep dist/desk/index.html "IMG_0716."
+  assert_grep dist/desk/artifacts/index.html "IMG_0716."
+  assert_grep dist/desk/artifacts/index.html 'datetime="2026-11-22"'
+  assert_grep dist/desk/artifacts/index.html '>November 2026</time>'
+  assert_grep dist/desk/artifacts/index.html "Notes on objects I’ve lived with as they turn from purchases into artifacts (and sometimes back)."
+  assert_grep dist/about/index.html 'href="/desk/artifacts/"'
+  assert_count "$H" 'qs-row--featured' 3
+  assert_count "$H" 'qs-row--compact' 0
+  assert_absent dist/desk/artifacts/gate-draft
+  assert_nogrep dist "gate-draft"
   assert_nogrep dist "SYNTHETIC"
 }
 
@@ -92,8 +107,6 @@ done
 assert_nogrep "$H" "Across strategy, content, analytics"   # superseded hero paragraph
 
 # Projects: DOGEAR comes first and both entries use the same feature class.
-assert_count "$H" 'qs-row--featured' 2
-assert_count "$H" 'qs-row--compact' 1
 for p in goto tools; do assert_nogrep "$H" "href=\"/desk/$p/\""; done
 if node -e '
   const html = require("fs").readFileSync(process.argv[1], "utf8");
@@ -143,28 +156,6 @@ for f in dist/goto/index.html dist/goto/install/index.html dist/goto/install/x4-
 stage
 build "CI [all flags + fixtures]" CI=true GITHUB_ACTIONS=true DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
 assert_production
-assert_count "$H" 'qs-row--compact' 1
-unstage
-
-# ── S2: Artifacts launched locally (fixtures) ────────────────────────────────
-stage
-build "S2 artifacts only" DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts
-assert_field_notes
-assert_count  "$H" 'qs-row--featured' 3
-assert_count  "$H" 'qs-row--compact' 0
-assert_grep   "$H" 'href="/desk/artifacts/gate-published/"'
-assert_nogrep "$H" "gate-draft"
-assert_grep   dist/about/index.html 'href="/desk/artifacts/"'   # footer directory follows the gate
-unstage
-
-# ── S3: both launched locally (fixtures) ─────────────────────────────────────
-stage
-build "S3 artifacts + field notes" DESK_PREVIEW_BUILD=true DESK_PREVIEW=artifacts,field-notes
-assert_count  "$H" 'qs-row--featured' 3
-assert_count  "$H" 'qs-row--compact' 0
-assert_field_notes
-assert_grep   "$H" 'href="/desk/artifacts/gate-published/"'
-assert_nogrep "$H" "gate-draft"
 unstage
 
 # ── FINAL: production default, fixtures removed ─────────────────────────────

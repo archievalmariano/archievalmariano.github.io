@@ -4,8 +4,9 @@
 // When the collection is unpublished, getStaticPaths returns [] and NOTHING is
 // built — no index, no articles, no directory in dist/. The URL simply 404s;
 // there is no hidden/noindex page and no bundled MDX to leak.
-import { getCollection } from 'astro:content';
-import { isPublished, collectionMeta } from '../../../data/desk';
+import { Image } from 'astro:assets';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { artifactsIntro, isPublished, collectionMeta } from '../../../data/desk';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import CollectionIndex from '../../../components/CollectionIndex.astro';
 import DeskArticleLayout from '../../../layouts/DeskArticleLayout.astro';
@@ -18,17 +19,25 @@ export async function getStaticPaths() {
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   );
   const paths: any[] = [{ params: { slug: undefined }, props: { kind: 'index', entries } }];
+  const publicationNumbers = new Set<number>();
   for (const entry of entries) {
+    const number = entry.data.publicationNumber;
+    if (number === undefined || publicationNumbers.has(number)) {
+      throw new Error(`Artifact "${entry.slug}" needs a unique publicationNumber.`);
+    }
+    publicationNumbers.add(number);
     paths.push({ params: { slug: entry.slug }, props: { kind: 'article', entry } });
   }
   return paths;
 }
 
 const props = Astro.props as
-  | { kind: 'index'; entries: any[] }
-  | { kind: 'article'; entry: any };
+  | { kind: 'index'; entries: CollectionEntry<'artifacts'>[] }
+  | { kind: 'article'; entry: CollectionEntry<'artifacts'> };
 
-const monthFmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' });
+const monthFmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric', month: 'long', timeZone: 'UTC',
+});
 
 let Content: any = null;
 if (props.kind === 'article') {
@@ -38,15 +47,18 @@ if (props.kind === 'article') {
 
 const items =
   props.kind === 'index'
-    ? props.entries.map((e) => {
-        const latest = e.data.ownershipUpdates
+    ? props.entries.map(({ data, slug }) => {
+        const latest = data.ownershipUpdates
           ?.slice()
-          .sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf())[0];
+          .sort((a, b) => b.date.valueOf() - a.date.valueOf())[0];
         return {
-          href: `/desk/${meta.slug}/${e.slug}/`,
-          title: e.data.title,
-          description: e.data.description,
-          kicker: e.data.object?.name,
+          href: `/desk/${meta.slug}/${slug}/`,
+          number: String(data.publicationNumber).padStart(2, '0'),
+          title: data.title,
+          subtitle: data.subtitle ?? data.description,
+          thumbnail: data.thumbnail,
+          date: data.pubDate,
+          kicker: data.object?.name,
           note: latest ? `Updated ${monthFmt.format(latest.date)}` : undefined,
         };
       })
@@ -64,11 +76,51 @@ const items =
         subtitle={meta.subtitle}
         chapterNo="Desk"
         accent="var(--coral)"
-        intro="Essays about living with objects over time — what changes, what breaks, and what stays."
-        items={items}
-        emptyText="No essays published yet."
+        intro={artifactsIntro}
         showNav={true}
-      />
+      >
+        <div slot="listing" class="wrap">
+          {items.length ? (
+            <ul class="artifacts-list">
+              {items.map((item) => (
+                <li class="artifacts-list__row">
+                  <article class:list={['artifact-feature', { 'artifact-feature--illustrated': item.thumbnail }]}>
+                    {item.thumbnail && (
+                      <Image
+                        class="artifact-feature__image"
+                        src={item.thumbnail.src}
+                        alt={item.thumbnail.alt}
+                        widths={[240, 360, 480, 640, 960]}
+                        sizes="(max-width: 40rem) min(88vw, 19rem), clamp(13rem, 30vw, 19rem)"
+                        format="webp"
+                        quality={76}
+                        loading="lazy"
+                      />
+                    )}
+                    <div class="artifact-feature__body">
+                      <p class="artifact-feature__number">{item.number}</p>
+                      {item.kicker && <p class="meta">{item.kicker}</p>}
+                      <h2>{item.title}</h2>
+                      <p class="artifact-feature__subtitle">{item.subtitle}</p>
+                      <p class="meta artifact-feature__date">
+                        <time datetime={item.date.toISOString().slice(0, 10)}>{monthFmt.format(item.date)}</time>
+                        {item.note && <> · {item.note}</>}
+                      </p>
+                      <p class="artifact-feature__read">
+                        <a href={item.href} aria-label={`Read ${item.title}`}>
+                          Read <span aria-hidden="true">→</span>
+                        </a>
+                      </p>
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="artifacts-list artifacts-list__empty">No essays published yet.</p>
+          )}
+        </div>
+      </CollectionIndex>
     </BaseLayout>
   ) : (
     <DeskArticleLayout
@@ -90,3 +142,89 @@ const items =
     </DeskArticleLayout>
   )
 }
+
+<style>
+  .artifacts-list {
+    list-style: none;
+    margin: var(--space-lg) 0 var(--space-xxl);
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .artifacts-list__row {
+    padding-block: clamp(2rem, 4.5vw, 4rem);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .artifacts-list__empty {
+    padding-top: var(--space-lg);
+    color: var(--ink-faint);
+  }
+
+  .artifact-feature {
+    display: grid;
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+
+  .artifact-feature--illustrated {
+    grid-template-columns: clamp(13rem, 30vw, 19rem) minmax(0, 1fr);
+  }
+
+  .artifact-feature__image {
+    display: block;
+    width: 100%;
+    max-width: 19rem;
+    height: auto;
+  }
+
+  .artifact-feature__number {
+    margin: 0 0 var(--space-sm);
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: var(--ink-faint);
+  }
+
+  .artifact-feature h2 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 3.6rem);
+    font-weight: 550;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  .artifact-feature__subtitle {
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+
+  .artifact-feature__date {
+    margin: var(--space-md) 0 0;
+  }
+
+  .artifact-feature__read {
+    margin: var(--space-md) 0 0;
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+
+  .artifact-feature__read a {
+    text-decoration-color: var(--ink-faint);
+    text-underline-offset: 0.3em;
+  }
+
+  .artifact-feature__read a:hover {
+    color: var(--accent-ink);
+    text-decoration-color: currentColor;
+  }
+
+  @media (max-width: 40rem) {
+    .artifact-feature--illustrated {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

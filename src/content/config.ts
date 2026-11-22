@@ -117,6 +117,8 @@ const artifacts = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(), // → dateModified
       draft: z.boolean().default(true),
+      publicationNumber: z.number().int().positive().optional(),
+      thumbnail: z.object({ src: image(), alt: z.string() }).optional(),
       heroImage: image().optional(),
       heroAlt: z.string().optional(),
       heroOrientation: z.enum(['portrait', 'landscape', 'panorama']).optional(),

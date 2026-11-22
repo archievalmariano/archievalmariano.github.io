@@ -21,7 +21,7 @@ import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { deskCollections, isPublished, type DeskCollectionKey } from '../data/desk';
+import { artifactsIntro, deskCollections, isPublished, type DeskCollectionKey } from '../data/desk';
 import { siteLinks } from '../data/site';
 import { hasCaseStudy } from '../utils/work';
 import portrait from '../assets/photos/archieval-portrait.jpg';
@@ -165,7 +165,7 @@ const copy = {
     projects: { subtitle: 'Works in progress', description: 'Independent applications, utilities, and experiments.' },
     artifacts: {
       subtitle: 'As things stand',
-      description: 'Notes on objects I’ve lived with as they turn from purchases into artifacts (and sometimes back).',
+      description: artifactsIntro,
     },
     fieldNotes: { subtitle: 'Dispatches from the margins', description: 'Thoughts that have managed to escape from my numerous draft folders.' },
   },
@@ -199,7 +199,7 @@ async function editorialFeature(key: DeskCollectionKey, slug: string): Promise<F
     description: e.data.description,
     href: `/desk/${slug}/${e.slug}/`,
     linkLabel: 'Read',
-    image: e.data.heroImage ? { src: e.data.heroImage, alt: e.data.heroAlt ?? '' } : undefined,
+    image: e.data.thumbnail ?? (e.data.heroImage ? { src: e.data.heroImage, alt: e.data.heroAlt ?? '' } : undefined),
   };
 }
 
@@ -220,7 +220,15 @@ for (const c of deskCollections) {
   const featured = isPublished(c.key) ? await editorialFeature(c.key, c.slug) : undefined;
   rows.push(
     featured
-      ? { key: c.slug, name: c.label, subtitle: copy.desk[c.key].subtitle, description: copy.desk[c.key].description, href: `/desk/${c.slug}/`, linkLabel: `All ${c.label}`, featured }
+      ? {
+          key: c.slug,
+          name: c.label,
+          subtitle: copy.desk[c.key].subtitle,
+          description: copy.desk[c.key].description,
+          href: `/desk/${c.slug}/`,
+          linkLabel: `All ${c.label}`,
+          featured,
+        }
       : { key: c.slug, name: c.label, subtitle: copy.desk[c.key].subtitle, description: copy.desk[c.key].description }
   );
 }

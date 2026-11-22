@@ -18,7 +18,7 @@ interface Props {
   chapterNo: string;
   intro?: string;
   accent?: string; // CSS var name for the chapter chip background
-  items: ListItem[];
+  items?: ListItem[];
   emptyText?: string;
   showNav?: boolean; // render the DESK secondary nav between the intro and the listing
 }
@@ -29,7 +29,7 @@ const {
   chapterNo,
   intro,
   accent = 'var(--yellow)',
-  items,
+  items = [],
   emptyText = 'Nothing here yet.',
   showNav = false,
 } = Astro.props;
@@ -48,7 +48,7 @@ const {
   </div>
 )}
 
-<section class="wrap">
+<slot name="listing"><section class="wrap">
   {
     items.length === 0 ? (
       <p class="collection-empty">{emptyText}</p>
@@ -71,7 +71,7 @@ const {
       </ul>
     )
   }
-</section>
+</section></slot>
 
 <style>
   .page-head {

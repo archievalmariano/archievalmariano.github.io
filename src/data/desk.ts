@@ -14,6 +14,9 @@
 
 export type DeskCollectionKey = 'artifacts' | 'fieldNotes';
 
+export const artifactsIntro =
+  'Notes on objects I’ve lived with as they turn from purchases into artifacts (and sometimes back).';
+
 export interface DeskCollectionMeta {
   key: DeskCollectionKey;
   label: string; // navigation / breadcrumb label
@@ -29,7 +32,7 @@ export const deskCollections: DeskCollectionMeta[] = [
 
 // PRODUCTION TRUTH. Do not flip to true except to launch a collection.
 const PUBLISHED: Record<DeskCollectionKey, boolean> = {
-  artifacts: false,
+  artifacts: true,
   fieldNotes: true,
 };
 

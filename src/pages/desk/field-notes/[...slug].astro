@@ -43,7 +43,7 @@ const items =
         href: `/desk/${meta.slug}/${e.slug}/`,
         title: e.data.title,
         description: e.data.description,
-        kicker: e.data.format,
+        kicker: e.data.format === 'Essay' ? undefined : e.data.format,
         note: listDate.format(e.data.pubDate),
       }))
     : [];

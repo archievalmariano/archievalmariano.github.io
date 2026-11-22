@@ -15,6 +15,8 @@ repository can see them. Therefore:
   publication is approved.
 - Add a finished essay here only when it is ready to publish, together with its
   photography, and then launch the collection via `src/data/desk.ts`.
+- Assign the next unused `publicationNumber` on publication and keep it fixed
+  when dates or listing order change.
 - Synthetic fixtures used to exercise the publication gate live in
   `test/fixtures/desk/` and are staged in/out by `scripts/desk-gate-test.sh`;
   they are never committed into this directory.

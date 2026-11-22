@@ -7,7 +7,9 @@
 # Fixtures are always removed afterwards (trap), so none can leak into a
 # committed/deployed build. Uses only astro + shell — no new dependency.
 #
-# Publication baseline (src/data/desk.ts): FIELD NOTES published, ARTIFACTS gated.
+# Production publishes FIELD NOTES and ARTIFACTS. Reproduce the closed Artifacts
+# gate in a disposable source copy so the CI and fail-closed states still exercise
+# a real unpublished collection without changing the release checkout.
 #
 # States:
 #   P   production default (no preview)            → FIELD NOTES published, ARTIFACTS gated
@@ -27,7 +29,10 @@
 # no gated-artifacts or draft fixture leaks into HTML / RSS / sitemap.
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT"
+TEST_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/desk-gate.XXXXXX")" || exit 1
+trap 'rm -rf "$TEST_ROOT"' EXIT
+cp -R "$ROOT"/{src,public,test,node_modules,package.json,package-lock.json,astro.config.mjs,tsconfig.json} "$TEST_ROOT/" || exit 1
+cd "$TEST_ROOT" || exit 1
 
 AF="src/content/artifacts"
 FN="src/content/fieldNotes"
@@ -35,6 +40,7 @@ FIX="test/fixtures/desk"
 
 # The approved, published Field Note (not a fixture — a committed article).
 FN_SLUG="make-no-mistakes-adds-the-monkey"
+AF_SLUG="my-otp-camera"
 
 PASS=0
 FAIL=0
@@ -46,7 +52,6 @@ cleanup() {
   rm -f "$AF/gate-published.mdx" "$AF/gate-draft.mdx" "$AF/gate-xss.mdx" \
         "$FN/gate-published.mdx" "$FN/gate-draft.mdx"
 }
-trap cleanup EXIT
 
 stage() {
   # ARTIFACTS (gated): published + draft synthetic fixtures. Neither may appear in
@@ -107,13 +112,38 @@ build() { # $1 = label, rest = env assignments
   rm -rf dist
   # Neutralize any ambient CI / GITHUB_ACTIONS so each state's CI signal is
   # exactly what this call passes (env applies -u before the assignments).
-  if env -u CI -u GITHUB_ACTIONS "$@" npm run build >/tmp/desk_build.log 2>&1; then
+  if env -u CI -u GITHUB_ACTIONS -u DESK_PREVIEW -u DESK_PREVIEW_BUILD "$@" npm run build >build.log 2>&1; then
     echo "   build ok"
   else
-    bad "BUILD FAILED ($label) — see /tmp/desk_build.log"; tail -20 /tmp/desk_build.log
+    bad "BUILD FAILED ($label) — see build log below"; tail -20 build.log
   fi
 }
 
+assert_launched() {
+  for route in artifacts/ "artifacts/$AF_SLUG/" field-notes/ "field-notes/$FN_SLUG/"; do
+    assert_exist "dist/desk/${route}index.html"
+    assert_grep dist/sitemap-0.xml "/desk/$route"
+  done
+  assert_grep dist/index.html "/desk/artifacts/$AF_SLUG/"
+  assert_grep dist/desk/index.html "/desk/artifacts/$AF_SLUG/"
+  assert_grep dist/desk/rss.xml "/desk/artifacts/$AF_SLUG/"
+  assert_grep dist/desk/rss.xml "$FN_SLUG"
+  assert_absent dist/desk/artifacts/gate-draft
+  assert_absent dist/desk/field-notes/gate-draft
+  assert_nogrep dist "SYNTHETIC FIXTURE"
+  assert_nogrep dist "gate-draft"
+}
+
+# Verify real production flags while exercising draft filtering.
+cp "$FIX/artifacts-draft.mdx" "$AF/gate-draft.mdx" || exit 1
+cp "$FIX/field-note-draft.mdx" "$FN/gate-draft.mdx" || exit 1
+build "PRODUCTION launch (with synthetic drafts)"
+assert_launched
+
+# Exercise the earlier gate matrix using only this disposable copy.
+cp src/data/desk.ts production-desk.ts || exit 1
+grep -q '^  artifacts: true,$' production-desk.ts || exit 1
+sed 's/^  artifacts: true,$/  artifacts: false,/' production-desk.ts >src/data/desk.ts || exit 1
 stage
 
 # ── State P: production default ───────────────────────────────────────────────
@@ -198,6 +228,7 @@ cat > "$AF/gate-xss.mdx" <<'EOF'
 title: "SYNTHETIC XSS </script><script>alert(1)</script> Fixture"
 description: "JSON-LD escape probe. </script><script>alert(2)</script>"
 pubDate: 2026-01-06
+publicationNumber: 3
 draft: false
 ---
 
@@ -227,17 +258,10 @@ fi
 rm -f "$AF/gate-xss.mdx"
 
 # ── Final: true production build, synthetic fixtures removed ───────────────────
-#    What actually deploys: the approved Field Note is public, ARTIFACTS gated,
-#    and no synthetic fixture is present at all.
 cleanup
+mv production-desk.ts src/data/desk.ts || exit 1
 build "FINAL production (fixtures removed)"
-assert_absent dist/desk/artifacts
-assert_exist  dist/desk/field-notes/index.html
-assert_exist  "dist/desk/field-notes/$FN_SLUG/index.html"
-assert_exist  dist/desk/rss.xml
-assert_grep   dist/desk/rss.xml "$FN_SLUG"
-assert_nogrep dist/desk/index.html "/desk/artifacts/"
-assert_nogrep dist "SYNTHETIC FIXTURE"
+assert_launched
 
 echo ""
 echo "════════════════════════════════════════════"
